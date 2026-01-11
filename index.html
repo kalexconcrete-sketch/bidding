@@ -2,7 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Dream World">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#1a1025">
+    <meta name="description" content="Experience the ever-changing nature of the 4th dimensional dream world">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon.svg">
     <title>The Fourth Dimension - Dream World</title>
     <style>
         * {
@@ -11,10 +19,17 @@
             box-sizing: border-box;
         }
 
-        body {
+        html, body {
             overflow: hidden;
             background: #0a0a0f;
             font-family: 'Courier New', monospace;
+            touch-action: none;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+            position: fixed;
+            width: 100%;
+            height: 100%;
         }
 
         #canvas {
@@ -23,6 +38,7 @@
             left: 0;
             width: 100%;
             height: 100%;
+            touch-action: none;
         }
 
         #overlay {
@@ -37,28 +53,54 @@
 
         #title {
             position: fixed;
-            top: 30px;
+            top: max(30px, env(safe-area-inset-top));
             left: 50%;
             transform: translateX(-50%);
             color: rgba(180, 160, 220, 0.6);
-            font-size: 14px;
-            letter-spacing: 8px;
+            font-size: 12px;
+            letter-spacing: 6px;
             text-transform: uppercase;
             pointer-events: none;
             text-shadow: 0 0 20px rgba(140, 100, 200, 0.5);
             animation: breathe 4s ease-in-out infinite;
+            text-align: center;
+            width: 90%;
         }
 
         #hint {
             position: fixed;
-            bottom: 30px;
+            bottom: max(30px, env(safe-area-inset-bottom));
             left: 50%;
             transform: translateX(-50%);
             color: rgba(140, 120, 180, 0.4);
-            font-size: 11px;
-            letter-spacing: 3px;
+            font-size: 10px;
+            letter-spacing: 2px;
             pointer-events: none;
             animation: fade 6s ease-in-out infinite;
+            text-align: center;
+        }
+
+        #install-prompt {
+            display: none;
+            position: fixed;
+            bottom: max(80px, calc(env(safe-area-inset-bottom) + 50px));
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(60, 40, 100, 0.8);
+            color: rgba(200, 180, 255, 0.9);
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 12px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            border: 1px solid rgba(140, 100, 200, 0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+
+        #install-prompt:active {
+            background: rgba(80, 60, 140, 0.9);
         }
 
         @keyframes breathe {
@@ -70,18 +112,60 @@
             0%, 100% { opacity: 0.4; }
             50% { opacity: 0.15; }
         }
+
+        /* Gyroscope indicator */
+        #gyro-indicator {
+            display: none;
+            position: fixed;
+            top: max(60px, calc(env(safe-area-inset-top) + 30px));
+            right: 20px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(140, 200, 255, 0.6);
+            box-shadow: 0 0 10px rgba(140, 200, 255, 0.4);
+        }
     </style>
 </head>
 <body>
     <canvas id="canvas"></canvas>
     <div id="overlay"></div>
     <div id="title">The Fourth Dimension</div>
-    <div id="hint">move through the dream</div>
+    <div id="hint">touch to drift through the dream</div>
+    <div id="gyro-indicator"></div>
+    <button id="install-prompt">Install Dream World</button>
 
     <script>
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('Dream World ready for offline'))
+                .catch(err => console.log('SW registration failed'));
+        }
+
+        // Install prompt handling
+        let deferredPrompt;
+        const installBtn = document.getElementById('install-prompt');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.style.display = 'block';
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                deferredPrompt = null;
+                installBtn.style.display = 'none';
+            }
+        });
+
         // Dream World Engine
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
+        const gyroIndicator = document.getElementById('gyro-indicator');
 
         let width, height;
         let time = 0;
@@ -90,6 +174,8 @@
         let targetMouseX = 0.5;
         let targetMouseY = 0.5;
         let dreamPhase = 0;
+        let useGyro = false;
+        let gyroX = 0, gyroY = 0;
 
         // Resize handler
         function resize() {
@@ -99,7 +185,7 @@
         resize();
         window.addEventListener('resize', resize);
 
-        // Mouse tracking
+        // Mouse tracking (desktop)
         document.addEventListener('mousemove', (e) => {
             targetMouseX = e.clientX / width;
             targetMouseY = e.clientY / height;
@@ -108,6 +194,75 @@
         document.addEventListener('click', () => {
             dreamPhase += Math.PI * 0.5;
         });
+
+        // Touch tracking (mobile)
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            targetMouseX = touch.clientX / width;
+            targetMouseY = touch.clientY / height;
+        }, { passive: false });
+
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            targetMouseX = touch.clientX / width;
+            targetMouseY = touch.clientY / height;
+        }, { passive: false });
+
+        canvas.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            dreamPhase += Math.PI * 0.5;
+        }, { passive: false });
+
+        // Multi-touch for dream shift
+        canvas.addEventListener('touchstart', (e) => {
+            if (e.touches.length >= 2) {
+                dreamPhase += Math.PI;
+            }
+        }, { passive: false });
+
+        // Gyroscope/Device orientation (mobile)
+        function enableGyro() {
+            if (typeof DeviceOrientationEvent !== 'undefined' &&
+                typeof DeviceOrientationEvent.requestPermission === 'function') {
+                // iOS 13+ requires permission
+                DeviceOrientationEvent.requestPermission()
+                    .then(response => {
+                        if (response === 'granted') {
+                            window.addEventListener('deviceorientation', handleOrientation);
+                            useGyro = true;
+                            gyroIndicator.style.display = 'block';
+                        }
+                    })
+                    .catch(console.error);
+            } else if ('DeviceOrientationEvent' in window) {
+                // Android and older iOS
+                window.addEventListener('deviceorientation', handleOrientation);
+                useGyro = true;
+                gyroIndicator.style.display = 'block';
+            }
+        }
+
+        function handleOrientation(e) {
+            if (e.gamma !== null && e.beta !== null) {
+                // gamma: left-right tilt (-90 to 90)
+                // beta: front-back tilt (-180 to 180)
+                gyroX = (e.gamma + 90) / 180; // normalize to 0-1
+                gyroY = (e.beta + 90) / 180; // normalize to 0-1
+                gyroX = Math.max(0, Math.min(1, gyroX));
+                gyroY = Math.max(0, Math.min(1, gyroY));
+            }
+        }
+
+        // Try to enable gyro on first touch
+        let gyroEnabled = false;
+        document.addEventListener('touchstart', () => {
+            if (!gyroEnabled) {
+                enableGyro();
+                gyroEnabled = true;
+            }
+        }, { once: true });
 
         // Noise functions for organic movement
         function noise(x, y, z) {
@@ -181,7 +336,7 @@
                 this.z -= 1 + mouseY * 2;
                 this.rotation += this.rotationSpeed;
 
-                // Mouse influence
+                // Mouse/touch influence
                 const dx = (mouseX * width - this.x) * 0.001;
                 const dy = (mouseY * height - this.y) * 0.001;
                 this.x += dx * 2;
@@ -288,7 +443,7 @@
 
             draw() {
                 const points = [];
-                const segments = 100;
+                const segments = Math.min(100, Math.floor(width / 10)); // Optimize for mobile
 
                 for (let i = 0; i <= segments; i++) {
                     const x = (i / segments) * width;
@@ -347,7 +502,7 @@
                 this.y += this.speedY + Math.cos(noiseVal * Math.PI * 2) * 0.3;
                 this.life -= this.decay;
 
-                // Attracted to mouse
+                // Attracted to touch/mouse
                 const dx = mouseX * width - this.x;
                 const dy = mouseY * height - this.y;
                 const dist = Math.sqrt(dx * dx + dy * dy);
@@ -370,9 +525,14 @@
             }
         }
 
-        // Initialize entities
+        // Initialize entities (reduced counts for mobile performance)
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        const formCount = isMobile ? 12 : 20;
+        const particleCount = isMobile ? 80 : 150;
+        const starCount = isMobile ? 100 : 200;
+
         const forms = [];
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < formCount; i++) {
             forms.push(new FloatingForm());
         }
 
@@ -383,13 +543,13 @@
         ];
 
         const particles = [];
-        for (let i = 0; i < 150; i++) {
+        for (let i = 0; i < particleCount; i++) {
             particles.push(new Particle());
         }
 
         // Stars
         const stars = [];
-        for (let i = 0; i < 200; i++) {
+        for (let i = 0; i < starCount; i++) {
             stars.push({
                 x: Math.random() * width,
                 y: Math.random() * height * 0.6,
@@ -405,7 +565,13 @@
             lastTime = currentTime;
             time += dt;
 
-            // Smooth mouse following
+            // Use gyroscope if available, otherwise touch/mouse
+            if (useGyro) {
+                targetMouseX = gyroX;
+                targetMouseY = gyroY;
+            }
+
+            // Smooth following
             mouseX += (targetMouseX - mouseX) * 0.05;
             mouseY += (targetMouseY - mouseY) * 0.05;
 
@@ -483,10 +649,12 @@
             ctx.fillStyle = fogGradient;
             ctx.fillRect(0, 0, width, height);
 
-            // Subtle scan lines for dreamy effect
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.03)';
-            for (let y = 0; y < height; y += 4) {
-                ctx.fillRect(0, y, width, 2);
+            // Subtle scan lines for dreamy effect (skip on mobile for performance)
+            if (!isMobile) {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.03)';
+                for (let y = 0; y < height; y += 4) {
+                    ctx.fillRect(0, y, width, 2);
+                }
             }
 
             requestAnimationFrame(animate);
