@@ -2,16 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1e3a5f">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Dream World">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#1a1025">
-    <meta name="description" content="Experience the ever-changing nature of the 4th dimensional dream world">
+    <title>KalexConcrete Estimator - AI-Powered Bidding</title>
     <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="icon.svg">
-    <title>The Fourth Dimension - Dream World</title>
+
+    <!-- SheetJS for Excel support -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+
     <style>
         * {
             margin: 0;
@@ -19,649 +21,2226 @@
             box-sizing: border-box;
         }
 
-        html, body {
-            overflow: hidden;
-            background: #0a0a0f;
-            font-family: 'Courier New', monospace;
-            touch-action: none;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-            position: fixed;
-            width: 100%;
-            height: 100%;
+        :root {
+            --primary: #1e3a5f;
+            --primary-light: #2d5a87;
+            --primary-dark: #0f1f33;
+            --accent: #f59e0b;
+            --accent-hover: #d97706;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
         }
 
-        #canvas {
-            position: fixed;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            touch-action: none;
+            z-index: 100;
         }
 
-        #overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            background: radial-gradient(ellipse at center, transparent 0%, rgba(5, 5, 15, 0.4) 100%);
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
-        #title {
-            position: fixed;
-            top: max(30px, env(safe-area-inset-top));
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(180, 160, 220, 0.6);
-            font-size: 12px;
-            letter-spacing: 6px;
-            text-transform: uppercase;
-            pointer-events: none;
-            text-shadow: 0 0 20px rgba(140, 100, 200, 0.5);
-            animation: breathe 4s ease-in-out infinite;
-            text-align: center;
-            width: 90%;
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
         }
 
-        #hint {
-            position: fixed;
-            bottom: max(30px, env(safe-area-inset-bottom));
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(140, 120, 180, 0.4);
-            font-size: 10px;
-            letter-spacing: 2px;
-            pointer-events: none;
-            animation: fade 6s ease-in-out infinite;
-            text-align: center;
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--accent);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
         }
 
-        #install-prompt {
-            display: none;
-            position: fixed;
-            bottom: max(80px, calc(env(safe-area-inset-bottom) + 50px));
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(60, 40, 100, 0.8);
-            color: rgba(200, 180, 255, 0.9);
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: 12px;
-            letter-spacing: 1px;
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.625rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.875rem;
             cursor: pointer;
-            border: 1px solid rgba(140, 100, 200, 0.3);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            z-index: 1000;
+            transition: all 0.2s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        #install-prompt:active {
-            background: rgba(80, 60, 140, 0.9);
+        .btn-primary {
+            background: var(--accent);
+            color: var(--primary-dark);
         }
 
-        @keyframes breathe {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 0.9; }
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
         }
 
-        @keyframes fade {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 0.15; }
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
-        /* Gyroscope indicator */
-        #gyro-indicator {
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            opacity: 0.9;
+        }
+
+        /* Main Layout */
+        .main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 1024px) {
+            .main {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Drop Zone */
+        .drop-zone {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+
+        .drop-zone:hover, .drop-zone.drag-over {
+            border-color: var(--accent);
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+        }
+
+        .drop-zone-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .drop-zone-text {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .drop-zone-subtext {
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+
+        .file-input {
             display: none;
-            position: fixed;
-            top: max(60px, calc(env(safe-area-inset-top) + 30px));
-            right: 20px;
+        }
+
+        /* Uploaded Files */
+        .uploaded-files {
+            margin-top: 1rem;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: var(--bg);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        .file-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .file-icon.excel {
+            background: #217346;
+        }
+
+        .file-icon.pdf {
+            background: #dc2626;
+        }
+
+        .file-icon.image {
+            background: #7c3aed;
+        }
+
+        .file-info {
+            flex: 1;
+        }
+
+        .file-name {
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .file-size {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        .file-remove {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            padding: 0.5rem;
+            font-size: 1.25rem;
+        }
+
+        /* Form Elements */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.375rem;
+            color: var(--text);
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 0.625rem 0.875rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9375rem;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-light);
+        }
+
+        /* Estimation Sections */
+        .estimate-section {
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .estimate-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .estimate-section-title {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .estimate-section-toggle {
+            font-size: 1.25rem;
+            transition: transform 0.3s;
+        }
+
+        .estimate-section.collapsed .estimate-section-toggle {
+            transform: rotate(-90deg);
+        }
+
+        .estimate-section.collapsed .estimate-section-content {
+            display: none;
+        }
+
+        .estimate-section-content {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Line Items Table */
+        .line-items-wrapper {
+            overflow-x: auto;
+        }
+
+        .line-items {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+            min-width: 600px;
+        }
+
+        .line-items th {
+            text-align: left;
+            padding: 0.5rem;
+            font-weight: 600;
+            color: var(--text-light);
+            border-bottom: 2px solid var(--border);
+        }
+
+        .line-items td {
+            padding: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .line-items .amount {
+            text-align: right;
+            font-family: 'SF Mono', Monaco, monospace;
+        }
+
+        .line-items input, .line-items select {
+            width: 100%;
+            padding: 0.375rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+
+        .line-items input:focus, .line-items select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .add-line-btn {
+            width: 100%;
+            padding: 0.5rem;
+            background: none;
+            border: 1px dashed var(--border);
+            border-radius: 4px;
+            color: var(--text-light);
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .add-line-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* AI Panel */
+        .ai-panel {
+            position: sticky;
+            top: 80px;
+        }
+
+        .ai-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: #065f46;
+        }
+
+        .ai-status.warning {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            color: #92400e;
+        }
+
+        .ai-status.error {
+            background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+            color: #991b1b;
+        }
+
+        .ai-status-dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: rgba(140, 200, 255, 0.6);
-            box-shadow: 0 0 10px rgba(140, 200, 255, 0.4);
+            background: currentColor;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* AI Suggestions */
+        .ai-suggestions {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .ai-suggestion {
+            padding: 0.75rem;
+            background: var(--bg);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border-left: 3px solid var(--primary);
+        }
+
+        .ai-suggestion.warning {
+            border-left-color: var(--warning);
+        }
+
+        .ai-suggestion.success {
+            border-left-color: var(--success);
+        }
+
+        .ai-suggestion-title {
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .ai-suggestion-text {
+            font-size: 0.8125rem;
+            color: var(--text-light);
+        }
+
+        /* Summary */
+        .summary-grid {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+        }
+
+        .summary-row.total {
+            border-top: 2px solid var(--primary);
+            padding-top: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .summary-label {
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .summary-value {
+            font-weight: 700;
+            font-family: 'SF Mono', Monaco, monospace;
+        }
+
+        .summary-row.total .summary-label,
+        .summary-row.total .summary-value {
+            font-size: 1.25rem;
+            color: var(--text);
+        }
+
+        /* Excel Preview */
+        .excel-preview {
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+
+        .excel-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.75rem;
+        }
+
+        .excel-table th, .excel-table td {
+            padding: 0.375rem 0.5rem;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+
+        .excel-table th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .excel-table tr:nth-child(even) {
+            background: var(--bg);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0.25rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 0.75rem 1.25rem;
+            background: none;
+            border: none;
+            font-weight: 600;
+            color: var(--text-light);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            color: var(--primary);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        .tab:hover:not(.active) {
+            color: var(--text);
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 1000;
+        }
+
+        .toast {
+            background: var(--text);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .toast.success {
+            background: var(--success);
+        }
+
+        .toast.warning {
+            background: var(--warning);
+            color: var(--text);
+        }
+
+        .toast.error {
+            background: var(--danger);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 640px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .main {
+                padding: 1rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .drop-zone {
+                padding: 2rem 1rem;
+            }
+
+            .card {
+                padding: 1rem;
+            }
+
+            .btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .header, .ai-panel, .drop-zone, .btn, .add-line-btn, .file-remove {
+                display: none !important;
+            }
+
+            .main {
+                display: block;
+                max-width: none;
+            }
+
+            .card {
+                box-shadow: none;
+                break-inside: avoid;
+            }
+
+            .estimate-section.collapsed .estimate-section-content {
+                display: block !important;
+            }
+        }
+
+        /* API Key Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
         }
     </style>
 </head>
 <body>
-    <canvas id="canvas"></canvas>
-    <div id="overlay"></div>
-    <div id="title">The Fourth Dimension</div>
-    <div id="hint">touch to drift through the dream</div>
-    <div id="gyro-indicator"></div>
-    <button id="install-prompt">Install Dream World</button>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">&#x1F3D7;</div>
+                <span>KalexConcrete Estimator</span>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="newEstimate()">
+                    <span>+</span> New Estimate
+                </button>
+                <button class="btn btn-secondary" onclick="document.getElementById('excelImportInput').click()">
+                    <span>&#x1F4C2;</span> Import Excel
+                </button>
+                <input type="file" id="excelImportInput" style="display:none" accept=".xlsx,.xls,.csv" onchange="handleExcelImport(this.files)">
+                <button class="btn btn-secondary" onclick="exportToExcel()">
+                    <span>&#x1F4CA;</span> Export Excel
+                </button>
+                <button class="btn btn-primary" onclick="runAICheck()">
+                    <span>&#x1F916;</span> AI Check
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="content-area">
+            <!-- Drop Zone -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">&#x1F4C1; Import Files</h2>
+                    <span style="color: var(--text-light); font-size: 0.875rem;">Excel (.xlsx, .xls, .csv)</span>
+                </div>
+
+                <div class="drop-zone" id="dropZone">
+                    <div class="drop-zone-icon">&#x1F4C2;</div>
+                    <div class="drop-zone-text">Drag & Drop Excel Files Here</div>
+                    <div class="drop-zone-subtext">or click to browse - Supports .xlsx, .xls, .csv</div>
+                    <input type="file" class="file-input" id="fileInput" multiple accept=".xlsx,.xls,.csv">
+                </div>
+
+                <div class="uploaded-files" id="uploadedFiles"></div>
+            </div>
+
+            <!-- Project Info -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">&#x1F4CB; Project Information</h2>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Project Name</label>
+                        <input type="text" class="form-input" id="projectName" placeholder="Enter project name">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Client Name</label>
+                        <input type="text" class="form-input" id="clientName" placeholder="Client name">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Project Address</label>
+                        <input type="text" class="form-input" id="projectAddress" placeholder="Address">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Bid Date</label>
+                        <input type="date" class="form-input" id="bidDate">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Estimation Sections -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">&#x1F4D0; Estimate Builder</h2>
+                </div>
+
+                <div class="tabs" id="estimateTabs">
+                    <button class="tab active" data-tab="concrete">Concrete</button>
+                    <button class="tab" data-tab="labor">Labor</button>
+                    <button class="tab" data-tab="equipment">Equipment</button>
+                    <button class="tab" data-tab="other">Other</button>
+                </div>
+
+                <!-- Concrete Section -->
+                <div id="concreteTab" class="tab-content">
+                    <div class="estimate-section" id="slabsSection">
+                        <div class="estimate-section-header" onclick="toggleSection('slabsSection')">
+                            <span class="estimate-section-title">&#x1F9F1; Slabs & Flatwork</span>
+                            <span class="estimate-section-toggle">&#x25BC;</span>
+                        </div>
+                        <div class="estimate-section-content">
+                            <div class="line-items-wrapper">
+                                <table class="line-items">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 30%">Description</th>
+                                            <th style="width: 15%">Quantity</th>
+                                            <th style="width: 15%">Unit</th>
+                                            <th style="width: 15%">Rate</th>
+                                            <th style="width: 20%">Amount</th>
+                                            <th style="width: 5%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="slabsItems">
+                                        <tr>
+                                            <td><input type="text" value="4&quot; Concrete Slab" data-field="desc"></td>
+                                            <td><input type="number" value="0" data-field="qty" onchange="calculateLine(this)"></td>
+                                            <td>
+                                                <select data-field="unit">
+                                                    <option value="SF">SF</option>
+                                                    <option value="SY">SY</option>
+                                                    <option value="CY">CY</option>
+                                                    <option value="LF">LF</option>
+                                                </select>
+                                            </td>
+                                            <td><input type="number" value="8.50" step="0.01" data-field="rate" onchange="calculateLine(this)"></td>
+                                            <td class="amount">$0.00</td>
+                                            <td><button class="file-remove" onclick="removeLine(this)">x</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button class="add-line-btn" onclick="addLine('slabsItems')">+ Add Line Item</button>
+                        </div>
+                    </div>
+
+                    <div class="estimate-section" id="footingsSection">
+                        <div class="estimate-section-header" onclick="toggleSection('footingsSection')">
+                            <span class="estimate-section-title">&#x1F3DB; Footings & Foundations</span>
+                            <span class="estimate-section-toggle">&#x25BC;</span>
+                        </div>
+                        <div class="estimate-section-content">
+                            <div class="line-items-wrapper">
+                                <table class="line-items">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 30%">Description</th>
+                                            <th style="width: 15%">Quantity</th>
+                                            <th style="width: 15%">Unit</th>
+                                            <th style="width: 15%">Rate</th>
+                                            <th style="width: 20%">Amount</th>
+                                            <th style="width: 5%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="footingsItems">
+                                        <tr>
+                                            <td><input type="text" value="Continuous Footing 24&quot;x12&quot;" data-field="desc"></td>
+                                            <td><input type="number" value="0" data-field="qty" onchange="calculateLine(this)"></td>
+                                            <td>
+                                                <select data-field="unit">
+                                                    <option value="LF">LF</option>
+                                                    <option value="CY">CY</option>
+                                                    <option value="EA">EA</option>
+                                                </select>
+                                            </td>
+                                            <td><input type="number" value="45.00" step="0.01" data-field="rate" onchange="calculateLine(this)"></td>
+                                            <td class="amount">$0.00</td>
+                                            <td><button class="file-remove" onclick="removeLine(this)">x</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button class="add-line-btn" onclick="addLine('footingsItems')">+ Add Line Item</button>
+                        </div>
+                    </div>
+
+                    <div class="estimate-section" id="wallsSection">
+                        <div class="estimate-section-header" onclick="toggleSection('wallsSection')">
+                            <span class="estimate-section-title">&#x1F9F1; Walls & Stem Walls</span>
+                            <span class="estimate-section-toggle">&#x25BC;</span>
+                        </div>
+                        <div class="estimate-section-content">
+                            <div class="line-items-wrapper">
+                                <table class="line-items">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 30%">Description</th>
+                                            <th style="width: 15%">Quantity</th>
+                                            <th style="width: 15%">Unit</th>
+                                            <th style="width: 15%">Rate</th>
+                                            <th style="width: 20%">Amount</th>
+                                            <th style="width: 5%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="wallsItems">
+                                        <tr>
+                                            <td><input type="text" value="8&quot; Concrete Wall" data-field="desc"></td>
+                                            <td><input type="number" value="0" data-field="qty" onchange="calculateLine(this)"></td>
+                                            <td>
+                                                <select data-field="unit">
+                                                    <option value="SF">SF</option>
+                                                    <option value="LF">LF</option>
+                                                    <option value="CY">CY</option>
+                                                </select>
+                                            </td>
+                                            <td><input type="number" value="35.00" step="0.01" data-field="rate" onchange="calculateLine(this)"></td>
+                                            <td class="amount">$0.00</td>
+                                            <td><button class="file-remove" onclick="removeLine(this)">x</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button class="add-line-btn" onclick="addLine('wallsItems')">+ Add Line Item</button>
+                        </div>
+                    </div>
+
+                    <div class="estimate-section" id="materialsSection">
+                        <div class="estimate-section-header" onclick="toggleSection('materialsSection')">
+                            <span class="estimate-section-title">&#x1FAA8; Materials</span>
+                            <span class="estimate-section-toggle">&#x25BC;</span>
+                        </div>
+                        <div class="estimate-section-content">
+                            <div class="line-items-wrapper">
+                                <table class="line-items">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 30%">Description</th>
+                                            <th style="width: 15%">Quantity</th>
+                                            <th style="width: 15%">Unit</th>
+                                            <th style="width: 15%">Rate</th>
+                                            <th style="width: 20%">Amount</th>
+                                            <th style="width: 5%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="materialsItems">
+                                        <tr>
+                                            <td><input type="text" value="3000 PSI Concrete" data-field="desc"></td>
+                                            <td><input type="number" value="0" data-field="qty" onchange="calculateLine(this)"></td>
+                                            <td>
+                                                <select data-field="unit">
+                                                    <option value="CY">CY</option>
+                                                    <option value="EA">EA</option>
+                                                </select>
+                                            </td>
+                                            <td><input type="number" value="165.00" step="0.01" data-field="rate" onchange="calculateLine(this)"></td>
+                                            <td class="amount">$0.00</td>
+                                            <td><button class="file-remove" onclick="removeLine(this)">x</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" value="Rebar #4" data-field="desc"></td>
+                                            <td><input type="number" value="0" data-field="qty" onchange="calculateLine(this)"></td>
+                                            <td>
+                                                <select data-field="unit">
+                                                    <option value="LF">LF</option>
+                                                    <option value="TON">TON</option>
+                                                    <option value="LB">LB</option>
+                                                </select>
+                                            </td>
+                                            <td><input type="number" value="1.25" step="0.01" data-field="rate" onchange="calculateLine(this)"></td>
+                                            <td class="amount">$0.00</td>
+                                            <td><button class="file-remove" onclick="removeLine(this)">x</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" value="Wire Mesh 6x6 W1.4" data-field="desc"></td>
+                                            <td><input type="number" value="0" data-field="qty" onchange="calculateLine(this)"></td>
+                                            <td>
+                                                <select data-field="unit">
+                                                    <option value="SF">SF</option>
+                                                    <option value="SHT">SHT</option>
+                                                </select>
+                                            </td>
+                                            <td><input type="number" value="0.45" step="0.01" data-field="rate" onchange="calculateLine(this)"></td>
+                                            <td class="amount">$0.00</td>
+                                            <td><button class="file-remove" onclick="removeLine(this)">x</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" value="Form Lumber/Plywood" data-field="desc"></td>
+                                            <td><input type="number" value="0" data-field="qty" onchange="calculateLine(this)"></td>
+                                            <td>
+                                                <select data-field="unit">
+                                                    <option value="SF">SF</option>
+                                                    <option value="LF">LF</option>
+                                                    <option value="EA">EA</option>
+                                                </select>
+                                            </td>
+                                            <td><input type="number" value="3.50" step="0.01" data-field="rate" onchange="calculateLine(this)"></td>
+                                            <td class="amount">$0.00</td>
+                                            <td><button class="file-remove" onclick="removeLine(this)">x</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button class="add-line-btn" onclick="addLine('materialsItems')">+ Add Line Item</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Labor Section -->
+                <div id="laborTab" class="tab-content" style="display: none;">
+                    <div class="estimate-section" id="laborSection">
+                        <div class="estimate-section-header" onclick="toggleSection('laborSection')">
+                            <span class="estimate-section-title">&#x1F477; Labor Costs</span>
+                            <span class="estimate-section-toggle">&#x25BC;</span>
+                        </div>
+                        <div class="estimate-section-content">
+                            <div class="line-items-wrapper">
+                                <table class="line-items">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 30%">Description</th>
+                                            <th style="width: 15%">Hours</th>
+                                            <th style="width: 15%">Workers</th>
+                                            <th style="width: 15%">Rate/Hr</th>
+                                            <th style="width: 20%">Amount</th>
+                                            <th style="width: 5%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="laborItems">
+                                        <tr>
+                                            <td><input type="text" value="Foreman" data-field="desc"></td>
+                                            <td><input type="number" value="0" data-field="qty" onchange="calculateLaborLine(this)"></td>
+                                            <td><input type="number" value="1" data-field="workers" onchange="calculateLaborLine(this)"></td>
+                                            <td><input type="number" value="65.00" step="0.01" data-field="rate" onchange="calculateLaborLine(this)"></td>
+                                            <td class="amount">$0.00</td>
+                                            <td><button class="file-remove" onclick="removeLine(this)">x</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" value="Finisher" data-field="desc"></td>
+                                            <td><input type="number" value="0" data-field="qty" onchange="calculateLaborLine(this)"></td>
+                                            <td><input type="number" value="2" data-field="workers" onchange="calculateLaborLine(this)"></td>
+                                            <td><input type="number" value="55.00" step="0.01" data-field="rate" onchange="calculateLaborLine(this)"></td>
+                                            <td class="amount">$0.00</td>
+                                            <td><button class="file-remove" onclick="removeLine(this)">x</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" value="Laborer" data-field="desc"></td>
+                                            <td><input type="number" value="0" data-field="qty" onchange="calculateLaborLine(this)"></td>
+                                            <td><input type="number" value="3" data-field="workers" onchange="calculateLaborLine(this)"></td>
+                                            <td><input type="number" value="35.00" step="0.01" data-field="rate" onchange="calculateLaborLine(this)"></td>
+                                            <td class="amount">$0.00</td>
+                                            <td><button class="file-remove" onclick="removeLine(this)">x</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button class="add-line-btn" onclick="addLaborLine('laborItems')">+ Add Labor Item</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Equipment Section -->
+                <div id="equipmentTab" class="tab-content" style="display: none;">
+                    <div class="estimate-section" id="equipmentSection">
+                        <div class="estimate-section-header" onclick="toggleSection('equipmentSection')">
+                            <span class="estimate-section-title">&#x1F69C; Equipment</span>
+                            <span class="estimate-section-toggle">&#x25BC;</span>
+                        </div>
+                        <div class="estimate-section-content">
+                            <div class="line-items-wrapper">
+                                <table class="line-items">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 30%">Description</th>
+                                            <th style="width: 15%">Days</th>
+                                            <th style="width: 15%">Unit</th>
+                                            <th style="width: 15%">Daily Rate</th>
+                                            <th style="width: 20%">Amount</th>
+                                            <th style="width: 5%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="equipmentItems">
+                                        <tr>
+                                            <td><input type="text" value="Concrete Pump Truck" data-field="desc"></td>
+                                            <td><input type="number" value="0" data-field="qty" onchange="calculateLine(this)"></td>
+                                            <td>
+                                                <select data-field="unit">
+                                                    <option value="DAY">DAY</option>
+                                                    <option value="HR">HR</option>
+                                                    <option value="EA">EA</option>
+                                                </select>
+                                            </td>
+                                            <td><input type="number" value="1500.00" step="0.01" data-field="rate" onchange="calculateLine(this)"></td>
+                                            <td class="amount">$0.00</td>
+                                            <td><button class="file-remove" onclick="removeLine(this)">x</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" value="Bobcat/Skid Steer" data-field="desc"></td>
+                                            <td><input type="number" value="0" data-field="qty" onchange="calculateLine(this)"></td>
+                                            <td>
+                                                <select data-field="unit">
+                                                    <option value="DAY">DAY</option>
+                                                    <option value="HR">HR</option>
+                                                </select>
+                                            </td>
+                                            <td><input type="number" value="350.00" step="0.01" data-field="rate" onchange="calculateLine(this)"></td>
+                                            <td class="amount">$0.00</td>
+                                            <td><button class="file-remove" onclick="removeLine(this)">x</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" value="Power Trowel" data-field="desc"></td>
+                                            <td><input type="number" value="0" data-field="qty" onchange="calculateLine(this)"></td>
+                                            <td>
+                                                <select data-field="unit">
+                                                    <option value="DAY">DAY</option>
+                                                    <option value="HR">HR</option>
+                                                </select>
+                                            </td>
+                                            <td><input type="number" value="150.00" step="0.01" data-field="rate" onchange="calculateLine(this)"></td>
+                                            <td class="amount">$0.00</td>
+                                            <td><button class="file-remove" onclick="removeLine(this)">x</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button class="add-line-btn" onclick="addLine('equipmentItems')">+ Add Equipment Item</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Other Section -->
+                <div id="otherTab" class="tab-content" style="display: none;">
+                    <div class="estimate-section" id="otherSection">
+                        <div class="estimate-section-header" onclick="toggleSection('otherSection')">
+                            <span class="estimate-section-title">&#x1F4E6; Other Costs</span>
+                            <span class="estimate-section-toggle">&#x25BC;</span>
+                        </div>
+                        <div class="estimate-section-content">
+                            <div class="line-items-wrapper">
+                                <table class="line-items">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 30%">Description</th>
+                                            <th style="width: 15%">Quantity</th>
+                                            <th style="width: 15%">Unit</th>
+                                            <th style="width: 15%">Rate</th>
+                                            <th style="width: 20%">Amount</th>
+                                            <th style="width: 5%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="otherItems">
+                                        <tr>
+                                            <td><input type="text" value="Permits & Fees" data-field="desc"></td>
+                                            <td><input type="number" value="1" data-field="qty" onchange="calculateLine(this)"></td>
+                                            <td>
+                                                <select data-field="unit">
+                                                    <option value="LS">LS</option>
+                                                    <option value="EA">EA</option>
+                                                </select>
+                                            </td>
+                                            <td><input type="number" value="500.00" step="0.01" data-field="rate" onchange="calculateLine(this)"></td>
+                                            <td class="amount">$500.00</td>
+                                            <td><button class="file-remove" onclick="removeLine(this)">x</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" value="Mobilization" data-field="desc"></td>
+                                            <td><input type="number" value="1" data-field="qty" onchange="calculateLine(this)"></td>
+                                            <td>
+                                                <select data-field="unit">
+                                                    <option value="LS">LS</option>
+                                                </select>
+                                            </td>
+                                            <td><input type="number" value="750.00" step="0.01" data-field="rate" onchange="calculateLine(this)"></td>
+                                            <td class="amount">$750.00</td>
+                                            <td><button class="file-remove" onclick="removeLine(this)">x</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button class="add-line-btn" onclick="addLine('otherItems')">+ Add Item</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Excel Import Preview -->
+            <div class="card" id="excelPreviewCard" style="display: none;">
+                <div class="card-header">
+                    <h2 class="card-title">&#x1F4CA; Imported Excel Data</h2>
+                    <button class="btn btn-primary" onclick="applyExcelData()">Apply to Estimate</button>
+                </div>
+                <div class="excel-preview" id="excelPreview"></div>
+            </div>
+        </div>
+
+        <!-- AI Panel (Sidebar) -->
+        <div class="ai-panel">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">&#x1F916; AI Assistant</h2>
+                </div>
+
+                <div class="ai-status" id="aiStatus">
+                    <span class="ai-status-dot"></span>
+                    <span>AI Ready - Click "AI Check" to validate</span>
+                </div>
+
+                <div class="ai-suggestions" id="aiSuggestions">
+                    <div class="ai-suggestion">
+                        <div class="ai-suggestion-title">Welcome!</div>
+                        <div class="ai-suggestion-text">Import your Excel files or enter quantities, then click "AI Check" to validate your estimate against industry standards.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">&#x1F4B0; Estimate Summary</h2>
+                </div>
+
+                <div class="summary-grid">
+                    <div class="summary-row">
+                        <span class="summary-label">Concrete Work</span>
+                        <span class="summary-value" id="sumConcrete">$0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Labor</span>
+                        <span class="summary-value" id="sumLabor">$0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Equipment</span>
+                        <span class="summary-value" id="sumEquipment">$0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Other</span>
+                        <span class="summary-value" id="sumOther">$0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Subtotal</span>
+                        <span class="summary-value" id="sumSubtotal">$0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">
+                            Overhead (<input type="number" id="overheadPct" value="10" style="width:50px;padding:2px 5px;border:1px solid var(--border);border-radius:4px;" onchange="updateTotals()">%)
+                        </span>
+                        <span class="summary-value" id="sumOverhead">$0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">
+                            Profit (<input type="number" id="profitPct" value="15" style="width:50px;padding:2px 5px;border:1px solid var(--border);border-radius:4px;" onchange="updateTotals()">%)
+                        </span>
+                        <span class="summary-value" id="sumProfit">$0.00</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span class="summary-label">TOTAL BID</span>
+                        <span class="summary-value" id="sumTotal">$0.00</span>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <button class="btn btn-success" style="flex:1;" onclick="exportToExcel()">&#x1F4CA; Export Excel</button>
+                    <button class="btn btn-secondary" style="flex:1; background: var(--primary); color: white;" onclick="window.print()">&#x1F5A8; Print</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- API Key Modal -->
+    <div class="modal-overlay" id="apiKeyModal">
+        <div class="modal">
+            <h3 class="modal-title">Configure AI API Key (Optional)</h3>
+            <p style="color: var(--text-light); margin-bottom: 1rem;">Enter your OpenAI API key for enhanced AI validation. Leave blank to use built-in analysis.</p>
+            <div class="form-group">
+                <label class="form-label">API Key</label>
+                <input type="password" class="form-input" id="apiKeyInput" placeholder="sk-...">
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeApiKeyModal()" style="background: var(--bg); color: var(--text);">Cancel</button>
+                <button class="btn btn-primary" onclick="saveApiKey()">Save</button>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // Register Service Worker for PWA
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js')
-                .then(reg => console.log('Dream World ready for offline'))
-                .catch(err => console.log('SW registration failed'));
+        // =============================================
+        // GLOBAL STATE
+        // =============================================
+        let uploadedFiles = [];
+        let excelData = null;
+        let excelSheets = {};
+        let aiApiKey = localStorage.getItem('aiApiKey') || '';
+
+        // =============================================
+        // INITIALIZATION
+        // =============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            initDropZone();
+            initTabs();
+            updateTotals();
+            document.getElementById('bidDate').valueAsDate = new Date();
+        });
+
+        // =============================================
+        // FILE DROP ZONE
+        // =============================================
+        function initDropZone() {
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('fileInput');
+
+            dropZone.addEventListener('click', () => fileInput.click());
+
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('drag-over');
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('drag-over');
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('drag-over');
+                handleFiles(e.dataTransfer.files);
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                handleFiles(e.target.files);
+            });
         }
 
-        // Install prompt handling
-        let deferredPrompt;
-        const installBtn = document.getElementById('install-prompt');
+        function handleFiles(files) {
+            for (const file of files) {
+                uploadedFiles.push(file);
+                displayFile(file);
 
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            installBtn.style.display = 'block';
-        });
-
-        installBtn.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                deferredPrompt = null;
-                installBtn.style.display = 'none';
+                if (file.name.match(/\.(xlsx|xls|csv)$/i)) {
+                    parseExcelFile(file);
+                }
             }
-        });
-
-        // Dream World Engine
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        const gyroIndicator = document.getElementById('gyro-indicator');
-
-        let width, height;
-        let time = 0;
-        let mouseX = 0.5;
-        let mouseY = 0.5;
-        let targetMouseX = 0.5;
-        let targetMouseY = 0.5;
-        let dreamPhase = 0;
-        let useGyro = false;
-        let gyroX = 0, gyroY = 0;
-
-        // Resize handler
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
         }
-        resize();
-        window.addEventListener('resize', resize);
 
-        // Mouse tracking (desktop)
-        document.addEventListener('mousemove', (e) => {
-            targetMouseX = e.clientX / width;
-            targetMouseY = e.clientY / height;
-        });
+        function handleExcelImport(files) {
+            handleFiles(files);
+        }
 
-        document.addEventListener('click', () => {
-            dreamPhase += Math.PI * 0.5;
-        });
+        function displayFile(file) {
+            const container = document.getElementById('uploadedFiles');
+            const fileExt = file.name.split('.').pop().toLowerCase();
 
-        // Touch tracking (mobile)
-        canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            const touch = e.touches[0];
-            targetMouseX = touch.clientX / width;
-            targetMouseY = touch.clientY / height;
-        }, { passive: false });
+            let iconClass = '';
+            let iconText = fileExt.toUpperCase();
 
-        canvas.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            const touch = e.touches[0];
-            targetMouseX = touch.clientX / width;
-            targetMouseY = touch.clientY / height;
-        }, { passive: false });
-
-        canvas.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            dreamPhase += Math.PI * 0.5;
-        }, { passive: false });
-
-        // Multi-touch for dream shift
-        canvas.addEventListener('touchstart', (e) => {
-            if (e.touches.length >= 2) {
-                dreamPhase += Math.PI;
+            if (['xlsx', 'xls', 'csv'].includes(fileExt)) {
+                iconClass = 'excel';
+            } else if (fileExt === 'pdf') {
+                iconClass = 'pdf';
+            } else if (['png', 'jpg', 'jpeg', 'gif'].includes(fileExt)) {
+                iconClass = 'image';
             }
-        }, { passive: false });
 
-        // Gyroscope/Device orientation (mobile)
-        function enableGyro() {
-            if (typeof DeviceOrientationEvent !== 'undefined' &&
-                typeof DeviceOrientationEvent.requestPermission === 'function') {
-                // iOS 13+ requires permission
-                DeviceOrientationEvent.requestPermission()
-                    .then(response => {
-                        if (response === 'granted') {
-                            window.addEventListener('deviceorientation', handleOrientation);
-                            useGyro = true;
-                            gyroIndicator.style.display = 'block';
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-item';
+            fileItem.innerHTML = `
+                <div class="file-icon ${iconClass}">${iconText}</div>
+                <div class="file-info">
+                    <div class="file-name">${file.name}</div>
+                    <div class="file-size">${formatFileSize(file.size)}</div>
+                </div>
+                <button class="file-remove" onclick="removeFile(this, '${file.name}')">x</button>
+            `;
+            container.appendChild(fileItem);
+        }
+
+        function removeFile(btn, fileName) {
+            uploadedFiles = uploadedFiles.filter(f => f.name !== fileName);
+            btn.closest('.file-item').remove();
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        }
+
+        // =============================================
+        // EXCEL PARSING
+        // =============================================
+        function parseExcelFile(file) {
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+
+                    // Store all sheets
+                    excelSheets = {};
+                    workbook.SheetNames.forEach(name => {
+                        excelSheets[name] = XLSX.utils.sheet_to_json(workbook.Sheets[name], { header: 1 });
+                    });
+
+                    // Get first sheet for preview
+                    const sheetName = workbook.SheetNames[0];
+                    excelData = excelSheets[sheetName];
+
+                    displayExcelPreview(excelData, sheetName, workbook.SheetNames);
+                    showToast(`Excel file parsed: ${workbook.SheetNames.length} sheet(s), ${excelData.length} rows`, 'success');
+
+                    // Try to auto-detect and apply data
+                    autoApplyExcelData(excelData);
+                } catch (err) {
+                    showToast('Error parsing Excel file: ' + err.message, 'error');
+                }
+            };
+
+            reader.readAsArrayBuffer(file);
+        }
+
+        function displayExcelPreview(data, sheetName, allSheets) {
+            const previewCard = document.getElementById('excelPreviewCard');
+            const preview = document.getElementById('excelPreview');
+
+            if (!data || data.length === 0) {
+                previewCard.style.display = 'none';
+                return;
+            }
+
+            previewCard.style.display = 'block';
+
+            let sheetSelector = '';
+            if (allSheets && allSheets.length > 1) {
+                sheetSelector = `<select onchange="switchSheet(this.value)" style="margin-left:1rem;padding:0.25rem 0.5rem;border-radius:4px;border:1px solid var(--border);">`;
+                allSheets.forEach(s => {
+                    sheetSelector += `<option value="${s}" ${s === sheetName ? 'selected' : ''}>${s}</option>`;
+                });
+                sheetSelector += '</select>';
+            }
+
+            let html = `<p style="margin-bottom: 0.5rem; color: var(--text-light);">Sheet: ${sheetName} ${sheetSelector}</p>`;
+            html += '<table class="excel-table"><thead><tr>';
+
+            const headers = data[0] || [];
+            headers.forEach((h, i) => {
+                html += `<th>${h || `Col ${i+1}`}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+
+            for (let i = 1; i < Math.min(data.length, 21); i++) {
+                html += '<tr>';
+                const row = data[i] || [];
+                headers.forEach((_, j) => {
+                    html += `<td>${row[j] !== undefined ? row[j] : ''}</td>`;
+                });
+                html += '</tr>';
+            }
+
+            if (data.length > 21) {
+                html += `<tr><td colspan="${headers.length}" style="text-align:center;color:var(--text-light);">... and ${data.length - 21} more rows</td></tr>`;
+            }
+
+            html += '</tbody></table>';
+            preview.innerHTML = html;
+        }
+
+        function switchSheet(sheetName) {
+            if (excelSheets[sheetName]) {
+                excelData = excelSheets[sheetName];
+                displayExcelPreview(excelData, sheetName, Object.keys(excelSheets));
+            }
+        }
+
+        function autoApplyExcelData(data) {
+            if (!data || data.length < 2) return;
+
+            const headers = data[0].map(h => String(h || '').toLowerCase());
+
+            const descIdx = headers.findIndex(h => h.includes('desc') || h.includes('item') || h.includes('name'));
+            const qtyIdx = headers.findIndex(h => h.includes('qty') || h.includes('quantity') || h.includes('amount'));
+            const unitIdx = headers.findIndex(h => h.includes('unit') || h.includes('uom'));
+            const rateIdx = headers.findIndex(h => h.includes('rate') || h.includes('price') || h.includes('cost') || h.includes('unit price'));
+
+            if (descIdx === -1) {
+                showToast('Could not auto-detect columns. Click "Apply to Estimate" to manually review.', 'warning');
+                return;
+            }
+
+            const tbody = document.getElementById('materialsItems');
+
+            while (tbody.children.length > 1) {
+                tbody.removeChild(tbody.lastChild);
+            }
+
+            let appliedCount = 0;
+            for (let i = 1; i < data.length; i++) {
+                const row = data[i];
+                if (!row || !row[descIdx]) continue;
+
+                const desc = row[descIdx] || '';
+                const qty = parseFloat(row[qtyIdx]) || 0;
+                const rate = parseFloat(row[rateIdx]) || 0;
+
+                if (i === 1) {
+                    const firstRow = tbody.children[0];
+                    firstRow.querySelector('[data-field="desc"]').value = desc;
+                    firstRow.querySelector('[data-field="qty"]').value = qty;
+                    firstRow.querySelector('[data-field="rate"]').value = rate;
+                    calculateLine(firstRow.querySelector('[data-field="qty"]'));
+                } else {
+                    addLine('materialsItems');
+                    const newRow = tbody.lastElementChild;
+                    newRow.querySelector('[data-field="desc"]').value = desc;
+                    newRow.querySelector('[data-field="qty"]').value = qty;
+                    newRow.querySelector('[data-field="rate"]').value = rate;
+                    calculateLine(newRow.querySelector('[data-field="qty"]'));
+                }
+                appliedCount++;
+            }
+
+            if (appliedCount > 0) {
+                showToast(`Applied ${appliedCount} items from Excel to Materials`, 'success');
+            }
+        }
+
+        function applyExcelData() {
+            if (!excelData) {
+                showToast('No Excel data to apply', 'warning');
+                return;
+            }
+            autoApplyExcelData(excelData);
+        }
+
+        // =============================================
+        // EXCEL EXPORT
+        // =============================================
+        function exportToExcel() {
+            const wb = XLSX.utils.book_new();
+
+            const projectInfo = [
+                ['KalexConcrete Estimate'],
+                [''],
+                ['Project Name', document.getElementById('projectName').value],
+                ['Client', document.getElementById('clientName').value],
+                ['Address', document.getElementById('projectAddress').value],
+                ['Bid Date', document.getElementById('bidDate').value],
+                ['Generated', new Date().toLocaleString()],
+                ['']
+            ];
+
+            const allItems = [];
+            allItems.push(['Category', 'Description', 'Quantity', 'Unit', 'Rate', 'Amount']);
+
+            gatherLineItems('slabsItems', 'Slabs & Flatwork', allItems);
+            gatherLineItems('footingsItems', 'Footings', allItems);
+            gatherLineItems('wallsItems', 'Walls', allItems);
+            gatherLineItems('materialsItems', 'Materials', allItems);
+            gatherLaborItems('laborItems', 'Labor', allItems);
+            gatherLineItems('equipmentItems', 'Equipment', allItems);
+            gatherLineItems('otherItems', 'Other', allItems);
+
+            const summary = [
+                [''],
+                ['SUMMARY'],
+                ['Concrete Work', '', '', '', '', document.getElementById('sumConcrete').textContent],
+                ['Labor', '', '', '', '', document.getElementById('sumLabor').textContent],
+                ['Equipment', '', '', '', '', document.getElementById('sumEquipment').textContent],
+                ['Other', '', '', '', '', document.getElementById('sumOther').textContent],
+                ['Subtotal', '', '', '', '', document.getElementById('sumSubtotal').textContent],
+                ['Overhead (' + document.getElementById('overheadPct').value + '%)', '', '', '', '', document.getElementById('sumOverhead').textContent],
+                ['Profit (' + document.getElementById('profitPct').value + '%)', '', '', '', '', document.getElementById('sumProfit').textContent],
+                [''],
+                ['TOTAL BID', '', '', '', '', document.getElementById('sumTotal').textContent]
+            ];
+
+            const wsData = [...projectInfo, ...allItems, ...summary];
+            const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+            ws['!cols'] = [
+                { wch: 20 },
+                { wch: 35 },
+                { wch: 12 },
+                { wch: 8 },
+                { wch: 12 },
+                { wch: 15 }
+            ];
+
+            XLSX.utils.book_append_sheet(wb, ws, 'Estimate');
+
+            // Add detailed breakdown sheet
+            const detailSheet = [];
+            detailSheet.push(['DETAILED BREAKDOWN']);
+            detailSheet.push(['']);
+
+            const sections = [
+                { name: 'Slabs & Flatwork', id: 'slabsItems' },
+                { name: 'Footings & Foundations', id: 'footingsItems' },
+                { name: 'Walls', id: 'wallsItems' },
+                { name: 'Materials', id: 'materialsItems' },
+                { name: 'Labor', id: 'laborItems', isLabor: true },
+                { name: 'Equipment', id: 'equipmentItems' },
+                { name: 'Other', id: 'otherItems' }
+            ];
+
+            sections.forEach(section => {
+                detailSheet.push([section.name]);
+                detailSheet.push(['Description', 'Qty', 'Unit', 'Rate', 'Amount']);
+
+                const tbody = document.getElementById(section.id);
+                if (tbody) {
+                    for (const row of tbody.children) {
+                        const desc = row.querySelector('[data-field="desc"]')?.value || '';
+                        const qty = row.querySelector('[data-field="qty"]')?.value || 0;
+                        const unit = row.querySelector('[data-field="unit"]')?.value || '';
+                        const rate = row.querySelector('[data-field="rate"]')?.value || 0;
+                        const amount = row.querySelector('.amount')?.textContent || '$0.00';
+
+                        if (section.isLabor) {
+                            const workers = row.querySelector('[data-field="workers"]')?.value || 1;
+                            detailSheet.push([desc, `${qty} hrs x ${workers}`, 'HR', rate, amount]);
+                        } else {
+                            detailSheet.push([desc, qty, unit, rate, amount]);
                         }
-                    })
-                    .catch(console.error);
-            } else if ('DeviceOrientationEvent' in window) {
-                // Android and older iOS
-                window.addEventListener('deviceorientation', handleOrientation);
-                useGyro = true;
-                gyroIndicator.style.display = 'block';
+                    }
+                }
+                detailSheet.push(['']);
+            });
+
+            const ws2 = XLSX.utils.aoa_to_sheet(detailSheet);
+            ws2['!cols'] = [{ wch: 35 }, { wch: 15 }, { wch: 8 }, { wch: 12 }, { wch: 15 }];
+            XLSX.utils.book_append_sheet(wb, ws2, 'Breakdown');
+
+            const projectName = document.getElementById('projectName').value || 'Estimate';
+            const date = new Date().toISOString().split('T')[0];
+            const fileName = `${projectName.replace(/[^a-z0-9]/gi, '_')}_${date}.xlsx`;
+
+            XLSX.writeFile(wb, fileName);
+            showToast('Excel file exported: ' + fileName, 'success');
+        }
+
+        function gatherLineItems(tbodyId, category, items) {
+            const tbody = document.getElementById(tbodyId);
+            if (!tbody) return;
+
+            for (const row of tbody.children) {
+                const desc = row.querySelector('[data-field="desc"]')?.value || '';
+                const qty = row.querySelector('[data-field="qty"]')?.value || 0;
+                const unit = row.querySelector('[data-field="unit"]')?.value || '';
+                const rate = row.querySelector('[data-field="rate"]')?.value || 0;
+                const amount = row.querySelector('.amount')?.textContent || '$0.00';
+
+                if (desc && parseFloat(qty) > 0) {
+                    items.push([category, desc, qty, unit, rate, amount]);
+                }
             }
         }
 
-        function handleOrientation(e) {
-            if (e.gamma !== null && e.beta !== null) {
-                // gamma: left-right tilt (-90 to 90)
-                // beta: front-back tilt (-180 to 180)
-                gyroX = (e.gamma + 90) / 180; // normalize to 0-1
-                gyroY = (e.beta + 90) / 180; // normalize to 0-1
-                gyroX = Math.max(0, Math.min(1, gyroX));
-                gyroY = Math.max(0, Math.min(1, gyroY));
+        function gatherLaborItems(tbodyId, category, items) {
+            const tbody = document.getElementById(tbodyId);
+            if (!tbody) return;
+
+            for (const row of tbody.children) {
+                const desc = row.querySelector('[data-field="desc"]')?.value || '';
+                const hours = row.querySelector('[data-field="qty"]')?.value || 0;
+                const workers = row.querySelector('[data-field="workers"]')?.value || 1;
+                const rate = row.querySelector('[data-field="rate"]')?.value || 0;
+                const amount = row.querySelector('.amount')?.textContent || '$0.00';
+
+                if (desc && parseFloat(hours) > 0) {
+                    items.push([category, desc, `${hours}hrs x ${workers}`, 'HR', rate, amount]);
+                }
             }
         }
 
-        // Try to enable gyro on first touch
-        let gyroEnabled = false;
-        document.addEventListener('touchstart', () => {
-            if (!gyroEnabled) {
-                enableGyro();
-                gyroEnabled = true;
-            }
-        }, { once: true });
+        // =============================================
+        // TABS
+        // =============================================
+        function initTabs() {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
 
-        // Noise functions for organic movement
-        function noise(x, y, z) {
-            const X = Math.floor(x) & 255;
-            const Y = Math.floor(y) & 255;
-            const Z = Math.floor(z) & 255;
-            x -= Math.floor(x);
-            y -= Math.floor(y);
-            z -= Math.floor(z);
-            const u = fade(x);
-            const v = fade(y);
-            const w = fade(z);
-            const A = p[X] + Y, AA = p[A] + Z, AB = p[A + 1] + Z;
-            const B = p[X + 1] + Y, BA = p[B] + Z, BB = p[B + 1] + Z;
-            return lerp(w, lerp(v, lerp(u, grad(p[AA], x, y, z), grad(p[BA], x - 1, y, z)),
-                lerp(u, grad(p[AB], x, y - 1, z), grad(p[BB], x - 1, y - 1, z))),
-                lerp(v, lerp(u, grad(p[AA + 1], x, y, z - 1), grad(p[BA + 1], x - 1, y, z - 1)),
-                lerp(u, grad(p[AB + 1], x, y - 1, z - 1), grad(p[BB + 1], x - 1, y - 1, z - 1))));
+                    document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+
+                    const tabId = tab.dataset.tab + 'Tab';
+                    document.getElementById(tabId).style.display = 'block';
+                });
+            });
         }
 
-        function fade(t) { return t * t * t * (t * (t * 6 - 15) + 10); }
-        function lerp(t, a, b) { return a + t * (b - a); }
-        function grad(hash, x, y, z) {
-            const h = hash & 15;
-            const u = h < 8 ? x : y;
-            const v = h < 4 ? y : h == 12 || h == 14 ? x : z;
-            return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
+        // =============================================
+        // SECTION TOGGLE
+        // =============================================
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.classList.toggle('collapsed');
         }
 
-        // Permutation table
-        const p = new Array(512);
-        const permutation = [151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168,68,175,74,165,71,134,139,48,27,166,77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,102,143,54,65,25,63,161,1,216,80,73,209,76,132,187,208,89,18,169,200,196,135,130,116,188,159,86,164,100,109,198,173,186,3,64,52,217,226,250,124,123,5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,223,183,170,213,119,248,152,2,44,154,163,70,221,153,101,155,167,43,172,9,129,22,39,253,19,98,108,110,79,113,224,232,178,185,112,104,218,246,97,228,251,34,242,193,238,210,144,12,191,179,162,241,81,51,145,235,249,14,239,107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,127,4,150,254,138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180];
-        for (let i = 0; i < 256; i++) p[256 + i] = p[i] = permutation[i];
-
-        // Fractal noise
-        function fbm(x, y, z, octaves = 4) {
-            let value = 0;
-            let amplitude = 0.5;
-            let frequency = 1;
-            for (let i = 0; i < octaves; i++) {
-                value += amplitude * noise(x * frequency, y * frequency, z * frequency);
-                amplitude *= 0.5;
-                frequency *= 2;
-            }
-            return value;
+        // =============================================
+        // LINE ITEM CALCULATIONS
+        // =============================================
+        function calculateLine(input) {
+            const row = input.closest('tr');
+            const qty = parseFloat(row.querySelector('[data-field="qty"]').value) || 0;
+            const rate = parseFloat(row.querySelector('[data-field="rate"]').value) || 0;
+            const amount = qty * rate;
+            row.querySelector('.amount').textContent = formatCurrency(amount);
+            updateTotals();
         }
 
-        // Dream entities
-        class FloatingForm {
-            constructor() {
-                this.reset();
+        function calculateLaborLine(input) {
+            const row = input.closest('tr');
+            const hours = parseFloat(row.querySelector('[data-field="qty"]').value) || 0;
+            const workers = parseFloat(row.querySelector('[data-field="workers"]').value) || 1;
+            const rate = parseFloat(row.querySelector('[data-field="rate"]').value) || 0;
+            const amount = hours * workers * rate;
+            row.querySelector('.amount').textContent = formatCurrency(amount);
+            updateTotals();
+        }
+
+        function addLine(tbodyId) {
+            const tbody = document.getElementById(tbodyId);
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td><input type="text" value="" data-field="desc" placeholder="Description"></td>
+                <td><input type="number" value="0" data-field="qty" onchange="calculateLine(this)"></td>
+                <td>
+                    <select data-field="unit">
+                        <option value="SF">SF</option>
+                        <option value="SY">SY</option>
+                        <option value="CY">CY</option>
+                        <option value="LF">LF</option>
+                        <option value="EA">EA</option>
+                        <option value="LS">LS</option>
+                        <option value="DAY">DAY</option>
+                        <option value="HR">HR</option>
+                        <option value="TON">TON</option>
+                        <option value="LB">LB</option>
+                    </select>
+                </td>
+                <td><input type="number" value="0" step="0.01" data-field="rate" onchange="calculateLine(this)"></td>
+                <td class="amount">$0.00</td>
+                <td><button class="file-remove" onclick="removeLine(this)">x</button></td>
+            `;
+            tbody.appendChild(newRow);
+        }
+
+        function addLaborLine(tbodyId) {
+            const tbody = document.getElementById(tbodyId);
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td><input type="text" value="" data-field="desc" placeholder="Description"></td>
+                <td><input type="number" value="0" data-field="qty" onchange="calculateLaborLine(this)"></td>
+                <td><input type="number" value="1" data-field="workers" onchange="calculateLaborLine(this)"></td>
+                <td><input type="number" value="0" step="0.01" data-field="rate" onchange="calculateLaborLine(this)"></td>
+                <td class="amount">$0.00</td>
+                <td><button class="file-remove" onclick="removeLine(this)">x</button></td>
+            `;
+            tbody.appendChild(newRow);
+        }
+
+        function removeLine(btn) {
+            const tbody = btn.closest('tbody');
+            if (tbody.children.length > 1) {
+                btn.closest('tr').remove();
+                updateTotals();
+            } else {
+                showToast('Cannot remove last row', 'warning');
             }
+        }
 
-            reset() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.z = Math.random() * 1000;
-                this.size = 20 + Math.random() * 80;
-                this.type = Math.floor(Math.random() * 5);
-                this.rotation = Math.random() * Math.PI * 2;
-                this.rotationSpeed = (Math.random() - 0.5) * 0.02;
-                this.pulsePhase = Math.random() * Math.PI * 2;
-                this.hue = 220 + Math.random() * 80;
-                this.opacity = 0.1 + Math.random() * 0.3;
+        // =============================================
+        // TOTALS CALCULATION
+        // =============================================
+        function updateTotals() {
+            const concrete =
+                sumSection('slabsItems') +
+                sumSection('footingsItems') +
+                sumSection('wallsItems') +
+                sumSection('materialsItems');
+
+            const labor = sumSection('laborItems');
+            const equipment = sumSection('equipmentItems');
+            const other = sumSection('otherItems');
+
+            const subtotal = concrete + labor + equipment + other;
+            const overheadPct = parseFloat(document.getElementById('overheadPct').value) || 0;
+            const profitPct = parseFloat(document.getElementById('profitPct').value) || 0;
+            const overhead = subtotal * (overheadPct / 100);
+            const profit = subtotal * (profitPct / 100);
+            const total = subtotal + overhead + profit;
+
+            document.getElementById('sumConcrete').textContent = formatCurrency(concrete);
+            document.getElementById('sumLabor').textContent = formatCurrency(labor);
+            document.getElementById('sumEquipment').textContent = formatCurrency(equipment);
+            document.getElementById('sumOther').textContent = formatCurrency(other);
+            document.getElementById('sumSubtotal').textContent = formatCurrency(subtotal);
+            document.getElementById('sumOverhead').textContent = formatCurrency(overhead);
+            document.getElementById('sumProfit').textContent = formatCurrency(profit);
+            document.getElementById('sumTotal').textContent = formatCurrency(total);
+        }
+
+        function sumSection(tbodyId) {
+            const tbody = document.getElementById(tbodyId);
+            if (!tbody) return 0;
+
+            let total = 0;
+            for (const row of tbody.children) {
+                const amountText = row.querySelector('.amount')?.textContent || '$0';
+                const amount = parseFloat(amountText.replace(/[$,]/g, '')) || 0;
+                total += amount;
             }
+            return total;
+        }
 
-            update(dt) {
-                const noiseVal = fbm(this.x * 0.001, this.y * 0.001, time * 0.1);
-                this.x += Math.sin(noiseVal * Math.PI * 2 + this.pulsePhase) * 0.5;
-                this.y += Math.cos(noiseVal * Math.PI * 2 + this.pulsePhase) * 0.3 - 0.2;
-                this.z -= 1 + mouseY * 2;
-                this.rotation += this.rotationSpeed;
+        function formatCurrency(value) {
+            return '$' + value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
 
-                // Mouse/touch influence
-                const dx = (mouseX * width - this.x) * 0.001;
-                const dy = (mouseY * height - this.y) * 0.001;
-                this.x += dx * 2;
-                this.y += dy * 2;
+        // =============================================
+        // AI VALIDATION
+        // =============================================
+        async function runAICheck() {
+            const status = document.getElementById('aiStatus');
+            const suggestions = document.getElementById('aiSuggestions');
 
-                if (this.z < 0 || this.y < -100 || this.y > height + 100) {
-                    this.reset();
-                    this.z = 800 + Math.random() * 200;
-                    this.y = height + 50;
+            status.className = 'ai-status warning';
+            status.innerHTML = '<span class="ai-status-dot"></span><span>Analyzing estimate...</span>';
+
+            const estimateData = gatherEstimateData();
+
+            await performAIAnalysis(estimateData, suggestions);
+
+            status.className = 'ai-status';
+            status.innerHTML = '<span class="ai-status-dot"></span><span>Analysis complete</span>';
+        }
+
+        function gatherEstimateData() {
+            return {
+                project: {
+                    name: document.getElementById('projectName').value,
+                    client: document.getElementById('clientName').value,
+                    address: document.getElementById('projectAddress').value,
+                    date: document.getElementById('bidDate').value
+                },
+                totals: {
+                    concrete: parseFloat(document.getElementById('sumConcrete').textContent.replace(/[$,]/g, '')),
+                    labor: parseFloat(document.getElementById('sumLabor').textContent.replace(/[$,]/g, '')),
+                    equipment: parseFloat(document.getElementById('sumEquipment').textContent.replace(/[$,]/g, '')),
+                    other: parseFloat(document.getElementById('sumOther').textContent.replace(/[$,]/g, '')),
+                    subtotal: parseFloat(document.getElementById('sumSubtotal').textContent.replace(/[$,]/g, '')),
+                    total: parseFloat(document.getElementById('sumTotal').textContent.replace(/[$,]/g, ''))
+                },
+                items: {
+                    slabs: getLineItemsData('slabsItems'),
+                    footings: getLineItemsData('footingsItems'),
+                    walls: getLineItemsData('wallsItems'),
+                    materials: getLineItemsData('materialsItems'),
+                    labor: getLineItemsData('laborItems'),
+                    equipment: getLineItemsData('equipmentItems'),
+                    other: getLineItemsData('otherItems')
+                }
+            };
+        }
+
+        function getLineItemsData(tbodyId) {
+            const tbody = document.getElementById(tbodyId);
+            if (!tbody) return [];
+
+            const items = [];
+            for (const row of tbody.children) {
+                const desc = row.querySelector('[data-field="desc"]')?.value || '';
+                const qty = parseFloat(row.querySelector('[data-field="qty"]')?.value) || 0;
+                const unit = row.querySelector('[data-field="unit"]')?.value || '';
+                const rate = parseFloat(row.querySelector('[data-field="rate"]')?.value) || 0;
+                const amountText = row.querySelector('.amount')?.textContent || '$0';
+                const amount = parseFloat(amountText.replace(/[$,]/g, '')) || 0;
+
+                if (desc || qty > 0) {
+                    items.push({ desc, qty, unit, rate, amount });
+                }
+            }
+            return items;
+        }
+
+        async function performAIAnalysis(data, container) {
+            container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            const suggestions = [];
+
+            // Industry standard rates for comparison
+            const standardRates = {
+                '4" slab': { min: 6, max: 14, unit: 'SF' },
+                '6" slab': { min: 8, max: 18, unit: 'SF' },
+                'footing': { min: 35, max: 75, unit: 'LF' },
+                'wall': { min: 25, max: 55, unit: 'SF' },
+                'concrete': { min: 140, max: 220, unit: 'CY' },
+                'rebar': { min: 0.80, max: 2.00, unit: 'LF' },
+                'pump': { min: 1200, max: 2000, unit: 'DAY' },
+                'foreman': { min: 55, max: 85, unit: 'HR' },
+                'finisher': { min: 45, max: 70, unit: 'HR' },
+                'laborer': { min: 28, max: 50, unit: 'HR' }
+            };
+
+            // Empty estimate check
+            if (data.totals.subtotal === 0) {
+                suggestions.push({
+                    type: 'warning',
+                    title: 'Empty Estimate',
+                    text: 'Your estimate has no values. Enter quantities and rates to calculate costs.'
+                });
+            } else {
+                // Check labor ratio
+                const laborRatio = data.totals.labor / data.totals.subtotal;
+                if (data.totals.labor > 0) {
+                    if (laborRatio < 0.20) {
+                        suggestions.push({
+                            type: 'warning',
+                            title: 'Low Labor Ratio',
+                            text: `Labor is ${(laborRatio * 100).toFixed(1)}% of subtotal. Typical concrete work ranges 25-40% labor. Consider reviewing labor hours.`
+                        });
+                    } else if (laborRatio > 0.55) {
+                        suggestions.push({
+                            type: 'warning',
+                            title: 'High Labor Ratio',
+                            text: `Labor is ${(laborRatio * 100).toFixed(1)}% of subtotal. This is higher than typical. Verify labor rates and hours.`
+                        });
+                    } else {
+                        suggestions.push({
+                            type: 'success',
+                            title: 'Labor Ratio OK',
+                            text: `Labor at ${(laborRatio * 100).toFixed(1)}% is within normal range for concrete work.`
+                        });
+                    }
+                }
+
+                // Check for missing components
+                const slabItems = data.items.slabs.filter(i => i.qty > 0);
+                const materialItems = data.items.materials.filter(i => i.qty > 0);
+
+                if (slabItems.length > 0 && materialItems.length === 0) {
+                    suggestions.push({
+                        type: 'warning',
+                        title: 'Missing Materials',
+                        text: 'You have slab work but no materials. Add concrete, rebar/mesh, and forms to your estimate.'
+                    });
+                }
+
+                // Check concrete pricing
+                for (const item of materialItems) {
+                    const descLower = item.desc.toLowerCase();
+                    if (descLower.includes('concrete') && item.unit === 'CY') {
+                        if (item.rate < standardRates.concrete.min) {
+                            suggestions.push({
+                                type: 'warning',
+                                title: 'Low Concrete Price',
+                                text: `Concrete at $${item.rate}/CY is below market rate ($${standardRates.concrete.min}-${standardRates.concrete.max}/CY). Verify pricing with supplier.`
+                            });
+                        } else if (item.rate > standardRates.concrete.max) {
+                            suggestions.push({
+                                type: 'warning',
+                                title: 'High Concrete Price',
+                                text: `Concrete at $${item.rate}/CY is above typical rates. May be accurate for specialty mix or remote delivery.`
+                            });
+                        }
+                    }
+                }
+
+                // Check labor rates
+                for (const item of data.items.labor) {
+                    const descLower = item.desc.toLowerCase();
+                    if (descLower.includes('foreman') && item.rate < standardRates.foreman.min) {
+                        suggestions.push({
+                            type: 'warning',
+                            title: 'Low Foreman Rate',
+                            text: `Foreman at $${item.rate}/hr may be underpriced. Market rate: $${standardRates.foreman.min}-${standardRates.foreman.max}/hr.`
+                        });
+                    }
+                }
+
+                // Check equipment
+                if (data.totals.equipment === 0 && data.totals.concrete > 5000) {
+                    suggestions.push({
+                        type: 'warning',
+                        title: 'No Equipment Costs',
+                        text: 'Consider adding equipment: concrete pump, finishing equipment, or delivery fees.'
+                    });
+                }
+
+                // Calculate concrete volume check
+                let totalSlabSF = 0;
+                let estimatedCY = 0;
+                for (const item of slabItems) {
+                    if (item.unit === 'SF') {
+                        totalSlabSF += item.qty;
+                        // Estimate CY based on 4" thickness
+                        if (item.desc.includes('4"') || item.desc.includes('4 inch')) {
+                            estimatedCY += (item.qty * 4 / 12) / 27;
+                        } else if (item.desc.includes('6"') || item.desc.includes('6 inch')) {
+                            estimatedCY += (item.qty * 6 / 12) / 27;
+                        } else {
+                            estimatedCY += (item.qty * 4 / 12) / 27; // Default 4"
+                        }
+                    }
+                }
+
+                // Check if concrete quantity matches slabs
+                const concreteItems = materialItems.filter(i => i.desc.toLowerCase().includes('concrete') && i.unit === 'CY');
+                if (concreteItems.length > 0 && estimatedCY > 0) {
+                    const totalConcreteCY = concreteItems.reduce((sum, i) => sum + i.qty, 0);
+                    const withWaste = estimatedCY * 1.05; // 5% waste factor
+
+                    if (totalConcreteCY < estimatedCY * 0.9) {
+                        suggestions.push({
+                            type: 'warning',
+                            title: 'Low Concrete Quantity',
+                            text: `You have ${totalSlabSF.toLocaleString()} SF of slabs requiring ~${withWaste.toFixed(1)} CY, but only ${totalConcreteCY} CY concrete listed.`
+                        });
+                    } else if (totalConcreteCY > estimatedCY * 1.15) {
+                        suggestions.push({
+                            type: 'warning',
+                            title: 'High Concrete Quantity',
+                            text: `${totalConcreteCY} CY of concrete for ${totalSlabSF.toLocaleString()} SF may be overestimated. Expected: ~${withWaste.toFixed(1)} CY.`
+                        });
+                    }
+                }
+
+                // Calculate $/SF for slabs if we have totals
+                if (totalSlabSF > 0) {
+                    const pricePerSF = data.totals.total / totalSlabSF;
+                    let evaluation = '';
+                    if (pricePerSF < 8) {
+                        evaluation = 'This is on the low end - verify all costs are included.';
+                    } else if (pricePerSF > 25) {
+                        evaluation = 'Premium pricing - appropriate for complex or specialty work.';
+                    } else {
+                        evaluation = 'Within typical market range for residential/commercial concrete.';
+                    }
+
+                    suggestions.push({
+                        type: 'success',
+                        title: 'Price Analysis',
+                        text: `Total bid: $${pricePerSF.toFixed(2)}/SF for ${totalSlabSF.toLocaleString()} SF. ${evaluation}`
+                    });
+                }
+
+                // Overhead and profit check
+                const overheadPct = parseFloat(document.getElementById('overheadPct').value) || 0;
+                const profitPct = parseFloat(document.getElementById('profitPct').value) || 0;
+
+                if (overheadPct + profitPct < 15) {
+                    suggestions.push({
+                        type: 'warning',
+                        title: 'Low Markup',
+                        text: `Combined overhead (${overheadPct}%) and profit (${profitPct}%) = ${overheadPct + profitPct}%. Industry standard is typically 20-35%.`
+                    });
                 }
             }
 
-            draw() {
-                const scale = 1000 / (1000 + this.z);
-                const screenX = width / 2 + (this.x - width / 2) * scale;
-                const screenY = height / 2 + (this.y - height / 2) * scale;
-                const screenSize = this.size * scale;
+            // Add pricing benchmarks
+            suggestions.push({
+                type: '',
+                title: 'Pricing Benchmarks (2024)',
+                text: `4" Slab: $8-14/SF | Footings: $40-70/LF | Concrete: $150-200/CY | Pump Truck: $1,200-2,000/day`
+            });
 
-                if (screenSize < 2) return;
-
-                const pulse = Math.sin(time * 2 + this.pulsePhase) * 0.3 + 0.7;
-                const alpha = this.opacity * scale * pulse;
-
-                ctx.save();
-                ctx.translate(screenX, screenY);
-                ctx.rotate(this.rotation + Math.sin(time + this.pulsePhase) * 0.2);
-
-                const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, screenSize);
-                gradient.addColorStop(0, `hsla(${this.hue + Math.sin(time) * 20}, 60%, 70%, ${alpha})`);
-                gradient.addColorStop(0.5, `hsla(${this.hue + 30}, 50%, 50%, ${alpha * 0.5})`);
-                gradient.addColorStop(1, `hsla(${this.hue + 60}, 40%, 30%, 0)`);
-
-                ctx.fillStyle = gradient;
-                ctx.beginPath();
-
-                // Different surreal shapes
-                switch (this.type) {
-                    case 0: // Morphing circle
-                        for (let i = 0; i <= 32; i++) {
-                            const angle = (i / 32) * Math.PI * 2;
-                            const r = screenSize * (0.8 + fbm(Math.cos(angle), Math.sin(angle), time * 0.5 + this.pulsePhase) * 0.4);
-                            const px = Math.cos(angle) * r;
-                            const py = Math.sin(angle) * r;
-                            if (i === 0) ctx.moveTo(px, py);
-                            else ctx.lineTo(px, py);
-                        }
-                        break;
-                    case 1: // Impossible triangle
-                        const s = screenSize;
-                        ctx.moveTo(0, -s);
-                        ctx.lineTo(s * 0.866, s * 0.5);
-                        ctx.lineTo(-s * 0.866, s * 0.5);
-                        ctx.closePath();
-                        ctx.moveTo(0, -s * 0.5);
-                        ctx.lineTo(s * 0.433, s * 0.25);
-                        ctx.lineTo(-s * 0.433, s * 0.25);
-                        break;
-                    case 2: // Eye
-                        ctx.ellipse(0, 0, screenSize, screenSize * 0.5, 0, 0, Math.PI * 2);
-                        ctx.moveTo(screenSize * 0.3, 0);
-                        ctx.arc(0, 0, screenSize * 0.3, 0, Math.PI * 2);
-                        break;
-                    case 3: // Spiral
-                        for (let i = 0; i <= 100; i++) {
-                            const t = i / 100;
-                            const angle = t * Math.PI * 6;
-                            const r = t * screenSize;
-                            const px = Math.cos(angle) * r;
-                            const py = Math.sin(angle) * r;
-                            if (i === 0) ctx.moveTo(px, py);
-                            else ctx.lineTo(px, py);
-                        }
-                        ctx.lineWidth = 2 * scale;
-                        ctx.strokeStyle = gradient;
-                        ctx.stroke();
-                        break;
-                    case 4: // Tesseract projection
-                        const ts = screenSize * 0.7;
-                        const inner = ts * 0.5;
-                        const phase = time * 0.5 + this.pulsePhase;
-                        ctx.rect(-ts, -ts, ts * 2, ts * 2);
-                        ctx.moveTo(-inner + Math.sin(phase) * 10, -inner + Math.cos(phase) * 10);
-                        ctx.lineTo(inner + Math.sin(phase) * 10, -inner + Math.cos(phase) * 10);
-                        ctx.lineTo(inner + Math.sin(phase) * 10, inner + Math.cos(phase) * 10);
-                        ctx.lineTo(-inner + Math.sin(phase) * 10, inner + Math.cos(phase) * 10);
-                        ctx.closePath();
-                        break;
-                }
-
-                ctx.fill();
-                ctx.restore();
-            }
+            container.innerHTML = suggestions.map(s => `
+                <div class="ai-suggestion ${s.type}">
+                    <div class="ai-suggestion-title">${s.title}</div>
+                    <div class="ai-suggestion-text">${s.text}</div>
+                </div>
+            `).join('');
         }
 
-        // Terrain layer for surreal landscape
-        class DreamTerrain {
-            constructor(y, speed, color, amplitude) {
-                this.baseY = y;
-                this.speed = speed;
-                this.color = color;
-                this.amplitude = amplitude;
-                this.offset = Math.random() * 1000;
-            }
+        // =============================================
+        // NEW ESTIMATE
+        // =============================================
+        function newEstimate() {
+            if (!confirm('Start a new estimate? Current data will be cleared.')) return;
 
-            draw() {
-                const points = [];
-                const segments = Math.min(100, Math.floor(width / 10)); // Optimize for mobile
+            document.getElementById('projectName').value = '';
+            document.getElementById('clientName').value = '';
+            document.getElementById('projectAddress').value = '';
+            document.getElementById('bidDate').valueAsDate = new Date();
 
-                for (let i = 0; i <= segments; i++) {
-                    const x = (i / segments) * width;
-                    const noiseX = (x * 0.002 + this.offset + time * this.speed);
-                    const noiseY = time * 0.1;
-                    const y = this.baseY + fbm(noiseX, noiseY, dreamPhase * 0.1) * this.amplitude;
+            const sections = [
+                { id: 'slabsItems', defaults: [{ desc: '4" Concrete Slab', unit: 'SF', rate: 8.50 }] },
+                { id: 'footingsItems', defaults: [{ desc: 'Continuous Footing 24"x12"', unit: 'LF', rate: 45.00 }] },
+                { id: 'wallsItems', defaults: [{ desc: '8" Concrete Wall', unit: 'SF', rate: 35.00 }] },
+                { id: 'materialsItems', defaults: [
+                    { desc: '3000 PSI Concrete', unit: 'CY', rate: 165.00 },
+                    { desc: 'Rebar #4', unit: 'LF', rate: 1.25 },
+                    { desc: 'Wire Mesh 6x6', unit: 'SF', rate: 0.45 }
+                ]},
+                { id: 'laborItems', labor: true, defaults: [
+                    { desc: 'Foreman', workers: 1, rate: 65.00 },
+                    { desc: 'Finisher', workers: 2, rate: 55.00 },
+                    { desc: 'Laborer', workers: 3, rate: 35.00 }
+                ]},
+                { id: 'equipmentItems', defaults: [
+                    { desc: 'Concrete Pump Truck', unit: 'DAY', rate: 1500.00 },
+                    { desc: 'Bobcat/Skid Steer', unit: 'DAY', rate: 350.00 }
+                ]},
+                { id: 'otherItems', defaults: [
+                    { desc: 'Permits & Fees', unit: 'LS', rate: 500.00, qty: 1 },
+                    { desc: 'Mobilization', unit: 'LS', rate: 750.00, qty: 1 }
+                ]}
+            ];
 
-                    // Mouse influence creates waves
-                    const distFromMouse = Math.abs(x - mouseX * width) / width;
-                    const mouseWave = Math.sin(distFromMouse * Math.PI * 4 - time * 3) * 20 * (1 - distFromMouse) * mouseY;
+            sections.forEach(section => {
+                const tbody = document.getElementById(section.id);
+                if (!tbody) return;
 
-                    points.push({ x, y: y + mouseWave });
-                }
-
-                ctx.beginPath();
-                ctx.moveTo(0, height);
-                points.forEach((p, i) => {
-                    if (i === 0) ctx.lineTo(p.x, p.y);
-                    else {
-                        const prev = points[i - 1];
-                        const cpx = (prev.x + p.x) / 2;
-                        ctx.quadraticCurveTo(prev.x, prev.y, cpx, (prev.y + p.y) / 2);
+                tbody.innerHTML = '';
+                section.defaults.forEach((item, idx) => {
+                    if (section.labor) {
+                        addLaborLine(section.id);
+                        const row = tbody.lastElementChild;
+                        row.querySelector('[data-field="desc"]').value = item.desc;
+                        row.querySelector('[data-field="workers"]').value = item.workers;
+                        row.querySelector('[data-field="rate"]').value = item.rate;
+                    } else {
+                        addLine(section.id);
+                        const row = tbody.lastElementChild;
+                        row.querySelector('[data-field="desc"]').value = item.desc;
+                        row.querySelector('[data-field="unit"]').value = item.unit;
+                        row.querySelector('[data-field="rate"]').value = item.rate;
+                        if (item.qty) {
+                            row.querySelector('[data-field="qty"]').value = item.qty;
+                            calculateLine(row.querySelector('[data-field="qty"]'));
+                        }
                     }
                 });
-                ctx.lineTo(width, height);
-                ctx.closePath();
-
-                const gradient = ctx.createLinearGradient(0, this.baseY - this.amplitude, 0, height);
-                gradient.addColorStop(0, this.color);
-                gradient.addColorStop(1, 'rgba(10, 5, 20, 0.9)');
-                ctx.fillStyle = gradient;
-                ctx.fill();
-            }
-        }
-
-        // Particle system for mystical atmosphere
-        class Particle {
-            constructor() {
-                this.reset();
-            }
-
-            reset() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.size = 1 + Math.random() * 3;
-                this.speedX = (Math.random() - 0.5) * 0.5;
-                this.speedY = (Math.random() - 0.5) * 0.5 - 0.3;
-                this.life = 1;
-                this.decay = 0.001 + Math.random() * 0.003;
-                this.hue = 260 + Math.random() * 60;
-            }
-
-            update() {
-                const noiseVal = fbm(this.x * 0.005, this.y * 0.005, time * 0.2);
-                this.x += this.speedX + Math.sin(noiseVal * Math.PI * 2) * 0.5;
-                this.y += this.speedY + Math.cos(noiseVal * Math.PI * 2) * 0.3;
-                this.life -= this.decay;
-
-                // Attracted to touch/mouse
-                const dx = mouseX * width - this.x;
-                const dy = mouseY * height - this.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < 200) {
-                    this.x += dx * 0.002;
-                    this.y += dy * 0.002;
-                }
-
-                if (this.life <= 0 || this.x < 0 || this.x > width || this.y < 0 || this.y > height) {
-                    this.reset();
-                }
-            }
-
-            draw() {
-                const alpha = this.life * 0.6;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = `hsla(${this.hue}, 70%, 70%, ${alpha})`;
-                ctx.fill();
-            }
-        }
-
-        // Initialize entities (reduced counts for mobile performance)
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        const formCount = isMobile ? 12 : 20;
-        const particleCount = isMobile ? 80 : 150;
-        const starCount = isMobile ? 100 : 200;
-
-        const forms = [];
-        for (let i = 0; i < formCount; i++) {
-            forms.push(new FloatingForm());
-        }
-
-        const terrains = [
-            new DreamTerrain(height * 0.85, 0.02, 'rgba(20, 10, 40, 0.8)', 100),
-            new DreamTerrain(height * 0.75, 0.03, 'rgba(40, 20, 60, 0.6)', 80),
-            new DreamTerrain(height * 0.65, 0.04, 'rgba(60, 30, 80, 0.4)', 60),
-        ];
-
-        const particles = [];
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(new Particle());
-        }
-
-        // Stars
-        const stars = [];
-        for (let i = 0; i < starCount; i++) {
-            stars.push({
-                x: Math.random() * width,
-                y: Math.random() * height * 0.6,
-                size: Math.random() * 2,
-                twinkle: Math.random() * Math.PI * 2
-            });
-        }
-
-        // Main render loop
-        let lastTime = 0;
-        function animate(currentTime) {
-            const dt = (currentTime - lastTime) / 1000;
-            lastTime = currentTime;
-            time += dt;
-
-            // Use gyroscope if available, otherwise touch/mouse
-            if (useGyro) {
-                targetMouseX = gyroX;
-                targetMouseY = gyroY;
-            }
-
-            // Smooth following
-            mouseX += (targetMouseX - mouseX) * 0.05;
-            mouseY += (targetMouseY - mouseY) * 0.05;
-
-            // Clear with fade effect for trails
-            ctx.fillStyle = `rgba(8, 5, 15, 0.1)`;
-            ctx.fillRect(0, 0, width, height);
-
-            // Redraw background occasionally for full clear
-            if (Math.random() < 0.02) {
-                const bgGradient = ctx.createRadialGradient(
-                    width * mouseX, height * mouseY, 0,
-                    width / 2, height / 2, Math.max(width, height)
-                );
-                bgGradient.addColorStop(0, `hsla(${260 + Math.sin(time * 0.1) * 20}, 50%, 15%, 1)`);
-                bgGradient.addColorStop(0.5, 'rgba(15, 10, 25, 1)');
-                bgGradient.addColorStop(1, 'rgba(5, 3, 10, 1)');
-                ctx.fillStyle = bgGradient;
-                ctx.fillRect(0, 0, width, height);
-            }
-
-            // Draw stars
-            stars.forEach(star => {
-                const twinkle = Math.sin(time * 2 + star.twinkle) * 0.5 + 0.5;
-                ctx.beginPath();
-                ctx.arc(star.x, star.y, star.size * twinkle, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(200, 180, 255, ${0.3 + twinkle * 0.4})`;
-                ctx.fill();
             });
 
-            // Draw moon/portal
-            const moonX = width * 0.7 + Math.sin(time * 0.1) * 50;
-            const moonY = height * 0.25 + Math.cos(time * 0.15) * 30;
-            const moonGradient = ctx.createRadialGradient(moonX, moonY, 0, moonX, moonY, 80);
-            moonGradient.addColorStop(0, 'rgba(200, 180, 255, 0.3)');
-            moonGradient.addColorStop(0.5, 'rgba(140, 100, 200, 0.15)');
-            moonGradient.addColorStop(1, 'rgba(80, 60, 120, 0)');
-            ctx.beginPath();
-            ctx.arc(moonX, moonY, 80, 0, Math.PI * 2);
-            ctx.fillStyle = moonGradient;
-            ctx.fill();
+            uploadedFiles = [];
+            document.getElementById('uploadedFiles').innerHTML = '';
+            document.getElementById('excelPreviewCard').style.display = 'none';
+            excelData = null;
+            excelSheets = {};
 
-            // Inner portal effect
-            const portalPhase = time * 0.5;
-            for (let ring = 0; ring < 5; ring++) {
-                ctx.beginPath();
-                ctx.arc(moonX, moonY, 30 + ring * 10 + Math.sin(portalPhase + ring) * 5, 0, Math.PI * 2);
-                ctx.strokeStyle = `rgba(180, 150, 255, ${0.2 - ring * 0.03})`;
-                ctx.lineWidth = 2;
-                ctx.stroke();
-            }
+            updateTotals();
 
-            // Update and draw particles (behind terrain)
-            particles.forEach(p => {
-                p.update();
-                p.draw();
-            });
+            document.getElementById('aiStatus').className = 'ai-status';
+            document.getElementById('aiStatus').innerHTML = '<span class="ai-status-dot"></span><span>AI Ready - Click "AI Check" to validate</span>';
+            document.getElementById('aiSuggestions').innerHTML = `
+                <div class="ai-suggestion">
+                    <div class="ai-suggestion-title">Ready for new estimate</div>
+                    <div class="ai-suggestion-text">Import Excel files or enter quantities to build your estimate.</div>
+                </div>
+            `;
 
-            // Draw floating forms (sorted by z for depth)
-            forms.sort((a, b) => b.z - a.z);
-            forms.forEach(form => {
-                form.update(dt);
-                form.draw();
-            });
-
-            // Draw terrain layers (front to back)
-            terrains.forEach(terrain => terrain.draw());
-
-            // Vignette fog effect
-            const fogGradient = ctx.createRadialGradient(
-                width / 2, height / 2, height * 0.3,
-                width / 2, height / 2, height
-            );
-            fogGradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
-            fogGradient.addColorStop(1, 'rgba(10, 5, 20, 0.6)');
-            ctx.fillStyle = fogGradient;
-            ctx.fillRect(0, 0, width, height);
-
-            // Subtle scan lines for dreamy effect (skip on mobile for performance)
-            if (!isMobile) {
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.03)';
-                for (let y = 0; y < height; y += 4) {
-                    ctx.fillRect(0, y, width, 2);
-                }
-            }
-
-            requestAnimationFrame(animate);
+            showToast('New estimate started', 'success');
         }
 
-        // Start the dream
-        animate(0);
+        // =============================================
+        // API KEY MODAL
+        // =============================================
+        function showApiKeyModal() {
+            document.getElementById('apiKeyInput').value = aiApiKey;
+            document.getElementById('apiKeyModal').classList.add('active');
+        }
+
+        function closeApiKeyModal() {
+            document.getElementById('apiKeyModal').classList.remove('active');
+        }
+
+        function saveApiKey() {
+            aiApiKey = document.getElementById('apiKeyInput').value;
+            localStorage.setItem('aiApiKey', aiApiKey);
+            closeApiKeyModal();
+            showToast('API key saved', 'success');
+        }
+
+        // =============================================
+        // TOAST NOTIFICATIONS
+        // =============================================
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+
+            let icon = 'i';
+            if (type === 'success') icon = '&#x2713;';
+            if (type === 'warning') icon = '!';
+            if (type === 'error') icon = 'X';
+
+            toast.innerHTML = `<span>${icon}</span><span>${message}</span>`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideIn 0.3s ease reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // =============================================
+        // SERVICE WORKER
+        // =============================================
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(err => {
+                console.log('SW registration failed:', err);
+            });
+        }
     </script>
 </body>
 </html>
