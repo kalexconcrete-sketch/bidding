@@ -1,18 +1,36 @@
 {
-  "name": "The Fourth Dimension - Dream World",
-  "short_name": "Dream World",
-  "description": "Experience the ever-changing nature of the 4th dimensional dream world",
+  "name": "DSC Bid Pro - Don Smith Concrete",
+  "short_name": "DSC Bid Pro",
+  "description": "Professional concrete estimating and bidding workstation for Don Smith Concrete LLC",
   "start_url": "/index.html",
-  "display": "fullscreen",
-  "orientation": "any",
-  "background_color": "#0a0a0f",
-  "theme_color": "#1a1025",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f8fafc",
+  "theme_color": "#1a1a1a",
   "icons": [
     {
       "src": "icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Quick Quote",
+      "short_name": "Quote",
+      "description": "Create a quick estimate",
+      "url": "/index.html#quick-quote",
+      "icons": [{ "src": "icon.svg", "sizes": "96x96" }]
+    },
+    {
+      "name": "New Project",
+      "short_name": "New",
+      "description": "Start a detailed estimate",
+      "url": "/index.html#estimator",
+      "icons": [{ "src": "icon.svg", "sizes": "96x96" }]
     }
   ]
 }
