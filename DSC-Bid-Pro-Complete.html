@@ -3,984 +3,1226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0f172a">
-    <title>DSC Bid Pro | Commercial Concrete Estimating</title>
+    <meta name="theme-color" content="#1a1a2e">
+    <title>DSC Bid Pro</title>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        :root{
-            --primary:#0f172a;--primary-light:#1e293b;--primary-dark:#020617;
-            --accent:#3b82f6;--accent-light:#60a5fa;--accent-dark:#1d4ed8;
-            --success:#10b981;--warning:#f59e0b;--danger:#ef4444;
-            --gold:#fbbf24;--purple:#8b5cf6;
-            --bg:#f1f5f9;--bg-card:#ffffff;--bg-dark:#e2e8f0;
-            --text:#0f172a;--text-muted:#64748b;--text-light:#94a3b8;
-            --border:#e2e8f0;--border-dark:#cbd5e1;
-            --shadow:0 1px 3px rgba(0,0,0,0.1),0 1px 2px rgba(0,0,0,0.06);
-            --shadow-md:0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06);
-            --shadow-lg:0 10px 15px -3px rgba(0,0,0,0.1),0 4px 6px -2px rgba(0,0,0,0.05);
-            --shadow-xl:0 20px 25px -5px rgba(0,0,0,0.1),0 10px 10px -5px rgba(0,0,0,0.04);
-            --radius:16px;--radius-sm:8px;--radius-lg:24px;
-        }
-        @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-        @keyframes slideIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
-        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-        @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
-        @keyframes countUp{from{opacity:0;transform:scale(0.5)}to{opacity:1;transform:scale(1)}}
-        @keyframes glow{0%,100%{box-shadow:0 0 5px var(--accent)}50%{box-shadow:0 0 20px var(--accent),0 0 30px var(--accent-light)}}
-        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
-        @keyframes progressBar{from{width:0}to{width:var(--progress)}}
-        @keyframes spin{to{transform:rotate(360deg)}}
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        :root {
+            --bg: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-subtle: #f1f5f9;
+            --border: #e2e8f0;
+            --border-focus: #3b82f6;
+            --text: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --primary: #1e3a5f;
+            --primary-light: #2d4a6f;
+            --accent: #3b82f6;
+            --accent-soft: rgba(59, 130, 246, 0.1);
+            --success: #10b981;
+            --success-soft: rgba(16, 185, 129, 0.1);
+            --warning: #f59e0b;
+            --warning-soft: rgba(245, 158, 11, 0.1);
+            --danger: #ef4444;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+            --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.04);
+            --radius: 8px;
+            --radius-lg: 12px;
+            --transition: 150ms ease;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
 
         /* Header */
-        .header{position:fixed;top:0;left:0;right:0;height:72px;background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 24px;z-index:100;box-shadow:var(--shadow-lg)}
-        .logo{display:flex;align-items:center;gap:16px}
-        .logo-icon{width:48px;height:48px;background:linear-gradient(135deg,var(--accent) 0%,var(--accent-dark) 100%);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;box-shadow:0 4px 12px rgba(59,130,246,0.4);animation:float 3s ease-in-out infinite}
-        .logo-text{font-size:1.5rem;font-weight:800;letter-spacing:-0.5px}
-        .logo-sub{font-size:0.75rem;color:var(--text-light);font-weight:500;letter-spacing:1px;text-transform:uppercase}
-        .header-actions{display:flex;gap:12px}
-        .header-btn{padding:10px 20px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-weight:600;cursor:pointer;transition:all 0.3s;backdrop-filter:blur(10px)}
-        .header-btn:hover{background:rgba(255,255,255,0.2);transform:translateY(-2px)}
+        .header {
+            background: var(--primary);
+            padding: 0 24px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #fff;
+        }
+        .logo-mark {
+            font-weight: 700;
+            font-size: 1.125rem;
+            letter-spacing: -0.5px;
+        }
+        .logo-divider {
+            width: 1px;
+            height: 20px;
+            background: rgba(255,255,255,0.3);
+        }
+        .logo-sub {
+            font-size: 0.8125rem;
+            opacity: 0.8;
+            font-weight: 500;
+        }
+        .header-nav {
+            display: flex;
+            gap: 4px;
+        }
+        .header-nav a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        .header-nav a:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.1);
+        }
+        .header-nav a.active {
+            color: #fff;
+            background: rgba(255,255,255,0.15);
+        }
 
-        /* Main Layout */
-        .app{display:flex;min-height:100vh;padding-top:72px}
-        .sidebar{width:280px;background:var(--bg-card);border-right:1px solid var(--border);padding:24px 16px;position:fixed;top:72px;bottom:0;left:0;overflow-y:auto;transition:transform 0.3s}
-        .main{flex:1;margin-left:280px;padding:32px;min-height:calc(100vh - 72px)}
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
 
-        /* Navigation */
-        .nav-section{margin-bottom:32px}
-        .nav-label{font-size:0.7rem;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:1.5px;padding:0 16px;margin-bottom:12px}
-        .nav-item{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:var(--radius-sm);color:var(--text-muted);cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
-        .nav-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);transform:scaleY(0);transition:transform 0.2s}
-        .nav-item:hover{background:var(--bg);color:var(--text)}
-        .nav-item.active{background:linear-gradient(90deg,rgba(59,130,246,0.1) 0%,transparent 100%);color:var(--accent);font-weight:600}
-        .nav-item.active::before{transform:scaleY(1)}
-        .nav-item svg{width:22px;height:22px;flex-shrink:0}
-        .nav-item span{font-size:0.9375rem}
-        .nav-badge{margin-left:auto;background:var(--accent);color:#fff;font-size:0.7rem;font-weight:700;padding:2px 8px;border-radius:20px;animation:pulse 2s infinite}
+        /* Page Header */
+        .page-header {
+            margin-bottom: 24px;
+        }
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+        }
 
         /* Cards */
-        .card{background:var(--bg-card);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);border:1px solid var(--border);transition:all 0.3s;animation:fadeIn 0.5s ease-out}
-        .card:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px)}
-        .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-        .card-title{font-size:1.125rem;font-weight:700;color:var(--text)}
-        .card-subtitle{font-size:0.875rem;color:var(--text-muted);margin-top:4px}
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            transition: box-shadow var(--transition);
+        }
+        .card:hover {
+            box-shadow: var(--shadow-md);
+        }
+        .card-title {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text);
+        }
 
-        /* Stats */
-        .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-bottom:32px}
-        .stat-card{background:var(--bg-card);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);border:1px solid var(--border);position:relative;overflow:hidden;transition:all 0.3s}
-        .stat-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-xl)}
-        .stat-card::after{content:'';position:absolute;top:0;right:0;width:100px;height:100px;background:linear-gradient(135deg,transparent 50%,rgba(59,130,246,0.05) 50%);border-radius:0 0 0 100%}
-        .stat-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
-        .stat-icon svg{width:24px;height:24px}
-        .stat-icon.blue{background:linear-gradient(135deg,#3b82f6 0%,#1d4ed8 100%);color:#fff}
-        .stat-icon.green{background:linear-gradient(135deg,#10b981 0%,#059669 100%);color:#fff}
-        .stat-icon.gold{background:linear-gradient(135deg,#f59e0b 0%,#d97706 100%);color:#fff}
-        .stat-icon.purple{background:linear-gradient(135deg,#8b5cf6 0%,#6d28d9 100%);color:#fff}
-        .stat-value{font-size:2rem;font-weight:800;color:var(--text);margin-bottom:4px;transition:all 0.5s}
-        .stat-value.counting{animation:countUp 0.5s ease-out}
-        .stat-label{font-size:0.8125rem;color:var(--text-muted);font-weight:500}
-        .stat-trend{display:flex;align-items:center;gap:4px;font-size:0.75rem;font-weight:600;margin-top:12px}
-        .stat-trend.up{color:var(--success)}
-        .stat-trend.down{color:var(--danger)}
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            transition: var(--transition);
+        }
+        .stat-card:hover {
+            border-color: var(--border-focus);
+        }
+        .stat-label {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+        .stat-value.currency::before {
+            content: '$';
+            font-weight: 500;
+            opacity: 0.7;
+        }
+        .stat-change {
+            font-size: 0.75rem;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .stat-change.up { color: var(--success); }
+        .stat-change.down { color: var(--danger); }
 
-        /* Page Headers */
-        .page-header{margin-bottom:32px}
-        .page-title{font-size:2rem;font-weight:800;color:var(--text);margin-bottom:8px}
-        .page-subtitle{font-size:1rem;color:var(--text-muted)}
-
-        /* Grid */
-        .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
-        .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-        .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
-
-        /* Buttons */
-        .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 24px;border:none;border-radius:var(--radius-sm);font-size:0.9375rem;font-weight:600;cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden}
-        .btn::after{content:'';position:absolute;inset:0;background:linear-gradient(rgba(255,255,255,0.2),transparent);opacity:0;transition:opacity 0.3s}
-        .btn:hover::after{opacity:1}
-        .btn:active{transform:scale(0.98)}
-        .btn-primary{background:linear-gradient(135deg,var(--accent) 0%,var(--accent-dark) 100%);color:#fff;box-shadow:0 4px 12px rgba(59,130,246,0.4)}
-        .btn-primary:hover{box-shadow:0 6px 20px rgba(59,130,246,0.5);transform:translateY(-2px)}
-        .btn-secondary{background:var(--bg);color:var(--text);border:1px solid var(--border)}
-        .btn-secondary:hover{background:var(--bg-dark);border-color:var(--border-dark)}
-        .btn-success{background:linear-gradient(135deg,var(--success) 0%,#059669 100%);color:#fff}
-        .btn-lg{padding:16px 32px;font-size:1rem}
-        .btn-block{width:100%}
-        .btn-icon{width:44px;height:44px;padding:0;border-radius:var(--radius-sm)}
+        /* Project Type Selection */
+        .type-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .type-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+        .type-card:hover {
+            border-color: var(--accent);
+            background: var(--accent-soft);
+        }
+        .type-card.selected {
+            border-color: var(--accent);
+            background: var(--accent-soft);
+        }
+        .type-card.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 20px;
+            height: 20px;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 50%;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .type-card {
+            position: relative;
+        }
+        .type-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 12px;
+            background: var(--bg-subtle);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        .type-card:hover .type-icon,
+        .type-card.selected .type-icon {
+            background: var(--accent);
+            color: #fff;
+        }
+        .type-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.5;
+        }
+        .type-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .type-desc {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+        }
 
         /* Forms */
-        .form-group{margin-bottom:20px}
-        .form-label{display:block;font-size:0.875rem;font-weight:600;color:var(--text);margin-bottom:8px}
-        .form-hint{font-size:0.75rem;color:var(--text-muted);margin-top:4px}
-        .form-input,.form-select{width:100%;padding:14px 16px;border:2px solid var(--border);border-radius:var(--radius-sm);font-size:1rem;background:var(--bg-card);color:var(--text);transition:all 0.3s}
-        .form-input:focus,.form-select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px rgba(59,130,246,0.1)}
-        .form-input::placeholder{color:var(--text-light)}
-        .form-row{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-        .form-row-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-        .input-group{position:relative}
-        .input-prefix{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-weight:500}
-        .input-prefix ~ .form-input{padding-left:36px}
-        .input-suffix{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:0.875rem}
+        .form-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+        .form-section-header {
+            padding: 16px 20px;
+            background: var(--bg-subtle);
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+            font-size: 0.9375rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .form-section-header:hover {
+            background: var(--bg);
+        }
+        .form-section-header .num {
+            width: 24px;
+            height: 24px;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 50%;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .form-section-body {
+            padding: 20px;
+            display: none;
+        }
+        .form-section.open .form-section-body {
+            display: block;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .form-row:last-child,
+        .form-row-3:last-child {
+            margin-bottom: 0;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-label {
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+        .form-input, .form-select {
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 0.9375rem;
+            background: var(--bg-card);
+            color: var(--text);
+            transition: var(--transition);
+        }
+        .form-input:hover, .form-select:hover {
+            border-color: #cbd5e1;
+        }
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-soft);
+        }
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+        .form-hint {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .input-with-unit {
+            position: relative;
+        }
+        .input-with-unit .form-input {
+            padding-right: 50px;
+        }
+        .input-unit {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
 
-        /* Project Type Cards */
-        .type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:32px}
-        .type-card{background:var(--bg-card);border:2px solid var(--border);border-radius:var(--radius);padding:24px;text-align:center;cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden}
-        .type-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--accent) 0%,var(--accent-dark) 100%);opacity:0;transition:opacity 0.3s}
-        .type-card:hover{border-color:var(--accent);transform:translateY(-4px);box-shadow:var(--shadow-lg)}
-        .type-card.selected{border-color:var(--accent);background:linear-gradient(135deg,rgba(59,130,246,0.05) 0%,rgba(59,130,246,0.1) 100%)}
-        .type-card.selected::after{content:'✓';position:absolute;top:12px;right:12px;width:24px;height:24px;background:var(--accent);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
-        .type-icon{width:64px;height:64px;margin:0 auto 16px;background:var(--bg);border-radius:16px;display:flex;align-items:center;justify-content:center;transition:all 0.3s}
-        .type-card:hover .type-icon,.type-card.selected .type-icon{background:var(--accent);color:#fff}
-        .type-icon svg{width:32px;height:32px;color:var(--accent);transition:color 0.3s}
-        .type-card:hover .type-icon svg,.type-card.selected .type-icon svg{color:#fff}
-        .type-name{font-size:1rem;font-weight:700;margin-bottom:4px}
-        .type-range{font-size:0.8125rem;color:var(--text-muted)}
+        /* Inline Calculation Display */
+        .calc-display {
+            background: var(--bg-subtle);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-top: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .calc-item {
+            text-align: center;
+        }
+        .calc-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .calc-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+        .calc-value.accent {
+            color: var(--accent);
+        }
 
-        /* Estimate Sections */
-        .estimate-section{background:var(--bg-card);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:24px;overflow:hidden}
-        .estimate-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;background:var(--bg);border-bottom:1px solid var(--border);cursor:pointer}
-        .estimate-header h3{font-size:1rem;font-weight:700;display:flex;align-items:center;gap:12px}
-        .estimate-header .step{width:28px;height:28px;background:var(--accent);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.8125rem;font-weight:700}
-        .estimate-header .toggle{width:24px;height:24px;transition:transform 0.3s}
-        .estimate-section.open .estimate-header .toggle{transform:rotate(180deg)}
-        .estimate-body{padding:24px;display:none}
-        .estimate-section.open .estimate-body{display:block;animation:fadeIn 0.3s}
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .btn:active {
+            transform: scale(0.98);
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+        .btn-secondary {
+            background: var(--bg-subtle);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: var(--bg);
+            border-color: #cbd5e1;
+        }
+        .btn-lg {
+            padding: 12px 24px;
+            font-size: 0.9375rem;
+        }
+        .btn svg {
+            width: 18px;
+            height: 18px;
+        }
 
         /* Results */
-        .result-hero{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);border-radius:var(--radius-lg);padding:40px;color:#fff;text-align:center;margin-bottom:32px;position:relative;overflow:hidden}
-        .result-hero::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(255,255,255,0.1) 0%,transparent 50%);animation:spin 20s linear infinite}
-        .result-label{font-size:0.875rem;text-transform:uppercase;letter-spacing:2px;opacity:0.8;margin-bottom:8px}
-        .result-value{font-size:4rem;font-weight:900;margin-bottom:8px;text-shadow:0 4px 12px rgba(0,0,0,0.3)}
-        .result-sub{font-size:1.125rem;opacity:0.9}
-        .result-range{display:flex;justify-content:center;gap:40px;margin-top:24px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.2)}
-        .range-item{text-align:center}
-        .range-label{font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;opacity:0.7;margin-bottom:4px}
-        .range-value{font-size:1.5rem;font-weight:700}
+        .results-hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .results-hero-label {
+            font-size: 0.8125rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .results-hero-value {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .results-hero-sub {
+            opacity: 0.8;
+        }
+        .results-range {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+        .range-item {
+            text-align: center;
+        }
+        .range-label {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin-bottom: 4px;
+        }
+        .range-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
 
         /* Breakdown Table */
-        .breakdown-table{width:100%}
-        .breakdown-row{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--border)}
-        .breakdown-row:last-child{border-bottom:none}
-        .breakdown-row.total{background:var(--bg);margin:16px -24px -24px;padding:20px 24px;border-radius:0 0 var(--radius) var(--radius);font-weight:700;font-size:1.125rem}
-        .breakdown-row.subtotal{font-weight:600;background:var(--bg);margin:0 -24px;padding:16px 24px}
-        .breakdown-label{color:var(--text-muted);display:flex;align-items:center;gap:8px}
-        .breakdown-label .material-tag{font-size:0.7rem;background:var(--accent);color:#fff;padding:2px 8px;border-radius:4px;font-weight:600}
-        .breakdown-value{font-weight:600;font-variant-numeric:tabular-nums}
-        .breakdown-detail{font-size:0.8125rem;color:var(--text-light)}
-
-        /* Progress Bar */
-        .progress-container{margin-bottom:24px}
-        .progress-header{display:flex;justify-content:space-between;margin-bottom:8px}
-        .progress-label{font-size:0.875rem;font-weight:600}
-        .progress-value{font-size:0.875rem;color:var(--text-muted)}
-        .progress-bar{height:8px;background:var(--bg-dark);border-radius:4px;overflow:hidden}
-        .progress-fill{height:100%;border-radius:4px;transition:width 1s ease-out;background:linear-gradient(90deg,var(--accent) 0%,var(--accent-light) 100%)}
+        .breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .breakdown-row:last-child {
+            border-bottom: none;
+        }
+        .breakdown-row.subtotal {
+            background: var(--bg-subtle);
+            margin: 12px -20px;
+            padding: 12px 20px;
+            font-weight: 600;
+        }
+        .breakdown-row.total {
+            background: var(--primary);
+            color: #fff;
+            margin: 16px -20px -20px;
+            padding: 16px 20px;
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+            font-weight: 600;
+            font-size: 1.0625rem;
+        }
+        .breakdown-label {
+            color: var(--text-secondary);
+        }
+        .breakdown-row.subtotal .breakdown-label,
+        .breakdown-row.total .breakdown-label {
+            color: inherit;
+        }
+        .breakdown-value {
+            font-weight: 500;
+            font-variant-numeric: tabular-nums;
+        }
+        .breakdown-tag {
+            font-size: 0.6875rem;
+            background: var(--accent-soft);
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+            font-weight: 500;
+        }
 
         /* Win Probability */
-        .probability-card{background:linear-gradient(135deg,#10b981 0%,#059669 100%);border-radius:var(--radius);padding:24px;color:#fff}
-        .probability-value{font-size:3rem;font-weight:900;margin-bottom:8px}
-        .probability-bar{height:8px;background:rgba(255,255,255,0.3);border-radius:4px;overflow:hidden;margin:16px 0}
-        .probability-fill{height:100%;background:#fff;border-radius:4px;transition:width 1s ease-out}
-        .probability-factors{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:20px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.2)}
-        .factor{display:flex;align-items:center;gap:8px;font-size:0.875rem}
-        .factor-dot{width:8px;height:8px;border-radius:50%;background:#fff}
-        .factor-dot.positive{background:#a7f3d0}
-        .factor-dot.negative{background:#fca5a5}
+        .prob-card {
+            background: var(--success);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            color: #fff;
+        }
+        .prob-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .prob-label {
+            opacity: 0.9;
+            font-size: 0.875rem;
+            margin-bottom: 12px;
+        }
+        .prob-bar {
+            height: 6px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .prob-fill {
+            height: 100%;
+            background: #fff;
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
 
-        /* Risk Assessment */
-        .risk-card{display:flex;align-items:center;gap:16px;padding:20px;background:var(--bg);border-radius:var(--radius-sm);margin-bottom:12px}
-        .risk-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center}
-        .risk-icon.low{background:#d1fae5;color:#059669}
-        .risk-icon.medium{background:#fef3c7;color:#d97706}
-        .risk-icon.high{background:#fee2e2;color:#dc2626}
-        .risk-content{flex:1}
-        .risk-title{font-weight:600;margin-bottom:4px}
-        .risk-desc{font-size:0.875rem;color:var(--text-muted)}
-        .risk-badge{padding:6px 14px;border-radius:20px;font-size:0.75rem;font-weight:700;text-transform:uppercase}
-        .risk-badge.low{background:#d1fae5;color:#059669}
-        .risk-badge.medium{background:#fef3c7;color:#d97706}
-        .risk-badge.high{background:#fee2e2;color:#dc2626}
+        /* Grid Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
 
-        /* Project List */
-        .project-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px;cursor:pointer;transition:all 0.3s;display:flex;gap:20px}
-        .project-card:hover{border-color:var(--accent);box-shadow:var(--shadow-lg);transform:translateX(4px)}
-        .project-status-bar{width:4px;border-radius:2px;flex-shrink:0}
-        .project-status-bar.draft{background:var(--text-light)}
-        .project-status-bar.pending{background:var(--warning)}
-        .project-status-bar.approved{background:var(--success)}
-        .project-status-bar.lost{background:var(--danger)}
-        .project-content{flex:1}
-        .project-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
-        .project-name{font-size:1.125rem;font-weight:700}
-        .project-value{font-size:1.5rem;font-weight:800;color:var(--accent)}
-        .project-meta{display:flex;gap:20px;font-size:0.875rem;color:var(--text-muted)}
-        .project-tag{display:inline-flex;align-items:center;gap:6px}
-
-        /* Toast */
-        .toast-container{position:fixed;bottom:32px;right:32px;z-index:1000;display:flex;flex-direction:column;gap:12px}
-        .toast{background:var(--primary);color:#fff;padding:16px 24px;border-radius:var(--radius-sm);box-shadow:var(--shadow-xl);display:flex;align-items:center;gap:12px;animation:slideIn 0.3s ease-out}
-        .toast.success{background:linear-gradient(135deg,var(--success) 0%,#059669 100%)}
-        .toast.error{background:linear-gradient(135deg,var(--danger) 0%,#dc2626 100%)}
-        .toast.warning{background:linear-gradient(135deg,var(--warning) 0%,#d97706 100%)}
-
-        /* Loading */
-        .loading{display:inline-block;width:20px;height:20px;border:3px solid rgba(255,255,255,0.3);border-radius:50%;border-top-color:#fff;animation:spin 1s linear infinite}
-        .skeleton{background:linear-gradient(90deg,var(--bg-dark) 25%,var(--bg) 50%,var(--bg-dark) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:var(--radius-sm)}
-
-        /* Modal */
-        .modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,0.8);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:200;padding:24px}
-        .modal-overlay.active{display:flex}
-        .modal{background:var(--bg-card);border-radius:var(--radius-lg);width:100%;max-width:600px;max-height:90vh;overflow:hidden;animation:fadeIn 0.3s}
-        .modal-header{display:flex;justify-content:space-between;align-items:center;padding:24px;border-bottom:1px solid var(--border)}
-        .modal-title{font-size:1.25rem;font-weight:700}
-        .modal-close{width:40px;height:40px;border:none;background:var(--bg);border-radius:var(--radius-sm);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s}
-        .modal-close:hover{background:var(--bg-dark)}
-        .modal-body{padding:24px;overflow-y:auto;max-height:calc(90vh - 140px)}
-        .modal-footer{padding:24px;border-top:1px solid var(--border);display:flex;gap:12px;justify-content:flex-end}
+        /* Projects List */
+        .project-row {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 8px;
+            background: var(--bg-card);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .project-row:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow);
+        }
+        .project-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 16px;
+        }
+        .project-status.draft { background: var(--text-muted); }
+        .project-status.pending { background: var(--warning); }
+        .project-status.won { background: var(--success); }
+        .project-status.lost { background: var(--danger); }
+        .project-info {
+            flex: 1;
+        }
+        .project-name {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        .project-meta {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+        }
+        .project-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text);
+        }
 
         /* Empty State */
-        .empty-state{text-align:center;padding:64px 32px}
-        .empty-icon{width:120px;height:120px;margin:0 auto 24px;background:var(--bg);border-radius:50%;display:flex;align-items:center;justify-content:center}
-        .empty-icon svg{width:48px;height:48px;color:var(--text-light)}
-        .empty-title{font-size:1.5rem;font-weight:700;margin-bottom:8px}
-        .empty-desc{color:var(--text-muted);margin-bottom:24px;max-width:400px;margin-left:auto;margin-right:auto}
+        .empty-state {
+            text-align: center;
+            padding: 48px 24px;
+            color: var(--text-secondary);
+        }
+        .empty-state svg {
+            width: 48px;
+            height: 48px;
+            stroke: var(--text-muted);
+            margin-bottom: 16px;
+        }
+        .empty-state h3 {
+            font-size: 1.125rem;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+        .empty-state p {
+            margin-bottom: 20px;
+        }
 
-        /* View Toggle */
-        .view{display:none;animation:fadeIn 0.4s ease-out}
-        .view.active{display:block}
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1000;
+        }
+        .toast {
+            background: var(--text);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: var(--radius);
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.875rem;
+            box-shadow: var(--shadow-md);
+            animation: slideIn 0.2s ease;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .toast.success { background: var(--success); }
+        .toast.error { background: var(--danger); }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            padding: 24px;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 480px;
+            max-height: 90vh;
+            overflow: hidden;
+        }
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-title {
+            font-weight: 600;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            color: var(--text-secondary);
+        }
+        .modal-close:hover {
+            color: var(--text);
+        }
+        .modal-body {
+            padding: 20px;
+        }
+
+        /* Views */
+        .view { display: none; }
+        .view.active { display: block; }
+
+        /* Quick Quote Banner */
+        .quick-quote-banner {
+            background: var(--accent-soft);
+            border: 1px solid var(--accent);
+            border-radius: var(--radius);
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .quick-quote-banner span {
+            color: var(--accent);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
 
         /* Responsive */
-        @media(max-width:1200px){.stats-row{grid-template-columns:repeat(2,1fr)}.type-grid{grid-template-columns:repeat(2,1fr)}}
-        @media(max-width:900px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}}
-        @media(max-width:600px){.stats-row{grid-template-columns:1fr}.type-grid{grid-template-columns:1fr}.form-row,.form-row-3{grid-template-columns:1fr}.result-value{font-size:2.5rem}.result-range{flex-direction:column;gap:16px}}
-
-        /* Animations for live feel */
-        .live-dot{width:8px;height:8px;background:var(--success);border-radius:50%;animation:pulse 2s infinite}
-        .card-animate{animation:fadeIn 0.5s ease-out backwards}
-        .card-animate:nth-child(1){animation-delay:0.1s}
-        .card-animate:nth-child(2){animation-delay:0.2s}
-        .card-animate:nth-child(3){animation-delay:0.3s}
-        .card-animate:nth-child(4){animation-delay:0.4s}
+        @media (max-width: 900px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .type-grid { grid-template-columns: repeat(2, 1fr); }
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 600px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .type-grid { grid-template-columns: 1fr; }
+            .form-row, .form-row-3 { grid-template-columns: 1fr; }
+            .header-nav { display: none; }
+        }
     </style>
 </head>
 <body>
     <header class="header">
         <div class="logo">
-            <div class="logo-icon">DSC</div>
-            <div>
-                <div class="logo-text">Bid Pro</div>
-                <div class="logo-sub">Commercial Estimating</div>
-            </div>
+            <span class="logo-mark">Don Smith Concrete</span>
+            <div class="logo-divider"></div>
+            <span class="logo-sub">Bid Pro</span>
         </div>
-        <div class="header-actions">
-            <button class="header-btn" onclick="showNewEstimate()">+ New Estimate</button>
-            <button class="header-btn" onclick="navigate('settings')">Settings</button>
-        </div>
+        <nav class="header-nav">
+            <a href="#" class="active" onclick="navigate('dashboard')">Dashboard</a>
+            <a href="#" onclick="navigate('estimate')">New Estimate</a>
+            <a href="#" onclick="navigate('projects')">Projects</a>
+            <a href="#" onclick="navigate('customers')">Customers</a>
+            <a href="#" onclick="navigate('settings')">Settings</a>
+        </nav>
     </header>
 
-    <div class="app">
-        <nav class="sidebar">
-            <div class="nav-section">
-                <div class="nav-label">Overview</div>
-                <div class="nav-item active" onclick="navigate('dashboard')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
-                    <span>Dashboard</span>
-                </div>
-                <div class="nav-item" onclick="navigate('projects')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-                    <span>Projects</span>
-                    <span class="nav-badge" id="project-count">0</span>
-                </div>
+    <div class="container">
+        <!-- Dashboard -->
+        <div id="view-dashboard" class="view active">
+            <div class="page-header">
+                <h1 class="page-title">Dashboard</h1>
+                <p class="page-subtitle">Your bidding overview</p>
             </div>
-            <div class="nav-section">
-                <div class="nav-label">Estimating</div>
-                <div class="nav-item" onclick="navigate('estimate')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
-                    <span>New Estimate</span>
-                </div>
-                <div class="nav-item" onclick="navigate('takeoff')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-                    <span>Material Takeoff</span>
-                </div>
-            </div>
-            <div class="nav-section">
-                <div class="nav-label">Analysis</div>
-                <div class="nav-item" onclick="navigate('analytics')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-                    <span>Analytics</span>
-                </div>
-                <div class="nav-item" onclick="navigate('compare')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><path d="M2 12h4m12 0h4"/></svg>
-                    <span>Bid Comparison</span>
-                </div>
-            </div>
-            <div class="nav-section">
-                <div class="nav-label">Manage</div>
-                <div class="nav-item" onclick="navigate('customers')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                    <span>Customers</span>
-                </div>
-                <div class="nav-item" onclick="navigate('rates')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                    <span>Labor Rates</span>
-                </div>
-            </div>
-        </nav>
 
-        <main class="main">
-            <!-- Dashboard View -->
-            <div id="view-dashboard" class="view active">
-                <div class="page-header">
-                    <h1 class="page-title">Dashboard</h1>
-                    <p class="page-subtitle">Welcome back. Here's your bidding overview.</p>
-                </div>
-
-                <div class="stats-row">
-                    <div class="stat-card card-animate">
-                        <div class="stat-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div>
-                        <div class="stat-value" id="dash-active">0</div>
-                        <div class="stat-label">Active Bids</div>
-                        <div class="stat-trend up"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg> +2 this week</div>
-                    </div>
-                    <div class="stat-card card-animate">
-                        <div class="stat-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
-                        <div class="stat-value" id="dash-pipeline">$0</div>
-                        <div class="stat-label">Pipeline Value</div>
-                        <div class="stat-trend up"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg> $340K added</div>
-                    </div>
-                    <div class="stat-card card-animate">
-                        <div class="stat-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
-                        <div class="stat-value" id="dash-won">$0</div>
-                        <div class="stat-label">Won This Quarter</div>
-                        <div class="stat-trend up"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg> 3 projects</div>
-                    </div>
-                    <div class="stat-card card-animate">
-                        <div class="stat-icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
-                        <div class="stat-value" id="dash-rate">0%</div>
-                        <div class="stat-label">Win Rate</div>
-                        <div class="stat-trend up"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg> +5% vs last quarter</div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Active Bids</div>
+                    <div class="stat-value" id="dash-active">0</div>
+                    <div class="stat-change up">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+                        2 this week
                     </div>
                 </div>
-
-                <div class="grid-2">
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <h3 class="card-title">Recent Projects</h3>
-                                <p class="card-subtitle">Latest bid activity</p>
-                            </div>
-                            <button class="btn btn-secondary" onclick="navigate('projects')">View All</button>
-                        </div>
-                        <div id="recent-projects">
-                            <div class="empty-state" style="padding:32px">
-                                <p style="color:var(--text-muted)">No projects yet. Create your first estimate to get started.</p>
-                                <button class="btn btn-primary" style="margin-top:16px" onclick="navigate('estimate')">Create Estimate</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <h3 class="card-title">Win Probability</h3>
-                                <p class="card-subtitle">Current pipeline analysis</p>
-                            </div>
-                        </div>
-                        <div class="probability-card">
-                            <div class="result-label">Avg Win Probability</div>
-                            <div class="probability-value" id="dash-prob">68%</div>
-                            <div class="probability-bar"><div class="probability-fill" style="width:68%"></div></div>
-                            <div class="probability-factors">
-                                <div class="factor"><div class="factor-dot positive"></div> Competitive pricing</div>
-                                <div class="factor"><div class="factor-dot positive"></div> Strong relationships</div>
-                                <div class="factor"><div class="factor-dot negative"></div> Tight timeline</div>
-                                <div class="factor"><div class="factor-dot positive"></div> Local advantage</div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="stat-card">
+                    <div class="stat-label">Pipeline Value</div>
+                    <div class="stat-value currency" id="dash-pipeline">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Won This Quarter</div>
+                    <div class="stat-value currency" id="dash-won">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Win Rate</div>
+                    <div class="stat-value" id="dash-rate">0%</div>
                 </div>
             </div>
 
-            <!-- Estimate View -->
-            <div id="view-estimate" class="view">
-                <div class="page-header">
-                    <h1 class="page-title">New Estimate</h1>
-                    <p class="page-subtitle">Create a detailed commercial concrete estimate</p>
-                </div>
-
-                <div class="card" style="margin-bottom:24px">
-                    <h3 class="card-title">Select Project Type</h3>
-                    <p class="card-subtitle" style="margin-bottom:20px">Choose the type of commercial concrete project</p>
-                    <div class="type-grid" id="project-types">
-                        <div class="type-card" data-type="parking" onclick="selectProjectType('parking')">
-                            <div class="type-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/></svg></div>
-                            <div class="type-name">Parking Structure</div>
-                            <div class="type-range">$500K - $5M+</div>
-                        </div>
-                        <div class="type-card" data-type="foundation" onclick="selectProjectType('foundation')">
-                            <div class="type-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><rect x="9" y="13" width="6" height="8"/></svg></div>
-                            <div class="type-name">Commercial Foundation</div>
-                            <div class="type-range">$200K - $2M</div>
-                        </div>
-                        <div class="type-card" data-type="industrial" onclick="selectProjectType('industrial')">
-                            <div class="type-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 20h20M4 20V10l4-6h8l4 6v10"/><rect x="8" y="14" width="8" height="6"/></svg></div>
-                            <div class="type-name">Industrial Slab</div>
-                            <div class="type-range">$300K - $3M</div>
-                        </div>
-                        <div class="type-card" data-type="tiltup" onclick="selectProjectType('tiltup')">
-                            <div class="type-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="16" height="16" rx="1"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="12" y1="4" x2="12" y2="20"/></svg></div>
-                            <div class="type-name">Tilt-Up Panels</div>
-                            <div class="type-range">$400K - $4M</div>
-                        </div>
-                        <div class="type-card" data-type="retaining" onclick="selectProjectType('retaining')">
-                            <div class="type-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 22h20M6 22V6h4v16M14 22V10h4v12"/></svg></div>
-                            <div class="type-name">Retaining Wall</div>
-                            <div class="type-range">$150K - $1.5M</div>
-                        </div>
-                        <div class="type-card" data-type="elevated" onclick="selectProjectType('elevated')">
-                            <div class="type-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="8" width="20" height="4"/><line x1="6" y1="12" x2="6" y2="22"/><line x1="18" y1="12" x2="18" y2="22"/><line x1="12" y1="12" x2="12" y2="22"/></svg></div>
-                            <div class="type-name">Elevated Deck</div>
-                            <div class="type-range">$600K - $6M</div>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-title">Recent Projects</div>
+                    <div id="recent-projects">
+                        <div class="empty-state" style="padding: 24px">
+                            <p>No projects yet</p>
+                            <button class="btn btn-primary" onclick="navigate('estimate')">Create Estimate</button>
                         </div>
                     </div>
                 </div>
+                <div class="card">
+                    <div class="card-title">Quick Actions</div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <button class="btn btn-secondary" style="justify-content: flex-start" onclick="navigate('estimate'); selectProjectType('curb')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M6 21V8l6-4 6 4v13"/></svg>
+                            New Curb & Gutter Estimate
+                        </button>
+                        <button class="btn btn-secondary" style="justify-content: flex-start" onclick="navigate('estimate'); selectProjectType('street')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="20" height="12" rx="1"/><line x1="6" y1="12" x2="18" y2="12" stroke-dasharray="2 2"/></svg>
+                            New Street Paving Estimate
+                        </button>
+                        <button class="btn btn-secondary" style="justify-content: flex-start" onclick="navigate('estimate'); selectProjectType('sidewalk')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="16" height="16"/><line x1="4" y1="10" x2="20" y2="10"/><line x1="4" y1="16" x2="20" y2="16"/></svg>
+                            New Sidewalk Estimate
+                        </button>
+                        <button class="btn btn-secondary" style="justify-content: flex-start" onclick="showAddCustomer()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                            Add Customer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                <div id="estimate-form" style="display:none">
-                    <!-- Project Info -->
-                    <div class="estimate-section open">
-                        <div class="estimate-header" onclick="toggleSection(this)">
-                            <h3><span class="step">1</span> Project Information</h3>
-                            <svg class="toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-                        </div>
-                        <div class="estimate-body">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label">Project Name</label>
-                                    <input type="text" class="form-input" id="est-name" placeholder="e.g., Westfield Plaza Parking">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Customer</label>
-                                    <select class="form-select" id="est-customer">
-                                        <option value="">Select customer...</option>
-                                    </select>
-                                </div>
+        <!-- Estimate -->
+        <div id="view-estimate" class="view">
+            <div class="page-header">
+                <h1 class="page-title">New Estimate</h1>
+                <p class="page-subtitle">Select a project type to get started</p>
+            </div>
+
+            <div class="type-grid" id="type-grid">
+                <div class="type-card" data-type="curb" onclick="selectProjectType('curb')">
+                    <div class="type-icon">
+                        <svg viewBox="0 0 24 24"><path d="M3 21h18M6 21V14h12v7M4 14h16"/></svg>
+                    </div>
+                    <div class="type-name">Curb & Gutter</div>
+                    <div class="type-desc">Linear foot pricing</div>
+                </div>
+                <div class="type-card" data-type="street" onclick="selectProjectType('street')">
+                    <div class="type-icon">
+                        <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="1"/><line x1="6" y1="12" x2="18" y2="12" stroke-dasharray="2 2"/></svg>
+                    </div>
+                    <div class="type-name">Street Paving</div>
+                    <div class="type-desc">Square foot / square yard</div>
+                </div>
+                <div class="type-card" data-type="sidewalk" onclick="selectProjectType('sidewalk')">
+                    <div class="type-icon">
+                        <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16"/><line x1="4" y1="10" x2="20" y2="10"/><line x1="4" y1="16" x2="20" y2="16"/></svg>
+                    </div>
+                    <div class="type-name">Sidewalk</div>
+                    <div class="type-desc">Square foot pricing</div>
+                </div>
+                <div class="type-card" data-type="ramp" onclick="selectProjectType('ramp')">
+                    <div class="type-icon">
+                        <svg viewBox="0 0 24 24"><path d="M2 20h20M4 20l8-12v12"/><circle cx="18" cy="16" r="2"/></svg>
+                    </div>
+                    <div class="type-name">ADA Ramps</div>
+                    <div class="type-desc">Per unit pricing</div>
+                </div>
+                <div class="type-card" data-type="parking" onclick="selectProjectType('parking')">
+                    <div class="type-icon">
+                        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/></svg>
+                    </div>
+                    <div class="type-name">Parking Lot</div>
+                    <div class="type-desc">Square foot / yard</div>
+                </div>
+                <div class="type-card" data-type="driveway" onclick="selectProjectType('driveway')">
+                    <div class="type-icon">
+                        <svg viewBox="0 0 24 24"><path d="M3 21V9l9-6 9 6v12"/><rect x="9" y="13" width="6" height="8"/></svg>
+                    </div>
+                    <div class="type-name">Commercial Driveway</div>
+                    <div class="type-desc">Square foot pricing</div>
+                </div>
+            </div>
+
+            <div id="estimate-form" style="display: none;">
+                <!-- Section 1: Project Info -->
+                <div class="form-section open">
+                    <div class="form-section-header" onclick="toggleSection(this)">
+                        <span class="num">1</span>
+                        Project Information
+                    </div>
+                    <div class="form-section-body">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Project Name</label>
+                                <input type="text" class="form-input" id="est-name" placeholder="e.g., Main St Improvements Phase 2">
                             </div>
-                            <div class="form-row-3">
-                                <div class="form-group">
-                                    <label class="form-label">Bid Due Date</label>
-                                    <input type="date" class="form-input" id="est-duedate">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Project Start</label>
-                                    <input type="date" class="form-input" id="est-startdate">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Duration (weeks)</label>
-                                    <input type="number" class="form-input" id="est-duration" placeholder="12">
-                                </div>
+                            <div class="form-group">
+                                <label class="form-label">Customer</label>
+                                <select class="form-select" id="est-customer">
+                                    <option value="">Select customer...</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row-3">
+                            <div class="form-group">
+                                <label class="form-label">Bid Due Date</label>
+                                <input type="date" class="form-input" id="est-duedate">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Project Location</label>
-                                <input type="text" class="form-input" id="est-location" placeholder="Address or city">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Concrete Takeoff -->
-                    <div class="estimate-section">
-                        <div class="estimate-header" onclick="toggleSection(this)">
-                            <h3><span class="step">2</span> Concrete Takeoff</h3>
-                            <svg class="toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-                        </div>
-                        <div class="estimate-body">
-                            <div class="form-row-3">
-                                <div class="form-group">
-                                    <label class="form-label">Total Area (SF)</label>
-                                    <input type="number" class="form-input" id="est-sqft" placeholder="50,000" oninput="calculateEstimate()">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Avg Thickness (in)</label>
-                                    <select class="form-select" id="est-thickness" onchange="calculateEstimate()">
-                                        <option value="4">4" - Light duty</option>
-                                        <option value="5">5" - Standard</option>
-                                        <option value="6" selected>6" - Heavy duty</option>
-                                        <option value="8">8" - Industrial</option>
-                                        <option value="10">10" - Extra heavy</option>
-                                        <option value="12">12" - Structural</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Concrete Mix</label>
-                                    <select class="form-select" id="est-mix" onchange="calculateEstimate()">
-                                        <option value="3000">3000 PSI - Standard</option>
-                                        <option value="4000" selected>4000 PSI - Commercial</option>
-                                        <option value="5000">5000 PSI - High strength</option>
-                                        <option value="6000">6000 PSI - Structural</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label">Waste Factor %</label>
-                                    <input type="number" class="form-input" id="est-waste" value="5" oninput="calculateEstimate()">
-                                    <p class="form-hint">Typical: 5-8% for slabs, 10-15% for walls</p>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Number of Pours</label>
-                                    <input type="number" class="form-input" id="est-pours" value="1" oninput="calculateEstimate()">
-                                </div>
-                            </div>
-                            <div class="card" style="background:var(--bg);margin-top:20px;padding:20px">
-                                <div style="display:flex;justify-content:space-between;align-items:center">
-                                    <div>
-                                        <div style="font-size:0.875rem;color:var(--text-muted)">Calculated Volume</div>
-                                        <div style="font-size:2rem;font-weight:800" id="calc-cy">0 CY</div>
-                                    </div>
-                                    <div style="text-align:right">
-                                        <div style="font-size:0.875rem;color:var(--text-muted)">Est. Concrete Cost</div>
-                                        <div style="font-size:2rem;font-weight:800;color:var(--accent)" id="calc-concrete-cost">$0</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Reinforcement -->
-                    <div class="estimate-section">
-                        <div class="estimate-header" onclick="toggleSection(this)">
-                            <h3><span class="step">3</span> Reinforcement</h3>
-                            <svg class="toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-                        </div>
-                        <div class="estimate-body">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label">Rebar Type</label>
-                                    <select class="form-select" id="est-rebar" onchange="calculateEstimate()">
-                                        <option value="none">No rebar</option>
-                                        <option value="light">Light (#3 @ 18" OC)</option>
-                                        <option value="standard" selected>Standard (#4 @ 12" OC)</option>
-                                        <option value="heavy">Heavy (#5 @ 12" OC)</option>
-                                        <option value="structural">Structural (#6 @ 8" OC)</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Wire Mesh</label>
-                                    <select class="form-select" id="est-mesh" onchange="calculateEstimate()">
-                                        <option value="none" selected>None</option>
-                                        <option value="6x6">6x6 W1.4/W1.4</option>
-                                        <option value="6x6-w2">6x6 W2.9/W2.9</option>
-                                        <option value="4x4">4x4 W2.9/W2.9</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label">Fiber Reinforcement</label>
-                                    <select class="form-select" id="est-fiber" onchange="calculateEstimate()">
-                                        <option value="none" selected>None</option>
-                                        <option value="micro">Micro-fiber (1.5 lb/cy)</option>
-                                        <option value="macro">Macro-fiber (3 lb/cy)</option>
-                                        <option value="steel">Steel fiber (50 lb/cy)</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Dowels/Tie Bars</label>
-                                    <input type="number" class="form-input" id="est-dowels" placeholder="Linear feet" oninput="calculateEstimate()">
-                                </div>
-                            </div>
-                            <div class="card" style="background:var(--bg);margin-top:20px;padding:20px">
-                                <div style="display:flex;justify-content:space-between;align-items:center">
-                                    <div>
-                                        <div style="font-size:0.875rem;color:var(--text-muted)">Est. Rebar (tons)</div>
-                                        <div style="font-size:1.5rem;font-weight:700" id="calc-rebar">0 tons</div>
-                                    </div>
-                                    <div style="text-align:right">
-                                        <div style="font-size:0.875rem;color:var(--text-muted)">Reinforcement Cost</div>
-                                        <div style="font-size:1.5rem;font-weight:700;color:var(--accent)" id="calc-rebar-cost">$0</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Formwork -->
-                    <div class="estimate-section">
-                        <div class="estimate-header" onclick="toggleSection(this)">
-                            <h3><span class="step">4</span> Formwork</h3>
-                            <svg class="toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-                        </div>
-                        <div class="estimate-body">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label">Edge Form (LF)</label>
-                                    <input type="number" class="form-input" id="est-edgeform" placeholder="Perimeter" oninput="calculateEstimate()">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Form Height (in)</label>
-                                    <select class="form-select" id="est-formheight" onchange="calculateEstimate()">
-                                        <option value="4">4"</option>
-                                        <option value="6" selected>6"</option>
-                                        <option value="8">8"</option>
-                                        <option value="12">12"</option>
-                                        <option value="18">18"</option>
-                                        <option value="24">24"+</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label">Form Type</label>
-                                    <select class="form-select" id="est-formtype" onchange="calculateEstimate()">
-                                        <option value="wood">Wood forms (standard)</option>
-                                        <option value="steel">Steel forms (reusable)</option>
-                                        <option value="aluminum">Aluminum forms</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Reuse Factor</label>
-                                    <select class="form-select" id="est-reuse" onchange="calculateEstimate()">
-                                        <option value="1">1 use (no reuse)</option>
-                                        <option value="2">2 uses</option>
-                                        <option value="3" selected>3 uses</option>
-                                        <option value="4">4 uses</option>
-                                        <option value="5">5+ uses</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="card" style="background:var(--bg);margin-top:20px;padding:20px">
-                                <div style="text-align:right">
-                                    <div style="font-size:0.875rem;color:var(--text-muted)">Formwork Cost</div>
-                                    <div style="font-size:1.5rem;font-weight:700;color:var(--accent)" id="calc-form-cost">$0</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Labor -->
-                    <div class="estimate-section">
-                        <div class="estimate-header" onclick="toggleSection(this)">
-                            <h3><span class="step">5</span> Labor</h3>
-                            <svg class="toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-                        </div>
-                        <div class="estimate-body">
-                            <div class="form-row-3">
-                                <div class="form-group">
-                                    <label class="form-label">Superintendent (days)</label>
-                                    <input type="number" class="form-input" id="est-super" placeholder="0" oninput="calculateEstimate()">
-                                    <p class="form-hint">$850/day</p>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Foreman (days)</label>
-                                    <input type="number" class="form-input" id="est-foreman" placeholder="0" oninput="calculateEstimate()">
-                                    <p class="form-hint">$650/day</p>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Finishers (man-days)</label>
-                                    <input type="number" class="form-input" id="est-finishers" placeholder="0" oninput="calculateEstimate()">
-                                    <p class="form-hint">$520/day</p>
-                                </div>
-                            </div>
-                            <div class="form-row-3">
-                                <div class="form-group">
-                                    <label class="form-label">Laborers (man-days)</label>
-                                    <input type="number" class="form-input" id="est-laborers" placeholder="0" oninput="calculateEstimate()">
-                                    <p class="form-hint">$380/day</p>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Operators (man-days)</label>
-                                    <input type="number" class="form-input" id="est-operators" placeholder="0" oninput="calculateEstimate()">
-                                    <p class="form-hint">$580/day</p>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Iron Workers (man-days)</label>
-                                    <input type="number" class="form-input" id="est-ironworkers" placeholder="0" oninput="calculateEstimate()">
-                                    <p class="form-hint">$550/day</p>
-                                </div>
-                            </div>
-                            <button class="btn btn-secondary" style="margin-top:12px" onclick="autoCalculateLabor()">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-                                Auto-Calculate Labor
-                            </button>
-                            <div class="card" style="background:var(--bg);margin-top:20px;padding:20px">
-                                <div style="text-align:right">
-                                    <div style="font-size:0.875rem;color:var(--text-muted)">Total Labor Cost</div>
-                                    <div style="font-size:1.5rem;font-weight:700;color:var(--accent)" id="calc-labor-cost">$0</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Equipment -->
-                    <div class="estimate-section">
-                        <div class="estimate-header" onclick="toggleSection(this)">
-                            <h3><span class="step">6</span> Equipment</h3>
-                            <svg class="toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-                        </div>
-                        <div class="estimate-body">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label">Concrete Pump</label>
-                                    <select class="form-select" id="est-pump" onchange="calculateEstimate()">
-                                        <option value="none">No pump (direct pour)</option>
-                                        <option value="line">Line pump ($1,200/day)</option>
-                                        <option value="boom-small" selected>32m Boom ($2,800/day)</option>
-                                        <option value="boom-med">42m Boom ($3,500/day)</option>
-                                        <option value="boom-large">52m+ Boom ($4,500/day)</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Pump Days</label>
-                                    <input type="number" class="form-input" id="est-pumpdays" value="1" oninput="calculateEstimate()">
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label">Laser Screed</label>
-                                    <select class="form-select" id="est-screed" onchange="calculateEstimate()">
-                                        <option value="none">None</option>
-                                        <option value="small">Small ($1,800/day)</option>
-                                        <option value="large" selected>Large ($2,500/day)</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Screed Days</label>
-                                    <input type="number" class="form-input" id="est-screeddays" value="1" oninput="calculateEstimate()">
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label">Power Trowels</label>
-                                    <input type="number" class="form-input" id="est-trowels" value="2" placeholder="Quantity" oninput="calculateEstimate()">
-                                    <p class="form-hint">$150/day each</p>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Trowel Days</label>
-                                    <input type="number" class="form-input" id="est-troweldays" value="1" oninput="calculateEstimate()">
-                                </div>
+                                <input type="text" class="form-input" id="est-location" placeholder="City, State">
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Additional Equipment</label>
-                                <div class="input-group">
-                                    <span class="input-prefix">$</span>
-                                    <input type="number" class="form-input" id="est-otherequip" placeholder="0" oninput="calculateEstimate()">
-                                </div>
-                                <p class="form-hint">Bobcat, crane, vibrators, curing equipment, etc.</p>
+                                <label class="form-label">GC / Prime</label>
+                                <input type="text" class="form-input" id="est-gc" placeholder="General Contractor">
                             </div>
-                            <div class="card" style="background:var(--bg);margin-top:20px;padding:20px">
-                                <div style="text-align:right">
-                                    <div style="font-size:0.875rem;color:var(--text-muted)">Total Equipment Cost</div>
-                                    <div style="font-size:1.5rem;font-weight:700;color:var(--accent)" id="calc-equip-cost">$0</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Markup & Costs -->
-                    <div class="estimate-section">
-                        <div class="estimate-header" onclick="toggleSection(this)">
-                            <h3><span class="step">7</span> Markup & Additional Costs</h3>
-                            <svg class="toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-                        </div>
-                        <div class="estimate-body">
-                            <div class="form-row-3">
-                                <div class="form-group">
-                                    <label class="form-label">Overhead %</label>
-                                    <input type="number" class="form-input" id="est-overhead" value="12" oninput="calculateEstimate()">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Profit %</label>
-                                    <input type="number" class="form-input" id="est-profit" value="10" oninput="calculateEstimate()">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Contingency %</label>
-                                    <input type="number" class="form-input" id="est-contingency" value="5" oninput="calculateEstimate()">
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label">Mobilization</label>
-                                    <div class="input-group">
-                                        <span class="input-prefix">$</span>
-                                        <input type="number" class="form-input" id="est-mobilization" value="15000" oninput="calculateEstimate()">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Bond & Insurance</label>
-                                    <div class="input-group">
-                                        <span class="input-prefix">$</span>
-                                        <input type="number" class="form-input" id="est-bond" value="0" oninput="calculateEstimate()">
-                                    </div>
-                                    <p class="form-hint">~2-3% of contract for bonds</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Results -->
-                    <div id="estimate-results" style="margin-top:32px">
-                        <div class="result-hero">
-                            <div class="result-label">Total Bid Amount</div>
-                            <div class="result-value" id="result-total">$0</div>
-                            <div class="result-sub" id="result-persf">$0.00 per SF</div>
-                            <div class="result-range">
-                                <div class="range-item">
-                                    <div class="range-label">Low Bid</div>
-                                    <div class="range-value" id="result-low">$0</div>
-                                </div>
-                                <div class="range-item">
-                                    <div class="range-label">High Bid</div>
-                                    <div class="range-value" id="result-high">$0</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="grid-2">
-                            <div class="card">
-                                <h3 class="card-title">Cost Breakdown</h3>
-                                <div class="breakdown-table" id="breakdown-table">
-                                    <!-- Filled by JS -->
-                                </div>
-                            </div>
-                            <div class="card">
-                                <h3 class="card-title">Win Probability Analysis</h3>
-                                <div class="probability-card" style="margin-top:16px">
-                                    <div class="probability-value" id="result-prob">0%</div>
-                                    <div style="font-size:0.875rem;margin-bottom:12px">Estimated win probability</div>
-                                    <div class="probability-bar"><div class="probability-fill" id="prob-bar" style="width:0%"></div></div>
-                                </div>
-                                <div style="margin-top:20px">
-                                    <h4 style="font-size:0.875rem;font-weight:600;margin-bottom:12px">Risk Assessment</h4>
-                                    <div id="risk-factors">
-                                        <!-- Filled by JS -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div style="display:flex;gap:16px;margin-top:32px">
-                            <button class="btn btn-secondary btn-lg" onclick="resetEstimate()">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-                                Reset
-                            </button>
-                            <button class="btn btn-primary btn-lg" style="flex:1" onclick="saveEstimate()">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-                                Save Estimate
-                            </button>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Projects View -->
-            <div id="view-projects" class="view">
-                <div class="page-header">
-                    <h1 class="page-title">Projects</h1>
-                    <p class="page-subtitle">Manage your bids and track status</p>
+                <!-- Section 2: Quantities - changes based on type -->
+                <div class="form-section open" id="qty-section">
+                    <div class="form-section-header" onclick="toggleSection(this)">
+                        <span class="num">2</span>
+                        <span id="qty-title">Quantities</span>
+                    </div>
+                    <div class="form-section-body" id="qty-body">
+                        <!-- Filled by JS based on project type -->
+                    </div>
                 </div>
-                <div id="projects-list"></div>
-            </div>
 
-            <!-- Customers View -->
-            <div id="view-customers" class="view">
-                <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start">
-                    <div>
-                        <h1 class="page-title">Customers</h1>
-                        <p class="page-subtitle">Manage your customer database</p>
+                <!-- Section 3: Concrete -->
+                <div class="form-section">
+                    <div class="form-section-header" onclick="toggleSection(this)">
+                        <span class="num">3</span>
+                        Concrete Mix
                     </div>
-                    <button class="btn btn-primary" onclick="showAddCustomer()">+ Add Customer</button>
-                </div>
-                <div id="customers-list"></div>
-            </div>
-
-            <!-- Analytics View -->
-            <div id="view-analytics" class="view">
-                <div class="page-header">
-                    <h1 class="page-title">Analytics</h1>
-                    <p class="page-subtitle">Track your bidding performance</p>
-                </div>
-                <div class="stats-row">
-                    <div class="stat-card">
-                        <div class="stat-value" id="an-total-bids">0</div>
-                        <div class="stat-label">Total Bids</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="an-total-value">$0</div>
-                        <div class="stat-label">Total Value</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="an-avg-bid">$0</div>
-                        <div class="stat-label">Average Bid</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="an-win-rate">0%</div>
-                        <div class="stat-label">Win Rate</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Settings View -->
-            <div id="view-settings" class="view">
-                <div class="page-header">
-                    <h1 class="page-title">Settings</h1>
-                    <p class="page-subtitle">Configure your company and rates</p>
-                </div>
-                <div class="grid-2">
-                    <div class="card">
-                        <h3 class="card-title">Company Information</h3>
-                        <div class="form-group">
-                            <label class="form-label">Company Name</label>
-                            <input type="text" class="form-input" id="set-company" value="Don Smith Concrete LLC">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Phone</label>
-                            <input type="tel" class="form-input" id="set-phone" placeholder="(555) 123-4567">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Email</label>
-                            <input type="email" class="form-input" id="set-email" placeholder="bids@donsmithconcrete.com">
-                        </div>
-                    </div>
-                    <div class="card">
-                        <h3 class="card-title">Default Rates</h3>
+                    <div class="form-section-body">
                         <div class="form-row">
                             <div class="form-group">
+                                <label class="form-label">Mix Design</label>
+                                <select class="form-select" id="est-mix" onchange="calculate()">
+                                    <option value="3000">3000 PSI - Standard</option>
+                                    <option value="3500" selected>3500 PSI - DOT Standard</option>
+                                    <option value="4000">4000 PSI - Heavy Duty</option>
+                                    <option value="4500">4500 PSI - High Strength</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Waste Factor</label>
+                                <select class="form-select" id="est-waste" onchange="calculate()">
+                                    <option value="5">5% - Flatwork</option>
+                                    <option value="7" selected>7% - Standard</option>
+                                    <option value="10">10% - Complex shapes</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Fiber Mesh</label>
+                                <select class="form-select" id="est-fiber" onchange="calculate()">
+                                    <option value="0">None</option>
+                                    <option value="8" selected>Synthetic ($8/CY)</option>
+                                    <option value="15">Macro Synthetic ($15/CY)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Color/Additive</label>
+                                <select class="form-select" id="est-additive" onchange="calculate()">
+                                    <option value="0" selected>None</option>
+                                    <option value="12">Integral Color ($12/CY)</option>
+                                    <option value="8">Accelerator ($8/CY)</option>
+                                    <option value="6">Retarder ($6/CY)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 4: Labor -->
+                <div class="form-section">
+                    <div class="form-section-header" onclick="toggleSection(this)">
+                        <span class="num">4</span>
+                        Labor
+                    </div>
+                    <div class="form-section-body">
+                        <div class="form-row-3">
+                            <div class="form-group">
+                                <label class="form-label">Foreman (days)</label>
+                                <input type="number" class="form-input" id="est-foreman" value="0" oninput="calculate()">
+                                <span class="form-hint">$650/day</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Finishers (man-days)</label>
+                                <input type="number" class="form-input" id="est-finishers" value="0" oninput="calculate()">
+                                <span class="form-hint">$480/day</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Laborers (man-days)</label>
+                                <input type="number" class="form-input" id="est-laborers" value="0" oninput="calculate()">
+                                <span class="form-hint">$360/day</span>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Form Setters (man-days)</label>
+                                <input type="number" class="form-input" id="est-formsetters" value="0" oninput="calculate()">
+                                <span class="form-hint">$420/day</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Operators (man-days)</label>
+                                <input type="number" class="form-input" id="est-operators" value="0" oninput="calculate()">
+                                <span class="form-hint">$520/day</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary" onclick="autoLabor()" style="margin-top: 8px">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
+                            Auto-Calculate Labor
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Section 5: Equipment -->
+                <div class="form-section">
+                    <div class="form-section-header" onclick="toggleSection(this)">
+                        <span class="num">5</span>
+                        Equipment
+                    </div>
+                    <div class="form-section-body">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Concrete Pump</label>
+                                <select class="form-select" id="est-pump" onchange="calculate()">
+                                    <option value="0">Direct pour / chute</option>
+                                    <option value="1200">Line pump ($1,200/day)</option>
+                                    <option value="2400" selected>Small boom ($2,400/day)</option>
+                                    <option value="3200">Large boom ($3,200/day)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Pump Days</label>
+                                <input type="number" class="form-input" id="est-pumpdays" value="1" oninput="calculate()">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Curb Machine (if applicable)</label>
+                                <select class="form-select" id="est-curbmachine" onchange="calculate()">
+                                    <option value="0" selected>None / Hand pour</option>
+                                    <option value="800">Small extruder ($800/day)</option>
+                                    <option value="1500">Large slip-form ($1,500/day)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Machine Days</label>
+                                <input type="number" class="form-input" id="est-machinedays" value="0" oninput="calculate()">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Other Equipment</label>
+                            <div class="input-with-unit">
+                                <input type="number" class="form-input" id="est-otherequip" value="0" oninput="calculate()" placeholder="0">
+                                <span class="input-unit">$</span>
+                            </div>
+                            <span class="form-hint">Saw, skid steer, vibrators, etc.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 6: Markup -->
+                <div class="form-section">
+                    <div class="form-section-header" onclick="toggleSection(this)">
+                        <span class="num">6</span>
+                        Markup & Costs
+                    </div>
+                    <div class="form-section-body">
+                        <div class="form-row-3">
+                            <div class="form-group">
                                 <label class="form-label">Overhead %</label>
-                                <input type="number" class="form-input" id="set-overhead" value="12">
+                                <input type="number" class="form-input" id="est-overhead" value="10" oninput="calculate()">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Profit %</label>
-                                <input type="number" class="form-input" id="set-profit" value="10">
+                                <input type="number" class="form-input" id="est-profit" value="10" oninput="calculate()">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Contingency %</label>
+                                <input type="number" class="form-input" id="est-contingency" value="5" oninput="calculate()">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label">Contingency %</label>
-                                <input type="number" class="form-input" id="set-contingency" value="5">
+                                <label class="form-label">Mobilization</label>
+                                <div class="input-with-unit">
+                                    <input type="number" class="form-input" id="est-mob" value="5000" oninput="calculate()">
+                                    <span class="input-unit">$</span>
+                                </div>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Concrete $/CY</label>
-                                <input type="number" class="form-input" id="set-concrete" value="175">
+                                <label class="form-label">Bond (if required)</label>
+                                <div class="input-with-unit">
+                                    <input type="number" class="form-input" id="est-bond" value="0" oninput="calculate()">
+                                    <span class="input-unit">$</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="card" style="margin-top:24px">
-                    <h3 class="card-title">Data Management</h3>
-                    <div style="display:flex;gap:12px;margin-top:16px">
-                        <button class="btn btn-secondary" onclick="exportData()">Export All Data</button>
-                        <button class="btn btn-secondary" style="color:var(--danger)" onclick="clearAllData()">Clear All Data</button>
+
+                <!-- Results -->
+                <div id="results-section" style="margin-top: 24px;">
+                    <div class="results-hero">
+                        <div class="results-hero-label">Total Bid</div>
+                        <div class="results-hero-value" id="result-total">$0</div>
+                        <div class="results-hero-sub" id="result-unit">$0.00 per LF</div>
+                        <div class="results-range">
+                            <div class="range-item">
+                                <div class="range-label">Low (-8%)</div>
+                                <div class="range-value" id="result-low">$0</div>
+                            </div>
+                            <div class="range-item">
+                                <div class="range-label">High (+8%)</div>
+                                <div class="range-value" id="result-high">$0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="card">
+                            <div class="card-title">Cost Breakdown</div>
+                            <div id="breakdown"></div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">Analysis</div>
+                            <div class="prob-card" id="prob-card">
+                                <div class="prob-value" id="result-prob">0%</div>
+                                <div class="prob-label">Estimated win probability</div>
+                                <div class="prob-bar"><div class="prob-fill" id="prob-fill" style="width: 0%"></div></div>
+                            </div>
+                            <div style="margin-top: 16px; font-size: 0.875rem; color: var(--text-secondary);" id="analysis-notes">
+                                Select a project type to see analysis.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 12px; margin-top: 24px;">
+                        <button class="btn btn-secondary" onclick="resetEstimate()">Reset</button>
+                        <button class="btn btn-primary btn-lg" style="flex: 1" onclick="saveEstimate()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+                            Save Estimate
+                        </button>
                     </div>
                 </div>
             </div>
-        </main>
+        </div>
+
+        <!-- Projects -->
+        <div id="view-projects" class="view">
+            <div class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1 class="page-title">Projects</h1>
+                    <p class="page-subtitle">Your saved estimates</p>
+                </div>
+                <button class="btn btn-primary" onclick="navigate('estimate')">+ New Estimate</button>
+            </div>
+            <div id="projects-list"></div>
+        </div>
+
+        <!-- Customers -->
+        <div id="view-customers" class="view">
+            <div class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1 class="page-title">Customers</h1>
+                    <p class="page-subtitle">GCs and contacts</p>
+                </div>
+                <button class="btn btn-primary" onclick="showAddCustomer()">+ Add Customer</button>
+            </div>
+            <div id="customers-list"></div>
+        </div>
+
+        <!-- Settings -->
+        <div id="view-settings" class="view">
+            <div class="page-header">
+                <h1 class="page-title">Settings</h1>
+                <p class="page-subtitle">Company and rate configuration</p>
+            </div>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-title">Company Information</div>
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label class="form-label">Company Name</label>
+                        <input type="text" class="form-input" id="set-company" value="Don Smith Concrete">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label class="form-label">Phone</label>
+                        <input type="text" class="form-input" id="set-phone" placeholder="(555) 123-4567">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="text" class="form-input" id="set-email" placeholder="bids@dsc.com">
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Default Rates</div>
+                    <div class="form-row" style="margin-bottom: 12px;">
+                        <div class="form-group">
+                            <label class="form-label">Concrete $/CY</label>
+                            <input type="number" class="form-input" id="set-concrete" value="165">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Curb $/LF</label>
+                            <input type="number" class="form-input" id="set-curb" value="28">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Default Overhead %</label>
+                            <input type="number" class="form-input" id="set-overhead" value="10">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Default Profit %</label>
+                            <input type="number" class="form-input" id="set-profit" value="10">
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary" onclick="saveSettings()" style="margin-top: 16px;">Save Settings</button>
+                </div>
+            </div>
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-title">Data</div>
+                <div style="display: flex; gap: 12px;">
+                    <button class="btn btn-secondary" onclick="exportData()">Export All Data</button>
+                    <button class="btn btn-secondary" style="color: var(--danger);" onclick="clearData()">Clear All Data</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="toast-container" id="toasts"></div>
 
-    <div class="modal-overlay" id="modal" onclick="closeModal()">
-        <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
             <div class="modal-header">
-                <h3 class="modal-title" id="modal-title">Modal</h3>
+                <span class="modal-title" id="modal-title">Modal</span>
                 <button class="modal-close" onclick="closeModal()">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
@@ -990,495 +1232,743 @@
     </div>
 
 <script>
-// ==================== STATE ====================
+// State
 let projects = JSON.parse(localStorage.getItem('dsc_projects') || '[]');
 let customers = JSON.parse(localStorage.getItem('dsc_customers') || '[]');
 let settings = JSON.parse(localStorage.getItem('dsc_settings') || '{}');
-let selectedProjectType = null;
-let currentEstimate = {};
+let selectedType = null;
+let currentCalc = {};
 
-// ==================== RATES ====================
+// Rates
 const RATES = {
-    concrete: { 3000: 165, 4000: 175, 5000: 190, 6000: 210 },
-    rebar: { none: 0, light: 0.8, standard: 1.2, heavy: 1.8, structural: 2.5 }, // lbs per SF
-    rebarCost: 1.15, // $ per lb installed
-    mesh: { none: 0, '6x6': 0.35, '6x6-w2': 0.45, '4x4': 0.55 }, // $ per SF
-    fiber: { none: 0, micro: 8, macro: 15, steel: 45 }, // $ per CY
-    pump: { none: 0, line: 1200, 'boom-small': 2800, 'boom-med': 3500, 'boom-large': 4500 },
-    screed: { none: 0, small: 1800, large: 2500 },
-    labor: { super: 850, foreman: 650, finishers: 520, laborers: 380, operators: 580, ironworkers: 550 },
-    form: { wood: 4.5, steel: 3.2, aluminum: 3.8 } // $ per LF per use
+    concrete: { 3000: 155, 3500: 165, 4000: 175, 4500: 190 },
+    labor: { foreman: 650, finishers: 480, laborers: 360, formsetters: 420, operators: 520 },
+    // Market rates for win probability
+    market: {
+        curb: { low: 24, avg: 30, high: 38 },      // per LF
+        street: { low: 8, avg: 11, high: 14 },     // per SF
+        sidewalk: { low: 7, avg: 9, high: 12 },    // per SF
+        ramp: { low: 2800, avg: 3500, high: 4500 }, // per unit
+        parking: { low: 7, avg: 10, high: 13 },    // per SF
+        driveway: { low: 8, avg: 11, high: 15 }    // per SF
+    }
 };
 
-// ==================== NAVIGATION ====================
+// Navigation
 function navigate(view) {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.getElementById('view-' + view)?.classList.add('active');
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.querySelector(`.nav-item[onclick="navigate('${view}')"]`)?.classList.add('active');
+    document.querySelectorAll('.header-nav a').forEach(a => a.classList.remove('active'));
+    document.querySelector(`.header-nav a[onclick="navigate('${view}')"]`)?.classList.add('active');
 
     if (view === 'dashboard') updateDashboard();
     if (view === 'projects') renderProjects();
     if (view === 'customers') renderCustomers();
-    if (view === 'analytics') updateAnalytics();
 }
 
-// ==================== DASHBOARD ====================
+// Dashboard
 function updateDashboard() {
-    const active = projects.filter(p => ['pending', 'draft'].includes(p.status)).length;
+    const active = projects.filter(p => ['draft', 'pending'].includes(p.status)).length;
     const pipeline = projects.filter(p => p.status !== 'lost').reduce((s, p) => s + (p.total || 0), 0);
-    const won = projects.filter(p => p.status === 'approved').reduce((s, p) => s + (p.total || 0), 0);
+    const won = projects.filter(p => p.status === 'won').reduce((s, p) => s + (p.total || 0), 0);
     const total = projects.length;
-    const wonCount = projects.filter(p => p.status === 'approved').length;
+    const wonCount = projects.filter(p => p.status === 'won').length;
     const rate = total > 0 ? Math.round((wonCount / total) * 100) : 0;
 
-    animateValue('dash-active', active);
-    animateValue('dash-pipeline', pipeline, true);
-    animateValue('dash-won', won, true);
-    animateValue('dash-rate', rate, false, '%');
-
-    document.getElementById('project-count').textContent = projects.length;
+    document.getElementById('dash-active').textContent = active;
+    document.getElementById('dash-pipeline').textContent = pipeline.toLocaleString();
+    document.getElementById('dash-won').textContent = won.toLocaleString();
+    document.getElementById('dash-rate').textContent = rate + '%';
 
     // Recent projects
     const recent = projects.slice(-5).reverse();
     const container = document.getElementById('recent-projects');
     if (recent.length > 0) {
         container.innerHTML = recent.map(p => `
-            <div class="project-card" style="margin-bottom:12px">
-                <div class="project-status-bar ${p.status}"></div>
-                <div class="project-content">
-                    <div class="project-header">
-                        <span class="project-name">${p.name}</span>
-                        <span class="project-value">$${(p.total||0).toLocaleString()}</span>
-                    </div>
-                    <div class="project-meta">
-                        <span class="project-tag">${p.type}</span>
-                        <span class="project-tag">${p.sqft?.toLocaleString() || 0} SF</span>
-                    </div>
+            <div class="project-row" onclick="viewProject('${p.id}')">
+                <div class="project-status ${p.status}"></div>
+                <div class="project-info">
+                    <div class="project-name">${p.name}</div>
+                    <div class="project-meta">${p.type} · ${p.qtyLabel || ''}</div>
                 </div>
+                <div class="project-value">$${(p.total || 0).toLocaleString()}</div>
             </div>
         `).join('');
     }
 }
 
-function animateValue(id, value, isCurrency = false, suffix = '') {
-    const el = document.getElementById(id);
-    if (!el) return;
-
-    const start = 0;
-    const duration = 1000;
-    const startTime = performance.now();
-
-    function update(currentTime) {
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        const current = Math.round(start + (value - start) * eased);
-
-        if (isCurrency) {
-            el.textContent = '$' + current.toLocaleString();
-        } else {
-            el.textContent = current + suffix;
-        }
-
-        if (progress < 1) requestAnimationFrame(update);
-    }
-
-    requestAnimationFrame(update);
-}
-
-// ==================== PROJECT TYPE ====================
+// Project type selection
 function selectProjectType(type) {
-    selectedProjectType = type;
-    document.querySelectorAll('.type-card').forEach(c => c.classList.toggle('selected', c.dataset.type === type));
+    selectedType = type;
+    document.querySelectorAll('.type-card').forEach(c => {
+        c.classList.toggle('selected', c.dataset.type === type);
+    });
     document.getElementById('estimate-form').style.display = 'block';
 
-    // Set defaults based on type
-    const defaults = {
-        parking: { sqft: 80000, thickness: '6', pours: 4, super: 20, foreman: 40, finishers: 200, laborers: 160, operators: 40, ironworkers: 80 },
-        foundation: { sqft: 25000, thickness: '12', pours: 2, super: 10, foreman: 20, finishers: 60, laborers: 80, operators: 20, ironworkers: 40 },
-        industrial: { sqft: 100000, thickness: '8', pours: 6, super: 25, foreman: 50, finishers: 300, laborers: 200, operators: 50, ironworkers: 60 },
-        tiltup: { sqft: 40000, thickness: '6', pours: 8, super: 30, foreman: 60, finishers: 150, laborers: 200, operators: 60, ironworkers: 100 },
-        retaining: { sqft: 8000, thickness: '12', pours: 5, super: 15, foreman: 30, finishers: 40, laborers: 100, operators: 30, ironworkers: 50 },
-        elevated: { sqft: 30000, thickness: '8', pours: 6, super: 30, foreman: 60, finishers: 200, laborers: 180, operators: 50, ironworkers: 120 }
-    };
-
-    const d = defaults[type] || defaults.industrial;
-    document.getElementById('est-sqft').value = d.sqft;
-    document.getElementById('est-thickness').value = d.thickness;
-    document.getElementById('est-pours').value = d.pours;
-    document.getElementById('est-super').value = d.super;
-    document.getElementById('est-foreman').value = d.foreman;
-    document.getElementById('est-finishers').value = d.finishers;
-    document.getElementById('est-laborers').value = d.laborers;
-    document.getElementById('est-operators').value = d.operators;
-    document.getElementById('est-ironworkers').value = d.ironworkers;
-    document.getElementById('est-edgeform').value = Math.round(Math.sqrt(d.sqft) * 4);
-    document.getElementById('est-pumpdays').value = d.pours;
-    document.getElementById('est-screeddays').value = d.pours;
-    document.getElementById('est-troweldays').value = d.pours;
-
-    calculateEstimate();
+    // Update quantity section based on type
+    updateQtySection(type);
 
     // Scroll to form
     document.getElementById('estimate-form').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function updateQtySection(type) {
+    const body = document.getElementById('qty-body');
+    const title = document.getElementById('qty-title');
+
+    const templates = {
+        curb: {
+            title: 'Curb & Gutter Quantities',
+            html: `
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Total Linear Feet</label>
+                        <input type="number" class="form-input" id="qty-lf" placeholder="2500" oninput="calculate()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Curb Type</label>
+                        <select class="form-select" id="qty-curbtype" onchange="calculate()">
+                            <option value="standard">Standard 6" curb & gutter</option>
+                            <option value="rollback">Rollback / Mountable</option>
+                            <option value="barrier">Barrier curb 8"</option>
+                            <option value="valley">Valley gutter</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Removal (LF)</label>
+                        <input type="number" class="form-input" id="qty-removal" value="0" oninput="calculate()">
+                        <span class="form-hint">Existing curb removal @ $8/LF</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Subgrade Prep</label>
+                        <select class="form-select" id="qty-subgrade" onchange="calculate()">
+                            <option value="0">None / by others</option>
+                            <option value="2">Light grading ($2/LF)</option>
+                            <option value="4" selected>Full prep ($4/LF)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="calc-display">
+                    <div class="calc-item">
+                        <div class="calc-label">Est. Concrete</div>
+                        <div class="calc-value" id="calc-cy">0 CY</div>
+                    </div>
+                    <div class="calc-item">
+                        <div class="calc-label">Material Cost</div>
+                        <div class="calc-value accent" id="calc-mat">$0</div>
+                    </div>
+                </div>
+            `
+        },
+        street: {
+            title: 'Street Paving Quantities',
+            html: `
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Total Square Feet</label>
+                        <input type="number" class="form-input" id="qty-sf" placeholder="25000" oninput="calculate()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Thickness</label>
+                        <select class="form-select" id="qty-thickness" onchange="calculate()">
+                            <option value="6">6" - Residential</option>
+                            <option value="8" selected>8" - Collector</option>
+                            <option value="10">10" - Arterial</option>
+                            <option value="12">12" - Heavy duty</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Dowel Bars (LF of joints)</label>
+                        <input type="number" class="form-input" id="qty-dowels" value="0" oninput="calculate()">
+                        <span class="form-hint">@ $12/LF installed</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tie Bars (LF of joints)</label>
+                        <input type="number" class="form-input" id="qty-ties" value="0" oninput="calculate()">
+                        <span class="form-hint">@ $8/LF installed</span>
+                    </div>
+                </div>
+                <div class="calc-display">
+                    <div class="calc-item">
+                        <div class="calc-label">Est. Concrete</div>
+                        <div class="calc-value" id="calc-cy">0 CY</div>
+                    </div>
+                    <div class="calc-item">
+                        <div class="calc-label">Square Yards</div>
+                        <div class="calc-value" id="calc-sy">0 SY</div>
+                    </div>
+                    <div class="calc-item">
+                        <div class="calc-label">Material Cost</div>
+                        <div class="calc-value accent" id="calc-mat">$0</div>
+                    </div>
+                </div>
+            `
+        },
+        sidewalk: {
+            title: 'Sidewalk Quantities',
+            html: `
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Total Square Feet</label>
+                        <input type="number" class="form-input" id="qty-sf" placeholder="5000" oninput="calculate()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Thickness</label>
+                        <select class="form-select" id="qty-thickness" onchange="calculate()">
+                            <option value="4" selected>4" - Standard</option>
+                            <option value="5">5" - Heavy use</option>
+                            <option value="6">6" - Driveway crossing</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Removal (SF)</label>
+                        <input type="number" class="form-input" id="qty-removal" value="0" oninput="calculate()">
+                        <span class="form-hint">Existing sidewalk removal @ $3/SF</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Form Type</label>
+                        <select class="form-select" id="qty-formtype" onchange="calculate()">
+                            <option value="wood" selected>Wood forms</option>
+                            <option value="metal">Metal forms</option>
+                            <option value="flex">Flexible (curves)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="calc-display">
+                    <div class="calc-item">
+                        <div class="calc-label">Est. Concrete</div>
+                        <div class="calc-value" id="calc-cy">0 CY</div>
+                    </div>
+                    <div class="calc-item">
+                        <div class="calc-label">Material Cost</div>
+                        <div class="calc-value accent" id="calc-mat">$0</div>
+                    </div>
+                </div>
+            `
+        },
+        ramp: {
+            title: 'ADA Ramp Quantities',
+            html: `
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Number of Ramps</label>
+                        <input type="number" class="form-input" id="qty-units" placeholder="12" oninput="calculate()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Ramp Type</label>
+                        <select class="form-select" id="qty-ramptype" onchange="calculate()">
+                            <option value="standard" selected>Standard perpendicular</option>
+                            <option value="parallel">Parallel / blended</option>
+                            <option value="corner">Corner / diagonal</option>
+                            <option value="midblock">Midblock crossing</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Detectable Warning</label>
+                        <select class="form-select" id="qty-dws" onchange="calculate()">
+                            <option value="cast" selected>Cast-in-place ($180/ea)</option>
+                            <option value="surface">Surface applied ($220/ea)</option>
+                            <option value="none">None / by others</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Existing Removal</label>
+                        <input type="number" class="form-input" id="qty-removal" value="0" oninput="calculate()">
+                        <span class="form-hint">Ramps to remove @ $400/ea</span>
+                    </div>
+                </div>
+                <div class="calc-display">
+                    <div class="calc-item">
+                        <div class="calc-label">Est. Concrete</div>
+                        <div class="calc-value" id="calc-cy">0 CY</div>
+                    </div>
+                    <div class="calc-item">
+                        <div class="calc-label">Material Cost</div>
+                        <div class="calc-value accent" id="calc-mat">$0</div>
+                    </div>
+                </div>
+            `
+        },
+        parking: {
+            title: 'Parking Lot Quantities',
+            html: `
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Total Square Feet</label>
+                        <input type="number" class="form-input" id="qty-sf" placeholder="40000" oninput="calculate()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Thickness</label>
+                        <select class="form-select" id="qty-thickness" onchange="calculate()">
+                            <option value="5">5" - Light duty</option>
+                            <option value="6" selected>6" - Standard</option>
+                            <option value="8">8" - Heavy / truck</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Wire Mesh</label>
+                        <select class="form-select" id="qty-mesh" onchange="calculate()">
+                            <option value="0">None</option>
+                            <option value="0.35" selected>6x6 W1.4 ($0.35/SF)</option>
+                            <option value="0.50">6x6 W2.9 ($0.50/SF)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Saw Cuts (LF)</label>
+                        <input type="number" class="form-input" id="qty-sawcuts" value="0" oninput="calculate()">
+                        <span class="form-hint">@ $1.50/LF</span>
+                    </div>
+                </div>
+                <div class="calc-display">
+                    <div class="calc-item">
+                        <div class="calc-label">Est. Concrete</div>
+                        <div class="calc-value" id="calc-cy">0 CY</div>
+                    </div>
+                    <div class="calc-item">
+                        <div class="calc-label">Square Yards</div>
+                        <div class="calc-value" id="calc-sy">0 SY</div>
+                    </div>
+                    <div class="calc-item">
+                        <div class="calc-label">Material Cost</div>
+                        <div class="calc-value accent" id="calc-mat">$0</div>
+                    </div>
+                </div>
+            `
+        },
+        driveway: {
+            title: 'Commercial Driveway Quantities',
+            html: `
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Total Square Feet</label>
+                        <input type="number" class="form-input" id="qty-sf" placeholder="3000" oninput="calculate()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Thickness</label>
+                        <select class="form-select" id="qty-thickness" onchange="calculate()">
+                            <option value="6" selected>6" - Standard</option>
+                            <option value="8">8" - Heavy duty</option>
+                            <option value="10">10" - Truck apron</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Approach Apron (SF)</label>
+                        <input type="number" class="form-input" id="qty-apron" value="0" oninput="calculate()">
+                        <span class="form-hint">Thickened edge @ street</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Removal (SF)</label>
+                        <input type="number" class="form-input" id="qty-removal" value="0" oninput="calculate()">
+                        <span class="form-hint">@ $4/SF</span>
+                    </div>
+                </div>
+                <div class="calc-display">
+                    <div class="calc-item">
+                        <div class="calc-label">Est. Concrete</div>
+                        <div class="calc-value" id="calc-cy">0 CY</div>
+                    </div>
+                    <div class="calc-item">
+                        <div class="calc-label">Material Cost</div>
+                        <div class="calc-value accent" id="calc-mat">$0</div>
+                    </div>
+                </div>
+            `
+        }
+    };
+
+    const t = templates[type] || templates.curb;
+    title.textContent = t.title;
+    body.innerHTML = t.html;
+
+    // Set defaults based on type
+    setDefaults(type);
+}
+
+function setDefaults(type) {
+    const defaults = {
+        curb: { foreman: 5, finishers: 10, laborers: 15, formsetters: 10, operators: 3, pumpdays: 3, mob: 5000 },
+        street: { foreman: 8, finishers: 20, laborers: 25, formsetters: 15, operators: 5, pumpdays: 5, mob: 12000 },
+        sidewalk: { foreman: 3, finishers: 6, laborers: 8, formsetters: 5, operators: 2, pumpdays: 2, mob: 3000 },
+        ramp: { foreman: 4, finishers: 8, laborers: 10, formsetters: 6, operators: 2, pumpdays: 3, mob: 4000 },
+        parking: { foreman: 6, finishers: 15, laborers: 20, formsetters: 10, operators: 4, pumpdays: 4, mob: 8000 },
+        driveway: { foreman: 2, finishers: 4, laborers: 5, formsetters: 3, operators: 1, pumpdays: 1, mob: 2500 }
+    };
+
+    const d = defaults[type] || defaults.curb;
+    document.getElementById('est-foreman').value = d.foreman;
+    document.getElementById('est-finishers').value = d.finishers;
+    document.getElementById('est-laborers').value = d.laborers;
+    document.getElementById('est-formsetters').value = d.formsetters;
+    document.getElementById('est-operators').value = d.operators;
+    document.getElementById('est-pumpdays').value = d.pumpdays;
+    document.getElementById('est-mob').value = d.mob;
 }
 
 function toggleSection(header) {
     header.parentElement.classList.toggle('open');
 }
 
-// ==================== CALCULATION ENGINE ====================
-function calculateEstimate() {
-    const sqft = parseFloat(document.getElementById('est-sqft')?.value) || 0;
-    if (sqft === 0) return;
+// Calculation
+function calculate() {
+    if (!selectedType) return;
 
-    const thickness = parseFloat(document.getElementById('est-thickness')?.value) || 6;
-    const mix = document.getElementById('est-mix')?.value || '4000';
-    const waste = parseFloat(document.getElementById('est-waste')?.value) || 5;
-    const pours = parseFloat(document.getElementById('est-pours')?.value) || 1;
+    const mix = document.getElementById('est-mix')?.value || '3500';
+    const wastePct = parseFloat(document.getElementById('est-waste')?.value) || 7;
+    const fiber = parseFloat(document.getElementById('est-fiber')?.value) || 0;
+    const additive = parseFloat(document.getElementById('est-additive')?.value) || 0;
+    const concreteRate = RATES.concrete[mix];
 
-    // Volume
-    const cy = (sqft * (thickness / 12) / 27) * (1 + waste/100);
+    let qty = 0;
+    let qtyLabel = '';
+    let unitLabel = '';
+    let cy = 0;
+    let materialCost = 0;
+    let extraCosts = 0;
+
+    // Calculate based on type
+    if (selectedType === 'curb') {
+        const lf = parseFloat(document.getElementById('qty-lf')?.value) || 0;
+        const removal = parseFloat(document.getElementById('qty-removal')?.value) || 0;
+        const subgrade = parseFloat(document.getElementById('qty-subgrade')?.value) || 0;
+
+        qty = lf;
+        qtyLabel = lf.toLocaleString() + ' LF';
+        unitLabel = 'per LF';
+        cy = (lf * 0.08) * (1 + wastePct/100); // ~0.08 CY per LF for standard curb
+        extraCosts = (removal * 8) + (lf * subgrade);
+
+    } else if (selectedType === 'street' || selectedType === 'parking' || selectedType === 'sidewalk' || selectedType === 'driveway') {
+        const sf = parseFloat(document.getElementById('qty-sf')?.value) || 0;
+        const thickness = parseFloat(document.getElementById('qty-thickness')?.value) || 6;
+        const removal = parseFloat(document.getElementById('qty-removal')?.value) || 0;
+
+        qty = sf;
+        qtyLabel = sf.toLocaleString() + ' SF';
+        unitLabel = 'per SF';
+        cy = (sf * (thickness / 12) / 27) * (1 + wastePct/100);
+
+        // Type-specific extras
+        if (selectedType === 'street') {
+            const dowels = parseFloat(document.getElementById('qty-dowels')?.value) || 0;
+            const ties = parseFloat(document.getElementById('qty-ties')?.value) || 0;
+            extraCosts = (dowels * 12) + (ties * 8);
+        } else if (selectedType === 'parking') {
+            const mesh = parseFloat(document.getElementById('qty-mesh')?.value) || 0;
+            const sawcuts = parseFloat(document.getElementById('qty-sawcuts')?.value) || 0;
+            extraCosts = (sf * mesh) + (sawcuts * 1.5);
+        } else if (selectedType === 'sidewalk') {
+            extraCosts = removal * 3;
+        } else if (selectedType === 'driveway') {
+            const apron = parseFloat(document.getElementById('qty-apron')?.value) || 0;
+            cy += (apron * (10/12) / 27) * (1 + wastePct/100); // Thickened apron
+            extraCosts = removal * 4;
+        }
+
+        // Update SY display if exists
+        const syEl = document.getElementById('calc-sy');
+        if (syEl) syEl.textContent = Math.round(sf / 9).toLocaleString() + ' SY';
+
+    } else if (selectedType === 'ramp') {
+        const units = parseFloat(document.getElementById('qty-units')?.value) || 0;
+        const removal = parseFloat(document.getElementById('qty-removal')?.value) || 0;
+        const dwsType = document.getElementById('qty-dws')?.value || 'cast';
+
+        qty = units;
+        qtyLabel = units + ' ramps';
+        unitLabel = 'per ramp';
+        cy = (units * 1.2) * (1 + wastePct/100); // ~1.2 CY per ramp avg
+
+        const dwsCost = dwsType === 'cast' ? 180 : dwsType === 'surface' ? 220 : 0;
+        extraCosts = (units * dwsCost) + (removal * 400);
+    }
+
+    // Update calc display
     document.getElementById('calc-cy').textContent = Math.round(cy) + ' CY';
 
-    // Concrete cost
-    const concreteCost = cy * RATES.concrete[mix];
-    document.getElementById('calc-concrete-cost').textContent = '$' + Math.round(concreteCost).toLocaleString();
+    // Material costs
+    materialCost = (cy * concreteRate) + (cy * fiber) + (cy * additive) + extraCosts;
+    document.getElementById('calc-mat').textContent = '$' + Math.round(materialCost).toLocaleString();
 
-    // Rebar
-    const rebarType = document.getElementById('est-rebar')?.value || 'standard';
-    const rebarLbs = sqft * RATES.rebar[rebarType];
-    const rebarTons = rebarLbs / 2000;
-    const rebarCost = rebarLbs * RATES.rebarCost;
-    document.getElementById('calc-rebar').textContent = rebarTons.toFixed(1) + ' tons';
-
-    // Mesh
-    const meshType = document.getElementById('est-mesh')?.value || 'none';
-    const meshCost = sqft * RATES.mesh[meshType];
-
-    // Fiber
-    const fiberType = document.getElementById('est-fiber')?.value || 'none';
-    const fiberCost = cy * RATES.fiber[fiberType];
-
-    const totalRebarCost = rebarCost + meshCost + fiberCost;
-    document.getElementById('calc-rebar-cost').textContent = '$' + Math.round(totalRebarCost).toLocaleString();
-
-    // Formwork
-    const edgeForm = parseFloat(document.getElementById('est-edgeform')?.value) || 0;
-    const formType = document.getElementById('est-formtype')?.value || 'wood';
-    const reuse = parseFloat(document.getElementById('est-reuse')?.value) || 3;
-    const formCost = (edgeForm * RATES.form[formType] * pours) / reuse;
-    document.getElementById('calc-form-cost').textContent = '$' + Math.round(formCost).toLocaleString();
-
-    // Labor
-    const superDays = parseFloat(document.getElementById('est-super')?.value) || 0;
-    const foremanDays = parseFloat(document.getElementById('est-foreman')?.value) || 0;
-    const finisherDays = parseFloat(document.getElementById('est-finishers')?.value) || 0;
-    const laborerDays = parseFloat(document.getElementById('est-laborers')?.value) || 0;
-    const operatorDays = parseFloat(document.getElementById('est-operators')?.value) || 0;
-    const ironworkerDays = parseFloat(document.getElementById('est-ironworkers')?.value) || 0;
-
+    // Labor costs
     const laborCost =
-        superDays * RATES.labor.super +
-        foremanDays * RATES.labor.foreman +
-        finisherDays * RATES.labor.finishers +
-        laborerDays * RATES.labor.laborers +
-        operatorDays * RATES.labor.operators +
-        ironworkerDays * RATES.labor.ironworkers;
-    document.getElementById('calc-labor-cost').textContent = '$' + Math.round(laborCost).toLocaleString();
+        (parseFloat(document.getElementById('est-foreman')?.value) || 0) * RATES.labor.foreman +
+        (parseFloat(document.getElementById('est-finishers')?.value) || 0) * RATES.labor.finishers +
+        (parseFloat(document.getElementById('est-laborers')?.value) || 0) * RATES.labor.laborers +
+        (parseFloat(document.getElementById('est-formsetters')?.value) || 0) * RATES.labor.formsetters +
+        (parseFloat(document.getElementById('est-operators')?.value) || 0) * RATES.labor.operators;
 
-    // Equipment
-    const pumpType = document.getElementById('est-pump')?.value || 'boom-small';
-    const pumpDays = parseFloat(document.getElementById('est-pumpdays')?.value) || 1;
-    const pumpCost = RATES.pump[pumpType] * pumpDays;
-
-    const screedType = document.getElementById('est-screed')?.value || 'large';
-    const screedDays = parseFloat(document.getElementById('est-screeddays')?.value) || 1;
-    const screedCost = RATES.screed[screedType] * screedDays;
-
-    const trowels = parseFloat(document.getElementById('est-trowels')?.value) || 2;
-    const trowelDays = parseFloat(document.getElementById('est-troweldays')?.value) || 1;
-    const trowelCost = trowels * 150 * trowelDays;
-
+    // Equipment costs
+    const pumpRate = parseFloat(document.getElementById('est-pump')?.value) || 0;
+    const pumpDays = parseFloat(document.getElementById('est-pumpdays')?.value) || 0;
+    const machineRate = parseFloat(document.getElementById('est-curbmachine')?.value) || 0;
+    const machineDays = parseFloat(document.getElementById('est-machinedays')?.value) || 0;
     const otherEquip = parseFloat(document.getElementById('est-otherequip')?.value) || 0;
-    const equipCost = pumpCost + screedCost + trowelCost + otherEquip;
-    document.getElementById('calc-equip-cost').textContent = '$' + Math.round(equipCost).toLocaleString();
+    const equipCost = (pumpRate * pumpDays) + (machineRate * machineDays) + otherEquip;
 
     // Totals
-    const directCost = concreteCost + totalRebarCost + formCost + laborCost + equipCost;
-
-    const overhead = parseFloat(document.getElementById('est-overhead')?.value) || 12;
-    const profit = parseFloat(document.getElementById('est-profit')?.value) || 10;
-    const contingency = parseFloat(document.getElementById('est-contingency')?.value) || 5;
-    const mobilization = parseFloat(document.getElementById('est-mobilization')?.value) || 15000;
+    const directCost = materialCost + laborCost + equipCost;
+    const overhead = directCost * (parseFloat(document.getElementById('est-overhead')?.value) || 10) / 100;
+    const profit = directCost * (parseFloat(document.getElementById('est-profit')?.value) || 10) / 100;
+    const contingency = directCost * (parseFloat(document.getElementById('est-contingency')?.value) || 5) / 100;
+    const mob = parseFloat(document.getElementById('est-mob')?.value) || 0;
     const bond = parseFloat(document.getElementById('est-bond')?.value) || 0;
 
-    const overheadCost = directCost * (overhead / 100);
-    const profitCost = directCost * (profit / 100);
-    const contingencyCost = directCost * (contingency / 100);
-
-    const totalBid = directCost + overheadCost + profitCost + contingencyCost + mobilization + bond;
-    const perSF = totalBid / sqft;
+    const total = directCost + overhead + profit + contingency + mob + bond;
+    const perUnit = qty > 0 ? total / qty : 0;
 
     // Store for saving
-    currentEstimate = {
-        sqft, cy: Math.round(cy), concreteCost, rebarCost: totalRebarCost, formCost,
-        laborCost, equipCost, directCost, overheadCost, profitCost, contingencyCost,
-        mobilization, bond, totalBid, perSF
+    currentCalc = {
+        type: selectedType,
+        qty, qtyLabel, cy: Math.round(cy),
+        materialCost, laborCost, equipCost, directCost,
+        overhead, profit, contingency, mob, bond,
+        total: Math.round(total), perUnit
     };
 
     // Update results
-    document.getElementById('result-total').textContent = '$' + Math.round(totalBid).toLocaleString();
-    document.getElementById('result-persf').textContent = '$' + perSF.toFixed(2) + ' per SF';
-    document.getElementById('result-low').textContent = '$' + Math.round(totalBid * 0.92).toLocaleString();
-    document.getElementById('result-high').textContent = '$' + Math.round(totalBid * 1.08).toLocaleString();
+    document.getElementById('result-total').textContent = '$' + Math.round(total).toLocaleString();
+    document.getElementById('result-unit').textContent = '$' + perUnit.toFixed(2) + ' ' + unitLabel;
+    document.getElementById('result-low').textContent = '$' + Math.round(total * 0.92).toLocaleString();
+    document.getElementById('result-high').textContent = '$' + Math.round(total * 1.08).toLocaleString();
 
     // Breakdown
-    document.getElementById('breakdown-table').innerHTML = `
-        <div class="breakdown-row"><span class="breakdown-label">Concrete <span class="material-tag">${Math.round(cy)} CY</span></span><span class="breakdown-value">$${Math.round(concreteCost).toLocaleString()}</span></div>
-        <div class="breakdown-row"><span class="breakdown-label">Reinforcement</span><span class="breakdown-value">$${Math.round(totalRebarCost).toLocaleString()}</span></div>
-        <div class="breakdown-row"><span class="breakdown-label">Formwork</span><span class="breakdown-value">$${Math.round(formCost).toLocaleString()}</span></div>
+    document.getElementById('breakdown').innerHTML = `
+        <div class="breakdown-row"><span class="breakdown-label">Material<span class="breakdown-tag">${Math.round(cy)} CY</span></span><span class="breakdown-value">$${Math.round(materialCost).toLocaleString()}</span></div>
         <div class="breakdown-row"><span class="breakdown-label">Labor</span><span class="breakdown-value">$${Math.round(laborCost).toLocaleString()}</span></div>
         <div class="breakdown-row"><span class="breakdown-label">Equipment</span><span class="breakdown-value">$${Math.round(equipCost).toLocaleString()}</span></div>
         <div class="breakdown-row subtotal"><span class="breakdown-label">Direct Cost</span><span class="breakdown-value">$${Math.round(directCost).toLocaleString()}</span></div>
-        <div class="breakdown-row"><span class="breakdown-label">Overhead (${overhead}%)</span><span class="breakdown-value">$${Math.round(overheadCost).toLocaleString()}</span></div>
-        <div class="breakdown-row"><span class="breakdown-label">Profit (${profit}%)</span><span class="breakdown-value">$${Math.round(profitCost).toLocaleString()}</span></div>
-        <div class="breakdown-row"><span class="breakdown-label">Contingency (${contingency}%)</span><span class="breakdown-value">$${Math.round(contingencyCost).toLocaleString()}</span></div>
-        <div class="breakdown-row"><span class="breakdown-label">Mobilization</span><span class="breakdown-value">$${Math.round(mobilization).toLocaleString()}</span></div>
-        ${bond > 0 ? `<div class="breakdown-row"><span class="breakdown-label">Bond & Insurance</span><span class="breakdown-value">$${Math.round(bond).toLocaleString()}</span></div>` : ''}
-        <div class="breakdown-row total"><span class="breakdown-label">Total Bid</span><span class="breakdown-value">$${Math.round(totalBid).toLocaleString()}</span></div>
+        <div class="breakdown-row"><span class="breakdown-label">Overhead</span><span class="breakdown-value">$${Math.round(overhead).toLocaleString()}</span></div>
+        <div class="breakdown-row"><span class="breakdown-label">Profit</span><span class="breakdown-value">$${Math.round(profit).toLocaleString()}</span></div>
+        <div class="breakdown-row"><span class="breakdown-label">Contingency</span><span class="breakdown-value">$${Math.round(contingency).toLocaleString()}</span></div>
+        <div class="breakdown-row"><span class="breakdown-label">Mobilization</span><span class="breakdown-value">$${Math.round(mob).toLocaleString()}</span></div>
+        ${bond > 0 ? `<div class="breakdown-row"><span class="breakdown-label">Bond</span><span class="breakdown-value">$${Math.round(bond).toLocaleString()}</span></div>` : ''}
+        <div class="breakdown-row total"><span class="breakdown-label">Total Bid</span><span class="breakdown-value">$${Math.round(total).toLocaleString()}</span></div>
     `;
 
     // Win probability
-    const marketAvg = { parking: 14, foundation: 18, industrial: 12, tiltup: 16, retaining: 22, elevated: 24 };
-    const avgRate = marketAvg[selectedProjectType] || 15;
-    const diff = (perSF - avgRate) / avgRate;
-    let prob = 65 - (diff * 80);
-    prob = Math.max(15, Math.min(92, prob));
+    const market = RATES.market[selectedType];
+    let prob = 50;
+    let notes = [];
 
-    document.getElementById('result-prob').textContent = Math.round(prob) + '%';
-    document.getElementById('prob-bar').style.width = prob + '%';
+    if (market && qty > 0) {
+        if (perUnit <= market.low) {
+            prob = 85;
+            notes.push('Price is very competitive (below market low)');
+        } else if (perUnit <= market.avg) {
+            prob = 70;
+            notes.push('Price is competitive (at or below market average)');
+        } else if (perUnit <= market.high) {
+            prob = 45;
+            notes.push('Price is above market average');
+        } else {
+            prob = 25;
+            notes.push('Price is above typical market range');
+        }
 
-    // Risk factors
-    const risks = [];
-    if (perSF > avgRate * 1.15) risks.push({ level: 'high', title: 'Above Market', desc: 'Price is 15%+ above market average' });
-    else if (perSF > avgRate * 1.05) risks.push({ level: 'medium', title: 'Slightly High', desc: 'Price is 5-15% above market' });
-    else risks.push({ level: 'low', title: 'Competitive', desc: 'Price is at or below market' });
+        notes.push(`Market range: $${market.low} - $${market.high} ${unitLabel}`);
+    }
 
-    if (pours > 4) risks.push({ level: 'medium', title: 'Multiple Pours', desc: 'Complex scheduling with ' + pours + ' pours' });
-    if (sqft > 75000) risks.push({ level: 'low', title: 'Large Scale', desc: 'Economies of scale advantage' });
-
-    document.getElementById('risk-factors').innerHTML = risks.map(r => `
-        <div class="risk-card">
-            <div class="risk-icon ${r.level}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg></div>
-            <div class="risk-content"><div class="risk-title">${r.title}</div><div class="risk-desc">${r.desc}</div></div>
-            <span class="risk-badge ${r.level}">${r.level}</span>
-        </div>
-    `).join('');
+    document.getElementById('result-prob').textContent = prob + '%';
+    document.getElementById('prob-fill').style.width = prob + '%';
+    document.getElementById('prob-card').style.background = prob >= 60 ? 'var(--success)' : prob >= 40 ? 'var(--warning)' : 'var(--danger)';
+    document.getElementById('analysis-notes').innerHTML = notes.map(n => `<div style="margin-bottom: 6px;">• ${n}</div>`).join('');
 }
 
-function autoCalculateLabor() {
-    const sqft = parseFloat(document.getElementById('est-sqft')?.value) || 0;
-    const pours = parseFloat(document.getElementById('est-pours')?.value) || 1;
+function autoLabor() {
+    if (!selectedType) return;
 
-    // Industry standard productivity rates
-    document.getElementById('est-super').value = Math.ceil(pours * 3);
-    document.getElementById('est-foreman').value = Math.ceil(pours * 5);
-    document.getElementById('est-finishers').value = Math.ceil(sqft / 400);
-    document.getElementById('est-laborers').value = Math.ceil(sqft / 500);
-    document.getElementById('est-operators').value = Math.ceil(pours * 3);
-    document.getElementById('est-ironworkers').value = Math.ceil(sqft / 800);
+    // Auto-calculate based on quantities
+    let base = 0;
+    if (selectedType === 'curb') {
+        base = parseFloat(document.getElementById('qty-lf')?.value) || 0;
+        document.getElementById('est-foreman').value = Math.ceil(base / 500);
+        document.getElementById('est-finishers').value = Math.ceil(base / 250);
+        document.getElementById('est-laborers').value = Math.ceil(base / 200);
+        document.getElementById('est-formsetters').value = Math.ceil(base / 250);
+        document.getElementById('est-operators').value = Math.ceil(base / 800);
+    } else if (['street', 'parking', 'sidewalk', 'driveway'].includes(selectedType)) {
+        base = parseFloat(document.getElementById('qty-sf')?.value) || 0;
+        document.getElementById('est-foreman').value = Math.ceil(base / 5000);
+        document.getElementById('est-finishers').value = Math.ceil(base / 2000);
+        document.getElementById('est-laborers').value = Math.ceil(base / 1500);
+        document.getElementById('est-formsetters').value = Math.ceil(base / 2500);
+        document.getElementById('est-operators').value = Math.ceil(base / 8000);
+    } else if (selectedType === 'ramp') {
+        base = parseFloat(document.getElementById('qty-units')?.value) || 0;
+        document.getElementById('est-foreman').value = Math.ceil(base / 3);
+        document.getElementById('est-finishers').value = Math.ceil(base / 1.5);
+        document.getElementById('est-laborers').value = Math.ceil(base / 1.2);
+        document.getElementById('est-formsetters').value = Math.ceil(base / 2);
+        document.getElementById('est-operators').value = Math.ceil(base / 4);
+    }
 
-    calculateEstimate();
-    toast('Labor auto-calculated based on area and pours', 'success');
+    calculate();
+    toast('Labor auto-calculated', 'success');
 }
 
-// ==================== PROJECTS ====================
+// Projects
 function renderProjects() {
     const container = document.getElementById('projects-list');
     if (projects.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
-                <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div>
-                <h3 class="empty-title">No Projects Yet</h3>
-                <p class="empty-desc">Create your first commercial estimate to start building your pipeline.</p>
-                <button class="btn btn-primary btn-lg" onclick="navigate('estimate')">Create Estimate</button>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                <h3>No Projects Yet</h3>
+                <p>Create your first estimate to get started.</p>
+                <button class="btn btn-primary" onclick="navigate('estimate')">New Estimate</button>
             </div>
         `;
         return;
     }
-    container.innerHTML = projects.map((p, i) => `
-        <div class="project-card card-animate" style="animation-delay:${i * 0.1}s">
-            <div class="project-status-bar ${p.status}"></div>
-            <div class="project-content">
-                <div class="project-header">
-                    <div>
-                        <div class="project-name">${p.name}</div>
-                        <div class="project-meta" style="margin-top:8px">
-                            <span class="project-tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> ${p.type}</span>
-                            <span class="project-tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8"/></svg> ${(p.sqft || 0).toLocaleString()} SF</span>
-                            <span class="project-tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> ${new Date(p.date).toLocaleDateString()}</span>
-                        </div>
-                    </div>
-                    <div style="text-align:right">
-                        <div class="project-value">$${(p.total || 0).toLocaleString()}</div>
-                        <div style="font-size:0.8125rem;color:var(--text-muted)">$${(p.perSF || 0).toFixed(2)}/SF</div>
-                    </div>
-                </div>
+
+    container.innerHTML = projects.map(p => `
+        <div class="project-row">
+            <div class="project-status ${p.status}"></div>
+            <div class="project-info">
+                <div class="project-name">${p.name}</div>
+                <div class="project-meta">${p.type} · ${p.qtyLabel || ''} · ${new Date(p.date).toLocaleDateString()}</div>
             </div>
+            <div class="project-value">$${(p.total || 0).toLocaleString()}</div>
         </div>
     `).join('');
 }
 
 function saveEstimate() {
-    if (!currentEstimate.totalBid) {
-        toast('Please complete the estimate first', 'error');
+    if (!currentCalc.total) {
+        toast('Complete the estimate first', 'error');
         return;
     }
 
-    const name = document.getElementById('est-name')?.value || `${selectedProjectType} - ${new Date().toLocaleDateString()}`;
+    const name = document.getElementById('est-name')?.value || `${selectedType} - ${new Date().toLocaleDateString()}`;
 
-    const project = {
+    projects.push({
         id: Date.now().toString(36),
-        name: name,
-        type: selectedProjectType,
-        sqft: currentEstimate.sqft,
-        cy: currentEstimate.cy,
-        total: Math.round(currentEstimate.totalBid),
-        perSF: currentEstimate.perSF,
+        name,
+        type: selectedType,
+        qtyLabel: currentCalc.qtyLabel,
+        total: currentCalc.total,
+        perUnit: currentCalc.perUnit,
         status: 'draft',
         date: new Date().toISOString(),
-        estimate: { ...currentEstimate }
-    };
+        calc: { ...currentCalc }
+    });
 
-    projects.push(project);
     localStorage.setItem('dsc_projects', JSON.stringify(projects));
-
-    toast('Estimate saved! $' + Math.round(currentEstimate.totalBid).toLocaleString(), 'success');
+    toast('Estimate saved', 'success');
     resetEstimate();
     navigate('projects');
 }
 
 function resetEstimate() {
-    selectedProjectType = null;
-    currentEstimate = {};
+    selectedType = null;
+    currentCalc = {};
     document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
     document.getElementById('estimate-form').style.display = 'none';
-    document.querySelectorAll('#estimate-form input').forEach(i => i.value = '');
 }
 
-// ==================== CUSTOMERS ====================
+// Customers
 function renderCustomers() {
     const container = document.getElementById('customers-list');
+
+    // Update customer dropdown
+    const select = document.getElementById('est-customer');
+    if (select) {
+        select.innerHTML = '<option value="">Select customer...</option>' +
+            customers.map(c => `<option value="${c.id}">${c.name}${c.company ? ' - ' + c.company : ''}</option>`).join('');
+    }
+
     if (customers.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
-                <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
-                <h3 class="empty-title">No Customers</h3>
-                <p class="empty-desc">Add your general contractors and clients to quickly assign them to bids.</p>
-                <button class="btn btn-primary btn-lg" onclick="showAddCustomer()">Add Customer</button>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                <h3>No Customers Yet</h3>
+                <p>Add your GCs and contacts.</p>
+                <button class="btn btn-primary" onclick="showAddCustomer()">Add Customer</button>
             </div>
         `;
         return;
     }
 
-    // Populate customer select in estimate form
-    const select = document.getElementById('est-customer');
-    if (select) {
-        select.innerHTML = '<option value="">Select customer...</option>' +
-            customers.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
-    }
-
-    container.innerHTML = `<div class="grid-3">` + customers.map(c => `
-        <div class="card">
-            <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
-                <div style="width:56px;height:56px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.25rem">${getInitials(c.name)}</div>
-                <div>
-                    <div style="font-weight:700">${c.name}</div>
-                    <div style="font-size:0.875rem;color:var(--text-muted)">${c.company || 'General Contractor'}</div>
+    container.innerHTML = `<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">` +
+        customers.map(c => `
+            <div class="card">
+                <div style="font-weight: 500; margin-bottom: 4px;">${c.name}</div>
+                <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 12px;">${c.company || 'General Contractor'}</div>
+                <div style="font-size: 0.8125rem; color: var(--text-muted);">
+                    ${c.phone || ''}<br>${c.email || ''}
                 </div>
             </div>
-            <div style="font-size:0.875rem;color:var(--text-muted)">
-                ${c.phone ? `<div style="margin-bottom:4px">${c.phone}</div>` : ''}
-                ${c.email ? `<div>${c.email}</div>` : ''}
-            </div>
-        </div>
-    `).join('') + `</div>`;
+        `).join('') + '</div>';
 }
 
 function showAddCustomer() {
     document.getElementById('modal-title').textContent = 'Add Customer';
     document.getElementById('modal-body').innerHTML = `
-        <div class="form-group">
+        <div class="form-group" style="margin-bottom: 12px;">
             <label class="form-label">Contact Name</label>
             <input type="text" class="form-input" id="cust-name" placeholder="John Smith">
         </div>
-        <div class="form-group">
+        <div class="form-group" style="margin-bottom: 12px;">
             <label class="form-label">Company</label>
             <input type="text" class="form-input" id="cust-company" placeholder="ABC Construction">
         </div>
-        <div class="form-group">
+        <div class="form-group" style="margin-bottom: 12px;">
             <label class="form-label">Phone</label>
-            <input type="tel" class="form-input" id="cust-phone" placeholder="(555) 123-4567">
+            <input type="text" class="form-input" id="cust-phone" placeholder="(555) 123-4567">
         </div>
-        <div class="form-group">
+        <div class="form-group" style="margin-bottom: 16px;">
             <label class="form-label">Email</label>
-            <input type="email" class="form-input" id="cust-email" placeholder="john@abcconstruction.com">
+            <input type="text" class="form-input" id="cust-email" placeholder="john@abc.com">
         </div>
-        <button class="btn btn-primary btn-block btn-lg" onclick="saveCustomer()">Add Customer</button>
+        <button class="btn btn-primary" style="width: 100%;" onclick="saveCustomer()">Add Customer</button>
     `;
     document.getElementById('modal').classList.add('active');
 }
 
 function saveCustomer() {
-    const name = document.getElementById('cust-name')?.value.trim();
-    if (!name) { toast('Name is required', 'error'); return; }
+    const name = document.getElementById('cust-name')?.value?.trim();
+    if (!name) { toast('Name required', 'error'); return; }
 
     customers.push({
         id: Date.now().toString(36),
-        name: name,
-        company: document.getElementById('cust-company')?.value.trim(),
-        phone: document.getElementById('cust-phone')?.value.trim(),
-        email: document.getElementById('cust-email')?.value.trim()
+        name,
+        company: document.getElementById('cust-company')?.value?.trim(),
+        phone: document.getElementById('cust-phone')?.value?.trim(),
+        email: document.getElementById('cust-email')?.value?.trim()
     });
 
     localStorage.setItem('dsc_customers', JSON.stringify(customers));
     closeModal();
-    toast('Customer added!', 'success');
+    toast('Customer added', 'success');
     renderCustomers();
 }
 
-// ==================== ANALYTICS ====================
-function updateAnalytics() {
-    const total = projects.length;
-    const totalValue = projects.reduce((s, p) => s + (p.total || 0), 0);
-    const avgBid = total > 0 ? totalValue / total : 0;
-    const wonCount = projects.filter(p => p.status === 'approved').length;
-    const winRate = total > 0 ? Math.round((wonCount / total) * 100) : 0;
-
-    animateValue('an-total-bids', total);
-    animateValue('an-total-value', totalValue, true);
-    animateValue('an-avg-bid', avgBid, true);
-    animateValue('an-win-rate', winRate, false, '%');
+// Settings
+function saveSettings() {
+    settings = {
+        company: document.getElementById('set-company')?.value,
+        phone: document.getElementById('set-phone')?.value,
+        email: document.getElementById('set-email')?.value,
+        concreteRate: document.getElementById('set-concrete')?.value,
+        curbRate: document.getElementById('set-curb')?.value,
+        overhead: document.getElementById('set-overhead')?.value,
+        profit: document.getElementById('set-profit')?.value
+    };
+    localStorage.setItem('dsc_settings', JSON.stringify(settings));
+    toast('Settings saved', 'success');
 }
-
-// ==================== UTILITIES ====================
-function toast(msg, type = 'info') {
-    const t = document.createElement('div');
-    t.className = 'toast ' + type;
-    t.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${
-        type === 'success' ? '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' :
-        type === 'error' ? '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>' :
-        '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>'
-    }</svg><span>${msg}</span>`;
-    document.getElementById('toasts').appendChild(t);
-    setTimeout(() => t.remove(), 4000);
-}
-
-function closeModal() { document.getElementById('modal').classList.remove('active'); }
-function getInitials(n) { return n ? n.split(' ').map(x => x[0]).join('').toUpperCase().slice(0, 2) : '?'; }
-function showNewEstimate() { navigate('estimate'); }
 
 function exportData() {
     const data = { projects, customers, settings, exported: new Date().toISOString() };
@@ -1487,24 +1977,36 @@ function exportData() {
     a.href = URL.createObjectURL(blob);
     a.download = `dsc-bidpro-${new Date().toISOString().split('T')[0]}.json`;
     a.click();
-    toast('Data exported!', 'success');
+    toast('Data exported', 'success');
 }
 
-function clearAllData() {
-    if (confirm('Delete ALL data? This cannot be undone.')) {
+function clearData() {
+    if (confirm('Delete all data? This cannot be undone.')) {
         projects = [];
         customers = [];
         localStorage.clear();
-        toast('All data cleared', 'success');
+        toast('Data cleared', 'success');
         navigate('dashboard');
     }
 }
 
-// ==================== INIT ====================
+// Utilities
+function closeModal() {
+    document.getElementById('modal').classList.remove('active');
+}
+
+function toast(msg, type = 'info') {
+    const t = document.createElement('div');
+    t.className = 'toast ' + type;
+    t.textContent = msg;
+    document.getElementById('toasts').appendChild(t);
+    setTimeout(() => t.remove(), 3000);
+}
+
+// Init
 document.addEventListener('DOMContentLoaded', () => {
     updateDashboard();
     renderCustomers();
-    console.log('%c DSC Bid Pro ', 'background:#0f172a;color:#fff;padding:8px 16px;border-radius:4px;font-weight:bold', 'Commercial Concrete Estimating');
 });
 </script>
 </body>
