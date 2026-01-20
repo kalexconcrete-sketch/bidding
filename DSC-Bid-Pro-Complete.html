@@ -716,6 +716,126 @@
             font-weight: 500;
         }
 
+        /* DSC Logo Branding */
+        .logo-icon {
+            width: 140px;
+            height: 40px;
+        }
+        .dashboard-brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .brand-mark {
+            width: 56px;
+            height: 56px;
+            flex-shrink: 0;
+        }
+
+        /* Multi-Select Project Types */
+        .type-card.selected {
+            border-color: var(--accent);
+            background: var(--accent-soft);
+        }
+        .selected-types-banner {
+            background: var(--accent-soft);
+            border: 1px solid var(--accent);
+            border-radius: var(--radius);
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .selected-types-banner .label {
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        .type-tag {
+            background: var(--accent);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .type-tag .remove {
+            cursor: pointer;
+            opacity: 0.8;
+        }
+        .type-tag .remove:hover {
+            opacity: 1;
+        }
+
+        /* Multi-Type Quantity Sections */
+        .qty-type-section {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+        .qty-type-header {
+            padding: 12px 16px;
+            background: var(--accent-soft);
+            font-weight: 600;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+        .qty-type-body {
+            padding: 16px;
+        }
+
+        /* Project Filters */
+        .filters-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--bg-card);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .filter-btn:hover {
+            border-color: var(--accent);
+        }
+        .filter-btn.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+        }
+
+        /* PDF Export Button */
+        .btn-export {
+            background: var(--success);
+            color: #fff;
+        }
+        .btn-export:hover {
+            background: #059669;
+        }
+
         /* Responsive */
         @media (max-width: 900px) {
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
@@ -733,14 +853,18 @@
 <body>
     <header class="header">
         <div class="logo">
-            <span class="logo-mark">Don Smith Concrete</span>
-            <div class="logo-divider"></div>
-            <span class="logo-sub">Bid Pro</span>
+            <svg class="logo-icon" viewBox="0 0 160 40">
+                <rect x="2" y="2" width="36" height="36" rx="6" fill="#1a1a1a"/>
+                <text x="20" y="26" font-family="Arial Black, Arial, sans-serif" font-size="14" font-weight="900" fill="#ffffff" text-anchor="middle">DSC</text>
+                <text x="58" y="18" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11" fill="rgba(255,255,255,0.7)">Don Smith Concrete</text>
+                <text x="58" y="32" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="700" fill="#ffffff">Bid Pro</text>
+            </svg>
         </div>
         <nav class="header-nav">
             <a href="#" class="active" onclick="navigate('dashboard')">Dashboard</a>
             <a href="#" onclick="navigate('estimate')">New Estimate</a>
             <a href="#" onclick="navigate('projects')">Projects</a>
+            <a href="#" onclick="navigate('calculators')">Calculators</a>
             <a href="#" onclick="navigate('customers')">Customers</a>
             <a href="#" onclick="navigate('settings')">Settings</a>
         </nav>
@@ -749,9 +873,17 @@
     <div class="container">
         <!-- Dashboard -->
         <div id="view-dashboard" class="view active">
-            <div class="page-header">
-                <h1 class="page-title">Dashboard</h1>
-                <p class="page-subtitle">Your bidding overview</p>
+            <div class="dashboard-brand">
+                <svg class="brand-mark" viewBox="0 0 64 64">
+                    <rect width="64" height="64" rx="10" fill="var(--primary)"/>
+                    <text x="32" y="38" font-family="Arial Black, Arial, sans-serif" font-size="22" font-weight="900" fill="#ffffff" text-anchor="middle">DSC</text>
+                    <rect x="12" y="44" width="40" height="2" fill="rgba(255,255,255,0.4)"/>
+                    <text x="32" y="56" font-family="-apple-system, sans-serif" font-size="8" fill="rgba(255,255,255,0.8)" text-anchor="middle">BID PRO</text>
+                </svg>
+                <div>
+                    <h1 class="page-title">Dashboard</h1>
+                    <p class="page-subtitle">Your bidding overview</p>
+                </div>
             </div>
 
             <div class="stats-grid">
@@ -815,7 +947,13 @@
         <div id="view-estimate" class="view">
             <div class="page-header">
                 <h1 class="page-title">New Estimate</h1>
-                <p class="page-subtitle">Select a project type to get started</p>
+                <p class="page-subtitle">Select one or more project types for a combined estimate</p>
+            </div>
+
+            <div id="selected-types-banner" class="selected-types-banner" style="display: none;">
+                <span class="label">Selected:</span>
+                <div id="selected-types-tags"></div>
+                <button class="btn btn-secondary" onclick="clearSelectedTypes()" style="margin-left: auto; padding: 6px 12px; font-size: 0.8125rem;">Clear All</button>
             </div>
 
             <div class="type-grid" id="type-grid">
@@ -1215,6 +1353,345 @@
                 </div>
             </div>
         </div>
+
+        <!-- Calculators -->
+        <div id="view-calculators" class="view">
+            <div class="page-header">
+                <h1 class="page-title">Material Calculators</h1>
+                <p class="page-subtitle">Quick calculations for concrete, rebar, forms, and more</p>
+            </div>
+
+            <div class="grid-2">
+                <!-- Concrete Volume Calculator -->
+                <div class="card">
+                    <div class="card-title">Concrete Volume Calculator</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Length (ft)</label>
+                            <input type="number" class="form-input" id="calc-conc-length" placeholder="100" oninput="calcConcrete()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Width (ft)</label>
+                            <input type="number" class="form-input" id="calc-conc-width" placeholder="10" oninput="calcConcrete()">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Thickness (in)</label>
+                            <input type="number" class="form-input" id="calc-conc-thick" placeholder="6" oninput="calcConcrete()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Waste %</label>
+                            <input type="number" class="form-input" id="calc-conc-waste" value="7" oninput="calcConcrete()">
+                        </div>
+                    </div>
+                    <div class="calc-display">
+                        <div class="calc-item">
+                            <div class="calc-label">Cubic Yards</div>
+                            <div class="calc-value accent" id="calc-conc-result">0 CY</div>
+                        </div>
+                        <div class="calc-item">
+                            <div class="calc-label">Trucks (10 CY)</div>
+                            <div class="calc-value" id="calc-conc-trucks">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Curb & Gutter Calculator -->
+                <div class="card">
+                    <div class="card-title">Curb & Gutter Calculator</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Linear Feet</label>
+                            <input type="number" class="form-input" id="calc-curb-lf" placeholder="500" oninput="calcCurb()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Curb Type</label>
+                            <select class="form-select" id="calc-curb-type" onchange="calcCurb()">
+                                <option value="0.08">Standard 6" (0.08 CY/LF)</option>
+                                <option value="0.10">Barrier 8" (0.10 CY/LF)</option>
+                                <option value="0.06">Rollback (0.06 CY/LF)</option>
+                                <option value="0.05">Valley Gutter (0.05 CY/LF)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="calc-display">
+                        <div class="calc-item">
+                            <div class="calc-label">Cubic Yards</div>
+                            <div class="calc-value accent" id="calc-curb-result">0 CY</div>
+                        </div>
+                        <div class="calc-item">
+                            <div class="calc-label">Forms (LF)</div>
+                            <div class="calc-value" id="calc-curb-forms">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rebar Calculator -->
+                <div class="card">
+                    <div class="card-title">Rebar Calculator</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Area (SF)</label>
+                            <input type="number" class="form-input" id="calc-rebar-sf" placeholder="1000" oninput="calcRebar()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Spacing (inches)</label>
+                            <select class="form-select" id="calc-rebar-spacing" onchange="calcRebar()">
+                                <option value="12">12" OC</option>
+                                <option value="16">16" OC</option>
+                                <option value="18" selected>18" OC</option>
+                                <option value="24">24" OC</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Bar Size</label>
+                            <select class="form-select" id="calc-rebar-size" onchange="calcRebar()">
+                                <option value="0.376">#3 (0.376 lb/ft)</option>
+                                <option value="0.668" selected>#4 (0.668 lb/ft)</option>
+                                <option value="1.043">#5 (1.043 lb/ft)</option>
+                                <option value="1.502">#6 (1.502 lb/ft)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Both Ways?</label>
+                            <select class="form-select" id="calc-rebar-both" onchange="calcRebar()">
+                                <option value="2" selected>Yes (mat)</option>
+                                <option value="1">One way only</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="calc-display">
+                        <div class="calc-item">
+                            <div class="calc-label">Linear Feet</div>
+                            <div class="calc-value" id="calc-rebar-lf">0 LF</div>
+                        </div>
+                        <div class="calc-item">
+                            <div class="calc-label">Weight</div>
+                            <div class="calc-value accent" id="calc-rebar-lbs">0 lbs</div>
+                        </div>
+                        <div class="calc-item">
+                            <div class="calc-label">Tons</div>
+                            <div class="calc-value" id="calc-rebar-tons">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wire Mesh Calculator -->
+                <div class="card">
+                    <div class="card-title">Wire Mesh Calculator</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Area (SF)</label>
+                            <input type="number" class="form-input" id="calc-mesh-sf" placeholder="5000" oninput="calcMesh()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Mesh Type</label>
+                            <select class="form-select" id="calc-mesh-type" onchange="calcMesh()">
+                                <option value="21">6x6 W1.4/W1.4 (21 lbs/100SF)</option>
+                                <option value="30">6x6 W2.9/W2.9 (30 lbs/100SF)</option>
+                                <option value="42">6x6 W4.0/W4.0 (42 lbs/100SF)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Overlap %</label>
+                            <input type="number" class="form-input" id="calc-mesh-overlap" value="10" oninput="calcMesh()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Sheet Size</label>
+                            <select class="form-select" id="calc-mesh-sheet" onchange="calcMesh()">
+                                <option value="50">5' x 10' (50 SF)</option>
+                                <option value="70">7' x 10' (70 SF)</option>
+                                <option value="150">5' x 150' Roll</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="calc-display">
+                        <div class="calc-item">
+                            <div class="calc-label">Sheets/Rolls</div>
+                            <div class="calc-value accent" id="calc-mesh-sheets">0</div>
+                        </div>
+                        <div class="calc-item">
+                            <div class="calc-label">Weight</div>
+                            <div class="calc-value" id="calc-mesh-lbs">0 lbs</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Board Calculator -->
+                <div class="card">
+                    <div class="card-title">Form Board Calculator</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Perimeter (LF)</label>
+                            <input type="number" class="form-input" id="calc-form-lf" placeholder="200" oninput="calcForms()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Slab Thickness</label>
+                            <select class="form-select" id="calc-form-height" onchange="calcForms()">
+                                <option value="1">4" (1x4 or 2x4)</option>
+                                <option value="1">5" (1x6 or 2x6)</option>
+                                <option value="1" selected>6" (1x6 or 2x6)</option>
+                                <option value="2">8" (2 boards)</option>
+                                <option value="2">10" (2 boards)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Stake Spacing (ft)</label>
+                            <input type="number" class="form-input" id="calc-form-stakes" value="4" oninput="calcForms()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Board Length</label>
+                            <select class="form-select" id="calc-form-length" onchange="calcForms()">
+                                <option value="8">8 ft</option>
+                                <option value="10">10 ft</option>
+                                <option value="12" selected>12 ft</option>
+                                <option value="16">16 ft</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="calc-display">
+                        <div class="calc-item">
+                            <div class="calc-label">Boards</div>
+                            <div class="calc-value accent" id="calc-form-boards">0</div>
+                        </div>
+                        <div class="calc-item">
+                            <div class="calc-label">Stakes</div>
+                            <div class="calc-value" id="calc-form-stakes-qty">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ADA Ramp Calculator -->
+                <div class="card">
+                    <div class="card-title">ADA Ramp Calculator</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Number of Ramps</label>
+                            <input type="number" class="form-input" id="calc-ramp-qty" placeholder="10" oninput="calcRamps()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Ramp Type</label>
+                            <select class="form-select" id="calc-ramp-type" onchange="calcRamps()">
+                                <option value="1.2">Standard (1.2 CY)</option>
+                                <option value="1.5">Corner/Diagonal (1.5 CY)</option>
+                                <option value="0.8">Parallel (0.8 CY)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Detectable Warnings</label>
+                            <select class="form-select" id="calc-ramp-dws" onchange="calcRamps()">
+                                <option value="180">Cast-in-place ($180)</option>
+                                <option value="220">Surface applied ($220)</option>
+                                <option value="0">By others</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Concrete $/CY</label>
+                            <input type="number" class="form-input" id="calc-ramp-rate" value="165" oninput="calcRamps()">
+                        </div>
+                    </div>
+                    <div class="calc-display">
+                        <div class="calc-item">
+                            <div class="calc-label">Total CY</div>
+                            <div class="calc-value" id="calc-ramp-cy">0 CY</div>
+                        </div>
+                        <div class="calc-item">
+                            <div class="calc-label">Material Cost</div>
+                            <div class="calc-value accent" id="calc-ramp-cost">$0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gravel/Base Calculator -->
+                <div class="card">
+                    <div class="card-title">Gravel/Base Calculator</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Area (SF)</label>
+                            <input type="number" class="form-input" id="calc-base-sf" placeholder="5000" oninput="calcBase()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Depth (inches)</label>
+                            <input type="number" class="form-input" id="calc-base-depth" placeholder="4" oninput="calcBase()">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Material Type</label>
+                            <select class="form-select" id="calc-base-type" onchange="calcBase()">
+                                <option value="1.4">Crusite ABC (1.4 T/CY)</option>
+                                <option value="1.35">3/4" Crushed (1.35 T/CY)</option>
+                                <option value="1.3">Pea Gravel (1.3 T/CY)</option>
+                                <option value="1.1">Sand (1.1 T/CY)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Compaction Factor</label>
+                            <input type="number" class="form-input" id="calc-base-compact" value="15" oninput="calcBase()">
+                            <span class="form-hint">% extra for compaction</span>
+                        </div>
+                    </div>
+                    <div class="calc-display">
+                        <div class="calc-item">
+                            <div class="calc-label">Cubic Yards</div>
+                            <div class="calc-value" id="calc-base-cy">0 CY</div>
+                        </div>
+                        <div class="calc-item">
+                            <div class="calc-label">Tons</div>
+                            <div class="calc-value accent" id="calc-base-tons">0 T</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Saw Cut Calculator -->
+                <div class="card">
+                    <div class="card-title">Saw Cut / Joint Calculator</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Slab Length (ft)</label>
+                            <input type="number" class="form-input" id="calc-saw-length" placeholder="100" oninput="calcSaw()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Slab Width (ft)</label>
+                            <input type="number" class="form-input" id="calc-saw-width" placeholder="20" oninput="calcSaw()">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Thickness (in)</label>
+                            <input type="number" class="form-input" id="calc-saw-thick" placeholder="6" oninput="calcSaw()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Max Panel Size</label>
+                            <select class="form-select" id="calc-saw-panel" onchange="calcSaw()">
+                                <option value="10">10' x 10'</option>
+                                <option value="12" selected>12' x 12'</option>
+                                <option value="15">15' x 15'</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="calc-display">
+                        <div class="calc-item">
+                            <div class="calc-label">Joints (LF)</div>
+                            <div class="calc-value accent" id="calc-saw-lf">0 LF</div>
+                        </div>
+                        <div class="calc-item">
+                            <div class="calc-label">Cut Depth</div>
+                            <div class="calc-value" id="calc-saw-depth">0"</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="toast-container" id="toasts"></div>
@@ -1236,8 +1713,17 @@
 let projects = JSON.parse(localStorage.getItem('dsc_projects') || '[]');
 let customers = JSON.parse(localStorage.getItem('dsc_customers') || '[]');
 let settings = JSON.parse(localStorage.getItem('dsc_settings') || '{}');
-let selectedType = null;
+let selectedTypes = []; // Multi-select support
 let currentCalc = {};
+
+const TYPE_NAMES = {
+    curb: 'Curb & Gutter',
+    street: 'Street Paving',
+    sidewalk: 'Sidewalk',
+    ramp: 'ADA Ramps',
+    parking: 'Parking Lot',
+    driveway: 'Commercial Driveway'
+};
 
 // Rates
 const RATES = {
@@ -1297,26 +1783,95 @@ function updateDashboard() {
     }
 }
 
-// Project type selection
+// Project type selection (multi-select)
 function selectProjectType(type) {
-    selectedType = type;
+    const idx = selectedTypes.indexOf(type);
+    if (idx > -1) {
+        selectedTypes.splice(idx, 1); // Deselect
+    } else {
+        selectedTypes.push(type); // Select
+    }
+
+    // Update UI
     document.querySelectorAll('.type-card').forEach(c => {
-        c.classList.toggle('selected', c.dataset.type === type);
+        c.classList.toggle('selected', selectedTypes.includes(c.dataset.type));
     });
-    document.getElementById('estimate-form').style.display = 'block';
 
-    // Update quantity section based on type
-    updateQtySection(type);
+    // Update selected types banner
+    updateSelectedTypesBanner();
 
-    // Scroll to form
-    document.getElementById('estimate-form').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Show/hide form
+    if (selectedTypes.length > 0) {
+        document.getElementById('estimate-form').style.display = 'block';
+        updateQtySection();
+        document.getElementById('estimate-form').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+        document.getElementById('estimate-form').style.display = 'none';
+    }
 }
 
-function updateQtySection(type) {
+function updateSelectedTypesBanner() {
+    const banner = document.getElementById('selected-types-banner');
+    const tagsContainer = document.getElementById('selected-types-tags');
+
+    if (selectedTypes.length === 0) {
+        banner.style.display = 'none';
+        return;
+    }
+
+    banner.style.display = 'flex';
+    tagsContainer.innerHTML = selectedTypes.map(t => `
+        <span class="type-tag">
+            ${TYPE_NAMES[t]}
+            <span class="remove" onclick="event.stopPropagation(); selectProjectType('${t}')">×</span>
+        </span>
+    `).join('');
+}
+
+function clearSelectedTypes() {
+    selectedTypes = [];
+    document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('selected-types-banner').style.display = 'none';
+    document.getElementById('estimate-form').style.display = 'none';
+}
+
+function updateQtySection() {
     const body = document.getElementById('qty-body');
     const title = document.getElementById('qty-title');
 
-    const templates = {
+    if (selectedTypes.length === 0) {
+        title.textContent = 'Quantities';
+        body.innerHTML = '<p style="color: var(--text-secondary);">Select a project type above.</p>';
+        return;
+    }
+
+    if (selectedTypes.length === 1) {
+        title.textContent = TYPE_NAMES[selectedTypes[0]] + ' Quantities';
+    } else {
+        title.textContent = 'Combined Quantities (' + selectedTypes.length + ' types)';
+    }
+
+    // Build combined form for all selected types
+    let html = '';
+    selectedTypes.forEach((type, idx) => {
+        const t = qtyTemplates[type];
+        if (t) {
+            html += `<div class="qty-type-section">
+                <div class="qty-type-header">${TYPE_NAMES[type]}</div>
+                <div class="qty-type-body">${t.html}</div>
+            </div>`;
+        }
+    });
+    body.innerHTML = html;
+
+    // Set defaults for first type selected
+    if (selectedTypes.length === 1) {
+        setDefaults(selectedTypes[0]);
+    }
+    calculate();
+}
+
+const qtyTemplates = {
         curb: {
             title: 'Curb & Gutter Quantities',
             html: `
@@ -1586,15 +2141,7 @@ function updateQtySection(type) {
                 </div>
             `
         }
-    };
-
-    const t = templates[type] || templates.curb;
-    title.textContent = t.title;
-    body.innerHTML = t.html;
-
-    // Set defaults based on type
-    setDefaults(type);
-}
+};
 
 function setDefaults(type) {
     const defaults = {
@@ -1620,9 +2167,9 @@ function toggleSection(header) {
     header.parentElement.classList.toggle('open');
 }
 
-// Calculation
+// Calculation (supports multi-select)
 function calculate() {
-    if (!selectedType) return;
+    if (selectedTypes.length === 0) return;
 
     const mix = document.getElementById('est-mix')?.value || '3500';
     const wastePct = parseFloat(document.getElementById('est-waste')?.value) || 7;
@@ -1630,76 +2177,81 @@ function calculate() {
     const additive = parseFloat(document.getElementById('est-additive')?.value) || 0;
     const concreteRate = RATES.concrete[mix];
 
-    let qty = 0;
-    let qtyLabel = '';
-    let unitLabel = '';
-    let cy = 0;
-    let materialCost = 0;
-    let extraCosts = 0;
+    let totalCY = 0;
+    let totalExtraCosts = 0;
+    let qtyLabels = [];
 
-    // Calculate based on type
-    if (selectedType === 'curb') {
-        const lf = parseFloat(document.getElementById('qty-lf')?.value) || 0;
-        const removal = parseFloat(document.getElementById('qty-removal')?.value) || 0;
-        const subgrade = parseFloat(document.getElementById('qty-subgrade')?.value) || 0;
+    // Calculate for each selected type
+    selectedTypes.forEach(type => {
+        let cy = 0;
+        let extraCosts = 0;
 
-        qty = lf;
-        qtyLabel = lf.toLocaleString() + ' LF';
-        unitLabel = 'per LF';
-        cy = (lf * 0.08) * (1 + wastePct/100); // ~0.08 CY per LF for standard curb
-        extraCosts = (removal * 8) + (lf * subgrade);
-
-    } else if (selectedType === 'street' || selectedType === 'parking' || selectedType === 'sidewalk' || selectedType === 'driveway') {
-        const sf = parseFloat(document.getElementById('qty-sf')?.value) || 0;
-        const thickness = parseFloat(document.getElementById('qty-thickness')?.value) || 6;
-        const removal = parseFloat(document.getElementById('qty-removal')?.value) || 0;
-
-        qty = sf;
-        qtyLabel = sf.toLocaleString() + ' SF';
-        unitLabel = 'per SF';
-        cy = (sf * (thickness / 12) / 27) * (1 + wastePct/100);
-
-        // Type-specific extras
-        if (selectedType === 'street') {
+        if (type === 'curb') {
+            const lf = parseFloat(document.getElementById('qty-lf')?.value) || 0;
+            const removal = parseFloat(document.getElementById('qty-removal')?.value) || 0;
+            const subgrade = parseFloat(document.getElementById('qty-subgrade')?.value) || 0;
+            cy = (lf * 0.08) * (1 + wastePct/100);
+            extraCosts = (removal * 8) + (lf * subgrade);
+            if (lf > 0) qtyLabels.push(lf.toLocaleString() + ' LF curb');
+        } else if (type === 'street') {
+            const sf = parseFloat(document.getElementById('qty-sf')?.value) || 0;
+            const thickness = parseFloat(document.getElementById('qty-thickness')?.value) || 8;
             const dowels = parseFloat(document.getElementById('qty-dowels')?.value) || 0;
             const ties = parseFloat(document.getElementById('qty-ties')?.value) || 0;
+            cy = (sf * (thickness / 12) / 27) * (1 + wastePct/100);
             extraCosts = (dowels * 12) + (ties * 8);
-        } else if (selectedType === 'parking') {
+            if (sf > 0) qtyLabels.push(sf.toLocaleString() + ' SF street');
+        } else if (type === 'sidewalk') {
+            const sf = parseFloat(document.getElementById('qty-sf')?.value) || 0;
+            const thickness = parseFloat(document.getElementById('qty-thickness')?.value) || 4;
+            const removal = parseFloat(document.getElementById('qty-removal')?.value) || 0;
+            cy = (sf * (thickness / 12) / 27) * (1 + wastePct/100);
+            extraCosts = removal * 3;
+            if (sf > 0) qtyLabels.push(sf.toLocaleString() + ' SF sidewalk');
+        } else if (type === 'ramp') {
+            const units = parseFloat(document.getElementById('qty-units')?.value) || 0;
+            const removal = parseFloat(document.getElementById('qty-removal')?.value) || 0;
+            const dwsType = document.getElementById('qty-dws')?.value || 'cast';
+            cy = (units * 1.2) * (1 + wastePct/100);
+            const dwsCost = dwsType === 'cast' ? 180 : dwsType === 'surface' ? 220 : 0;
+            extraCosts = (units * dwsCost) + (removal * 400);
+            if (units > 0) qtyLabels.push(units + ' ADA ramps');
+        } else if (type === 'parking') {
+            const sf = parseFloat(document.getElementById('qty-sf')?.value) || 0;
+            const thickness = parseFloat(document.getElementById('qty-thickness')?.value) || 6;
             const mesh = parseFloat(document.getElementById('qty-mesh')?.value) || 0;
             const sawcuts = parseFloat(document.getElementById('qty-sawcuts')?.value) || 0;
+            cy = (sf * (thickness / 12) / 27) * (1 + wastePct/100);
             extraCosts = (sf * mesh) + (sawcuts * 1.5);
-        } else if (selectedType === 'sidewalk') {
-            extraCosts = removal * 3;
-        } else if (selectedType === 'driveway') {
+            if (sf > 0) qtyLabels.push(sf.toLocaleString() + ' SF parking');
+        } else if (type === 'driveway') {
+            const sf = parseFloat(document.getElementById('qty-sf')?.value) || 0;
+            const thickness = parseFloat(document.getElementById('qty-thickness')?.value) || 6;
             const apron = parseFloat(document.getElementById('qty-apron')?.value) || 0;
-            cy += (apron * (10/12) / 27) * (1 + wastePct/100); // Thickened apron
+            const removal = parseFloat(document.getElementById('qty-removal')?.value) || 0;
+            cy = (sf * (thickness / 12) / 27) * (1 + wastePct/100);
+            cy += (apron * (10/12) / 27) * (1 + wastePct/100);
             extraCosts = removal * 4;
+            if (sf > 0) qtyLabels.push(sf.toLocaleString() + ' SF driveway');
         }
 
-        // Update SY display if exists
-        const syEl = document.getElementById('calc-sy');
-        if (syEl) syEl.textContent = Math.round(sf / 9).toLocaleString() + ' SY';
+        totalCY += cy;
+        totalExtraCosts += extraCosts;
+    });
 
-    } else if (selectedType === 'ramp') {
-        const units = parseFloat(document.getElementById('qty-units')?.value) || 0;
-        const removal = parseFloat(document.getElementById('qty-removal')?.value) || 0;
-        const dwsType = document.getElementById('qty-dws')?.value || 'cast';
+    let qtyLabel = qtyLabels.join(', ') || 'No quantities';
+    let unitLabel = selectedTypes.length === 1 ?
+        (selectedTypes[0] === 'curb' ? 'per LF' : selectedTypes[0] === 'ramp' ? 'per ramp' : 'per SF') :
+        'combined';
 
-        qty = units;
-        qtyLabel = units + ' ramps';
-        unitLabel = 'per ramp';
-        cy = (units * 1.2) * (1 + wastePct/100); // ~1.2 CY per ramp avg
-
-        const dwsCost = dwsType === 'cast' ? 180 : dwsType === 'surface' ? 220 : 0;
-        extraCosts = (units * dwsCost) + (removal * 400);
-    }
-
-    // Update calc display
-    document.getElementById('calc-cy').textContent = Math.round(cy) + ' CY';
+    // Update calc display (try to update, may not exist for all types)
+    const calcCyEl = document.getElementById('calc-cy');
+    if (calcCyEl) calcCyEl.textContent = Math.round(totalCY) + ' CY';
 
     // Material costs
-    materialCost = (cy * concreteRate) + (cy * fiber) + (cy * additive) + extraCosts;
-    document.getElementById('calc-mat').textContent = '$' + Math.round(materialCost).toLocaleString();
+    const materialCost = (totalCY * concreteRate) + (totalCY * fiber) + (totalCY * additive) + totalExtraCosts;
+    const calcMatEl = document.getElementById('calc-mat');
+    if (calcMatEl) calcMatEl.textContent = '$' + Math.round(materialCost).toLocaleString();
 
     // Labor costs
     const laborCost =
@@ -1726,26 +2278,25 @@ function calculate() {
     const bond = parseFloat(document.getElementById('est-bond')?.value) || 0;
 
     const total = directCost + overhead + profit + contingency + mob + bond;
-    const perUnit = qty > 0 ? total / qty : 0;
 
     // Store for saving
     currentCalc = {
-        type: selectedType,
-        qty, qtyLabel, cy: Math.round(cy),
+        types: [...selectedTypes],
+        qtyLabel, cy: Math.round(totalCY),
         materialCost, laborCost, equipCost, directCost,
         overhead, profit, contingency, mob, bond,
-        total: Math.round(total), perUnit
+        total: Math.round(total)
     };
 
     // Update results
     document.getElementById('result-total').textContent = '$' + Math.round(total).toLocaleString();
-    document.getElementById('result-unit').textContent = '$' + perUnit.toFixed(2) + ' ' + unitLabel;
+    document.getElementById('result-unit').textContent = qtyLabel;
     document.getElementById('result-low').textContent = '$' + Math.round(total * 0.92).toLocaleString();
     document.getElementById('result-high').textContent = '$' + Math.round(total * 1.08).toLocaleString();
 
     // Breakdown
     document.getElementById('breakdown').innerHTML = `
-        <div class="breakdown-row"><span class="breakdown-label">Material<span class="breakdown-tag">${Math.round(cy)} CY</span></span><span class="breakdown-value">$${Math.round(materialCost).toLocaleString()}</span></div>
+        <div class="breakdown-row"><span class="breakdown-label">Material<span class="breakdown-tag">${Math.round(totalCY)} CY</span></span><span class="breakdown-value">$${Math.round(materialCost).toLocaleString()}</span></div>
         <div class="breakdown-row"><span class="breakdown-label">Labor</span><span class="breakdown-value">$${Math.round(laborCost).toLocaleString()}</span></div>
         <div class="breakdown-row"><span class="breakdown-label">Equipment</span><span class="breakdown-value">$${Math.round(equipCost).toLocaleString()}</span></div>
         <div class="breakdown-row subtotal"><span class="breakdown-label">Direct Cost</span><span class="breakdown-value">$${Math.round(directCost).toLocaleString()}</span></div>
@@ -1757,27 +2308,31 @@ function calculate() {
         <div class="breakdown-row total"><span class="breakdown-label">Total Bid</span><span class="breakdown-value">$${Math.round(total).toLocaleString()}</span></div>
     `;
 
-    // Win probability
-    const market = RATES.market[selectedType];
+    // Win probability (simplified for multi-select)
     let prob = 50;
     let notes = [];
+    if (selectedTypes.length === 1) {
+        const market = RATES.market[selectedTypes[0]];
+        if (market && total > 0) {
+            // Calculate unit price based on first quantity
+            const firstType = selectedTypes[0];
+            let qty = 0;
+            if (firstType === 'curb') qty = parseFloat(document.getElementById('qty-lf')?.value) || 0;
+            else if (firstType === 'ramp') qty = parseFloat(document.getElementById('qty-units')?.value) || 0;
+            else qty = parseFloat(document.getElementById('qty-sf')?.value) || 0;
 
-    if (market && qty > 0) {
-        if (perUnit <= market.low) {
-            prob = 85;
-            notes.push('Price is very competitive (below market low)');
-        } else if (perUnit <= market.avg) {
-            prob = 70;
-            notes.push('Price is competitive (at or below market average)');
-        } else if (perUnit <= market.high) {
-            prob = 45;
-            notes.push('Price is above market average');
-        } else {
-            prob = 25;
-            notes.push('Price is above typical market range');
+            const perUnit = qty > 0 ? total / qty : 0;
+            if (perUnit > 0) {
+                if (perUnit <= market.low) { prob = 85; notes.push('Very competitive pricing'); }
+                else if (perUnit <= market.avg) { prob = 70; notes.push('Competitive pricing'); }
+                else if (perUnit <= market.high) { prob = 45; notes.push('Above average pricing'); }
+                else { prob = 25; notes.push('Premium pricing'); }
+                notes.push(`Market: $${market.low}-$${market.high} ${unitLabel}`);
+            }
         }
-
-        notes.push(`Market range: $${market.low} - $${market.high} ${unitLabel}`);
+    } else {
+        notes.push('Combined estimate - review individual type pricing');
+        prob = 55;
     }
 
     document.getElementById('result-prob').textContent = prob + '%';
@@ -1787,32 +2342,41 @@ function calculate() {
 }
 
 function autoLabor() {
-    if (!selectedType) return;
+    if (selectedTypes.length === 0) return;
 
-    // Auto-calculate based on quantities
-    let base = 0;
-    if (selectedType === 'curb') {
-        base = parseFloat(document.getElementById('qty-lf')?.value) || 0;
-        document.getElementById('est-foreman').value = Math.ceil(base / 500);
-        document.getElementById('est-finishers').value = Math.ceil(base / 250);
-        document.getElementById('est-laborers').value = Math.ceil(base / 200);
-        document.getElementById('est-formsetters').value = Math.ceil(base / 250);
-        document.getElementById('est-operators').value = Math.ceil(base / 800);
-    } else if (['street', 'parking', 'sidewalk', 'driveway'].includes(selectedType)) {
-        base = parseFloat(document.getElementById('qty-sf')?.value) || 0;
-        document.getElementById('est-foreman').value = Math.ceil(base / 5000);
-        document.getElementById('est-finishers').value = Math.ceil(base / 2000);
-        document.getElementById('est-laborers').value = Math.ceil(base / 1500);
-        document.getElementById('est-formsetters').value = Math.ceil(base / 2500);
-        document.getElementById('est-operators').value = Math.ceil(base / 8000);
-    } else if (selectedType === 'ramp') {
-        base = parseFloat(document.getElementById('qty-units')?.value) || 0;
-        document.getElementById('est-foreman').value = Math.ceil(base / 3);
-        document.getElementById('est-finishers').value = Math.ceil(base / 1.5);
-        document.getElementById('est-laborers').value = Math.ceil(base / 1.2);
-        document.getElementById('est-formsetters').value = Math.ceil(base / 2);
-        document.getElementById('est-operators').value = Math.ceil(base / 4);
-    }
+    // Auto-calculate based on quantities for all selected types
+    let foreman = 0, finishers = 0, laborers = 0, formsetters = 0, operators = 0;
+
+    selectedTypes.forEach(type => {
+        if (type === 'curb') {
+            const lf = parseFloat(document.getElementById('qty-lf')?.value) || 0;
+            foreman += Math.ceil(lf / 500);
+            finishers += Math.ceil(lf / 250);
+            laborers += Math.ceil(lf / 200);
+            formsetters += Math.ceil(lf / 250);
+            operators += Math.ceil(lf / 800);
+        } else if (['street', 'parking', 'sidewalk', 'driveway'].includes(type)) {
+            const sf = parseFloat(document.getElementById('qty-sf')?.value) || 0;
+            foreman += Math.ceil(sf / 5000);
+            finishers += Math.ceil(sf / 2000);
+            laborers += Math.ceil(sf / 1500);
+            formsetters += Math.ceil(sf / 2500);
+            operators += Math.ceil(sf / 8000);
+        } else if (type === 'ramp') {
+            const units = parseFloat(document.getElementById('qty-units')?.value) || 0;
+            foreman += Math.ceil(units / 3);
+            finishers += Math.ceil(units / 1.5);
+            laborers += Math.ceil(units / 1.2);
+            formsetters += Math.ceil(units / 2);
+            operators += Math.ceil(units / 4);
+        }
+    });
+
+    document.getElementById('est-foreman').value = foreman || 1;
+    document.getElementById('est-finishers').value = finishers || 1;
+    document.getElementById('est-laborers').value = laborers || 1;
+    document.getElementById('est-formsetters').value = formsetters || 1;
+    document.getElementById('est-operators').value = operators || 1;
 
     calculate();
     toast('Labor auto-calculated', 'success');
@@ -1851,15 +2415,16 @@ function saveEstimate() {
         return;
     }
 
-    const name = document.getElementById('est-name')?.value || `${selectedType} - ${new Date().toLocaleDateString()}`;
+    const typeNames = selectedTypes.map(t => TYPE_NAMES[t]).join(' + ');
+    const name = document.getElementById('est-name')?.value || `${typeNames} - ${new Date().toLocaleDateString()}`;
 
     projects.push({
         id: Date.now().toString(36),
         name,
-        type: selectedType,
+        type: typeNames,
+        types: [...selectedTypes],
         qtyLabel: currentCalc.qtyLabel,
         total: currentCalc.total,
-        perUnit: currentCalc.perUnit,
         status: 'draft',
         date: new Date().toISOString(),
         calc: { ...currentCalc }
@@ -1872,9 +2437,10 @@ function saveEstimate() {
 }
 
 function resetEstimate() {
-    selectedType = null;
+    selectedTypes = [];
     currentCalc = {};
     document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('selected-types-banner').style.display = 'none';
     document.getElementById('estimate-form').style.display = 'none';
 }
 
@@ -2001,6 +2567,99 @@ function toast(msg, type = 'info') {
     t.textContent = msg;
     document.getElementById('toasts').appendChild(t);
     setTimeout(() => t.remove(), 3000);
+}
+
+// Material Calculator Functions
+function calcConcrete() {
+    const length = parseFloat(document.getElementById('calc-conc-length')?.value) || 0;
+    const width = parseFloat(document.getElementById('calc-conc-width')?.value) || 0;
+    const thick = parseFloat(document.getElementById('calc-conc-thick')?.value) || 0;
+    const waste = parseFloat(document.getElementById('calc-conc-waste')?.value) || 7;
+    const cy = (length * width * (thick / 12) / 27) * (1 + waste / 100);
+    document.getElementById('calc-conc-result').textContent = cy.toFixed(1) + ' CY';
+    document.getElementById('calc-conc-trucks').textContent = Math.ceil(cy / 10);
+}
+
+function calcCurb() {
+    const lf = parseFloat(document.getElementById('calc-curb-lf')?.value) || 0;
+    const cyPerLf = parseFloat(document.getElementById('calc-curb-type')?.value) || 0.08;
+    const cy = lf * cyPerLf * 1.07; // 7% waste
+    document.getElementById('calc-curb-result').textContent = cy.toFixed(1) + ' CY';
+    document.getElementById('calc-curb-forms').textContent = (lf * 2).toLocaleString(); // Both sides
+}
+
+function calcRebar() {
+    const sf = parseFloat(document.getElementById('calc-rebar-sf')?.value) || 0;
+    const spacing = parseFloat(document.getElementById('calc-rebar-spacing')?.value) || 18;
+    const lbPerFt = parseFloat(document.getElementById('calc-rebar-size')?.value) || 0.668;
+    const ways = parseFloat(document.getElementById('calc-rebar-both')?.value) || 2;
+    const side = Math.sqrt(sf);
+    const barsPerWay = Math.ceil(side / (spacing / 12)) + 1;
+    const lfPerWay = barsPerWay * side;
+    const totalLf = lfPerWay * ways * 1.1; // 10% overlap/waste
+    const lbs = totalLf * lbPerFt;
+    document.getElementById('calc-rebar-lf').textContent = Math.round(totalLf).toLocaleString() + ' LF';
+    document.getElementById('calc-rebar-lbs').textContent = Math.round(lbs).toLocaleString() + ' lbs';
+    document.getElementById('calc-rebar-tons').textContent = (lbs / 2000).toFixed(2);
+}
+
+function calcMesh() {
+    const sf = parseFloat(document.getElementById('calc-mesh-sf')?.value) || 0;
+    const lbsPer100 = parseFloat(document.getElementById('calc-mesh-type')?.value) || 21;
+    const overlap = parseFloat(document.getElementById('calc-mesh-overlap')?.value) || 10;
+    const sheetSf = parseFloat(document.getElementById('calc-mesh-sheet')?.value) || 50;
+    const totalSf = sf * (1 + overlap / 100);
+    const sheets = Math.ceil(totalSf / sheetSf);
+    const lbs = (totalSf / 100) * lbsPer100;
+    document.getElementById('calc-mesh-sheets').textContent = sheets;
+    document.getElementById('calc-mesh-lbs').textContent = Math.round(lbs).toLocaleString() + ' lbs';
+}
+
+function calcForms() {
+    const lf = parseFloat(document.getElementById('calc-form-lf')?.value) || 0;
+    const boardsHigh = parseFloat(document.getElementById('calc-form-height')?.value) || 1;
+    const stakeSpacing = parseFloat(document.getElementById('calc-form-stakes')?.value) || 4;
+    const boardLen = parseFloat(document.getElementById('calc-form-length')?.value) || 12;
+    const boards = Math.ceil((lf * boardsHigh) / boardLen) * 1.1; // 10% waste
+    const stakes = Math.ceil(lf / stakeSpacing) + 1;
+    document.getElementById('calc-form-boards').textContent = Math.ceil(boards);
+    document.getElementById('calc-form-stakes-qty').textContent = stakes;
+}
+
+function calcRamps() {
+    const qty = parseFloat(document.getElementById('calc-ramp-qty')?.value) || 0;
+    const cyEach = parseFloat(document.getElementById('calc-ramp-type')?.value) || 1.2;
+    const dwsCost = parseFloat(document.getElementById('calc-ramp-dws')?.value) || 180;
+    const rate = parseFloat(document.getElementById('calc-ramp-rate')?.value) || 165;
+    const totalCy = qty * cyEach * 1.07; // 7% waste
+    const cost = (totalCy * rate) + (qty * dwsCost);
+    document.getElementById('calc-ramp-cy').textContent = totalCy.toFixed(1) + ' CY';
+    document.getElementById('calc-ramp-cost').textContent = '$' + Math.round(cost).toLocaleString();
+}
+
+function calcBase() {
+    const sf = parseFloat(document.getElementById('calc-base-sf')?.value) || 0;
+    const depth = parseFloat(document.getElementById('calc-base-depth')?.value) || 0;
+    const tonsPerCy = parseFloat(document.getElementById('calc-base-type')?.value) || 1.4;
+    const compact = parseFloat(document.getElementById('calc-base-compact')?.value) || 15;
+    const cy = (sf * (depth / 12) / 27) * (1 + compact / 100);
+    const tons = cy * tonsPerCy;
+    document.getElementById('calc-base-cy').textContent = cy.toFixed(1) + ' CY';
+    document.getElementById('calc-base-tons').textContent = tons.toFixed(1) + ' T';
+}
+
+function calcSaw() {
+    const length = parseFloat(document.getElementById('calc-saw-length')?.value) || 0;
+    const width = parseFloat(document.getElementById('calc-saw-width')?.value) || 0;
+    const thick = parseFloat(document.getElementById('calc-saw-thick')?.value) || 6;
+    const panelSize = parseFloat(document.getElementById('calc-saw-panel')?.value) || 12;
+    // Calculate number of joints needed
+    const longJoints = Math.floor(length / panelSize);
+    const crossJoints = Math.floor(width / panelSize);
+    const totalLf = (longJoints * width) + (crossJoints * length);
+    const cutDepth = thick / 4; // 1/4 of slab thickness
+    document.getElementById('calc-saw-lf').textContent = Math.round(totalLf).toLocaleString() + ' LF';
+    document.getElementById('calc-saw-depth').textContent = cutDepth.toFixed(1) + '"';
 }
 
 // Init
