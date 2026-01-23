@@ -1,22 +1,31 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
-  <defs>
-    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" style="stop-color:#d8c8ff;stop-opacity:0.9"/>
-      <stop offset="40%" style="stop-color:#8c64c8;stop-opacity:0.6"/>
-      <stop offset="70%" style="stop-color:#4a3278;stop-opacity:0.3"/>
-      <stop offset="100%" style="stop-color:#0a0a14;stop-opacity:1"/>
-    </radialGradient>
-    <radialGradient id="portal" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.8"/>
-      <stop offset="50%" style="stop-color:#b496dc;stop-opacity:0.5"/>
-      <stop offset="100%" style="stop-color:#6432a0;stop-opacity:0"/>
-    </radialGradient>
-  </defs>
-  <rect width="192" height="192" fill="#0a0a14"/>
-  <circle cx="96" cy="96" r="80" fill="url(#glow)"/>
-  <circle cx="96" cy="96" r="40" fill="url(#portal)"/>
-  <circle cx="96" cy="96" r="15" fill="#e8dcff" opacity="0.9"/>
-  <circle cx="96" cy="96" r="60" fill="none" stroke="#9678c8" stroke-width="1" opacity="0.4"/>
-  <circle cx="96" cy="96" r="50" fill="none" stroke="#b496dc" stroke-width="1" opacity="0.3"/>
-  <circle cx="96" cy="96" r="70" fill="none" stroke="#7850a0" stroke-width="1" opacity="0.2"/>
+<svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" rx="64" fill="#1e3a5f"/>
+
+  <!-- Concrete truck body -->
+  <rect x="60" y="280" width="320" height="120" rx="12" fill="#f59e0b"/>
+
+  <!-- Truck cab -->
+  <rect x="320" y="240" width="120" height="160" rx="12" fill="#f59e0b"/>
+  <rect x="340" y="260" width="80" height="60" rx="8" fill="#94a3b8"/>
+
+  <!-- Mixer drum -->
+  <ellipse cx="200" cy="240" rx="120" ry="80" fill="#64748b"/>
+  <ellipse cx="200" cy="240" rx="100" ry="65" fill="#94a3b8"/>
+
+  <!-- Drum stripes -->
+  <path d="M100 220 Q200 180 300 220" stroke="#475569" stroke-width="12" fill="none"/>
+  <path d="M100 260 Q200 220 300 260" stroke="#475569" stroke-width="12" fill="none"/>
+
+  <!-- Wheels -->
+  <circle cx="140" cy="400" r="50" fill="#374151"/>
+  <circle cx="140" cy="400" r="25" fill="#1e3a5f"/>
+  <circle cx="300" cy="400" r="50" fill="#374151"/>
+  <circle cx="300" cy="400" r="25" fill="#1e3a5f"/>
+  <circle cx="400" cy="400" r="50" fill="#374151"/>
+  <circle cx="400" cy="400" r="25" fill="#1e3a5f"/>
+
+  <!-- Company text -->
+  <text x="256" y="100" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">KALEX</text>
+  <text x="256" y="145" font-family="Arial, sans-serif" font-size="32" fill="#f59e0b" text-anchor="middle">CONCRETE</text>
 </svg>

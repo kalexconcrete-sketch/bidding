@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Dream World">
+    <meta name="apple-mobile-web-app-title" content="Kalex Concrete">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#1a1025">
-    <meta name="description" content="Experience the ever-changing nature of the 4th dimensional dream world">
+    <meta name="theme-color" content="#1e3a5f">
+    <meta name="description" content="Professional concrete bidding and estimation tool">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon.svg">
-    <title>The Fourth Dimension - Dream World</title>
+    <title>Kalex Concrete - Bidding Tool</title>
     <style>
         * {
             margin: 0;
@@ -19,649 +19,1665 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary: #1e3a5f;
+            --primary-light: #2d5a8a;
+            --primary-dark: #0f2840;
+            --accent: #f59e0b;
+            --accent-light: #fbbf24;
+            --success: #10b981;
+            --danger: #ef4444;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
         html, body {
-            overflow: hidden;
-            background: #0a0a0f;
-            font-family: 'Courier New', monospace;
-            touch-action: none;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-            position: fixed;
-            width: 100%;
-            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--gray-100);
+            color: var(--gray-800);
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        #canvas {
-            position: fixed;
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1rem;
+            position: sticky;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            touch-action: none;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
-        #overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            background: radial-gradient(ellipse at center, transparent 0%, rgba(5, 5, 15, 0.4) 100%);
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        #title {
-            position: fixed;
-            top: max(30px, env(safe-area-inset-top));
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(180, 160, 220, 0.6);
-            font-size: 12px;
-            letter-spacing: 6px;
-            text-transform: uppercase;
-            pointer-events: none;
-            text-shadow: 0 0 20px rgba(140, 100, 200, 0.5);
-            animation: breathe 4s ease-in-out infinite;
-            text-align: center;
-            width: 90%;
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
 
-        #hint {
-            position: fixed;
-            bottom: max(30px, env(safe-area-inset-bottom));
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(140, 120, 180, 0.4);
-            font-size: 10px;
-            letter-spacing: 2px;
-            pointer-events: none;
-            animation: fade 6s ease-in-out infinite;
-            text-align: center;
+        .logo svg {
+            width: 40px;
+            height: 40px;
         }
 
-        #install-prompt {
-            display: none;
-            position: fixed;
-            bottom: max(80px, calc(env(safe-area-inset-bottom) + 50px));
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(60, 40, 100, 0.8);
-            color: rgba(200, 180, 255, 0.9);
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: 12px;
-            letter-spacing: 1px;
+        .logo-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text span {
+            color: var(--accent);
+        }
+
+        /* Navigation */
+        nav {
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            position: sticky;
+            top: 72px;
+            z-index: 99;
+        }
+
+        .nav-tabs {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .nav-tab {
+            padding: 1rem 1.5rem;
+            border: none;
+            background: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--gray-500);
             cursor: pointer;
-            border: 1px solid rgba(140, 100, 200, 0.3);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            z-index: 1000;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
         }
 
-        #install-prompt:active {
-            background: rgba(80, 60, 140, 0.9);
+        .nav-tab:hover {
+            color: var(--primary);
+            background: var(--gray-50);
         }
 
-        @keyframes breathe {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 0.9; }
+        .nav-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--accent);
         }
 
-        @keyframes fade {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 0.15; }
+        /* Main Content */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
         }
 
-        /* Gyroscope indicator */
-        #gyro-indicator {
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--gray-600);
+            margin-bottom: 0.4rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.1);
+        }
+
+        input[type="number"] {
+            font-family: 'SF Mono', Monaco, monospace;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-light);
+        }
+
+        .btn-accent {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-accent:hover {
+            background: var(--accent-light);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-outline {
+            background: white;
+            border: 2px solid var(--gray-300);
+            color: var(--gray-700);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        /* Bid Calculator */
+        .calculator-section {
+            background: var(--gray-50);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .cost-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px dashed var(--gray-200);
+        }
+
+        .cost-line:last-child {
+            border-bottom: none;
+        }
+
+        .cost-label {
+            color: var(--gray-600);
+        }
+
+        .cost-value {
+            font-family: 'SF Mono', Monaco, monospace;
+            font-weight: 600;
+        }
+
+        .total-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .total-label {
+            font-weight: 600;
+        }
+
+        .total-value {
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        /* Project List */
+        .project-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .project-item {
+            background: white;
+            border-radius: 12px;
+            padding: 1.25rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--primary);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .project-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .project-item.status-pending {
+            border-left-color: var(--accent);
+        }
+
+        .project-item.status-approved {
+            border-left-color: var(--success);
+        }
+
+        .project-item.status-completed {
+            border-left-color: var(--gray-400);
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .project-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--gray-800);
+        }
+
+        .project-amount {
+            font-family: 'SF Mono', Monaco, monospace;
+            font-weight: 700;
+            color: var(--success);
+            font-size: 1.1rem;
+        }
+
+        .project-details {
+            display: flex;
+            gap: 1.5rem;
+            color: var(--gray-500);
+            font-size: 0.85rem;
+        }
+
+        .project-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-draft { background: var(--gray-200); color: var(--gray-600); }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-approved { background: #d1fae5; color: #065f46; }
+        .status-completed { background: #dbeafe; color: #1e40af; }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.25rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary);
+            font-family: 'SF Mono', Monaco, monospace;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+            margin-top: 0.25rem;
+        }
+
+        /* Material Presets */
+        .preset-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .preset-btn {
+            padding: 0.75rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .preset-btn:hover {
+            border-color: var(--primary);
+            background: var(--gray-50);
+        }
+
+        .preset-btn.selected {
+            border-color: var(--primary);
+            background: rgba(30, 58, 95, 0.1);
+        }
+
+        .preset-name {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--gray-800);
+        }
+
+        .preset-price {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+            margin-top: 0.25rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray-400);
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Modal */
+        .modal-overlay {
             display: none;
             position: fixed;
-            top: max(60px, calc(env(safe-area-inset-top) + 30px));
-            right: 20px;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(140, 200, 255, 0.6);
-            box-shadow: 0 0 10px rgba(140, 200, 255, 0.4);
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
         }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-400);
+            line-height: 1;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .header-content {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-tab {
+                padding: 0.75rem 1rem;
+                font-size: 0.85rem;
+            }
+
+            .project-details {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            header, nav, .btn, .no-print {
+                display: none !important;
+            }
+
+            .card {
+                box-shadow: none;
+                border: 1px solid var(--gray-300);
+            }
+        }
+
+        /* Utility */
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+        .mt-1 { margin-top: 1rem; }
+        .mb-1 { margin-bottom: 1rem; }
+        .flex { display: flex; }
+        .gap-1 { gap: 1rem; }
+        .justify-between { justify-content: space-between; }
+        .items-center { align-items: center; }
     </style>
 </head>
 <body>
-    <canvas id="canvas"></canvas>
-    <div id="overlay"></div>
-    <div id="title">The Fourth Dimension</div>
-    <div id="hint">touch to drift through the dream</div>
-    <div id="gyro-indicator"></div>
-    <button id="install-prompt">Install Dream World</button>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="10" y="60" width="80" height="30" rx="4" fill="#f59e0b"/>
+                    <rect x="15" y="40" width="70" height="25" rx="3" fill="#94a3b8"/>
+                    <rect x="20" y="25" width="60" height="20" rx="3" fill="#64748b"/>
+                    <rect x="35" y="10" width="30" height="20" rx="2" fill="#475569"/>
+                    <circle cx="30" cy="75" r="8" fill="#1e3a5f"/>
+                    <circle cx="70" cy="75" r="8" fill="#1e3a5f"/>
+                </svg>
+                <div class="logo-text">Kalex<span>Concrete</span></div>
+            </div>
+            <div id="syncStatus" style="font-size: 0.8rem; opacity: 0.8;">
+                <span id="lastSaved">Data saved locally</span>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-page="dashboard">Dashboard</button>
+            <button class="nav-tab" data-page="calculator">New Bid</button>
+            <button class="nav-tab" data-page="projects">Projects</button>
+            <button class="nav-tab" data-page="customers">Customers</button>
+            <button class="nav-tab" data-page="settings">Settings</button>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Dashboard Page -->
+        <div id="dashboard" class="page active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="statTotalBids">0</div>
+                    <div class="stat-label">Total Bids</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statPending">0</div>
+                    <div class="stat-label">Pending</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statApproved">0</div>
+                    <div class="stat-label">Approved</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statRevenue">$0</div>
+                    <div class="stat-label">Est. Revenue</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Recent Projects</div>
+                    <button class="btn btn-primary btn-sm" onclick="showPage('calculator')">+ New Bid</button>
+                </div>
+                <div id="recentProjects" class="project-list">
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <p>No projects yet. Create your first bid!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calculator Page -->
+        <div id="calculator" class="page">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Project Information</div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Project Name *</label>
+                        <input type="text" id="projectName" placeholder="e.g., Smith Driveway">
+                    </div>
+                    <div class="form-group">
+                        <label>Customer</label>
+                        <select id="projectCustomer">
+                            <option value="">Select or type new...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" id="projectAddress" placeholder="Job site address">
+                    </div>
+                    <div class="form-group">
+                        <label>Project Type</label>
+                        <select id="projectType">
+                            <option value="driveway">Driveway</option>
+                            <option value="patio">Patio</option>
+                            <option value="sidewalk">Sidewalk</option>
+                            <option value="foundation">Foundation</option>
+                            <option value="slab">Slab</option>
+                            <option value="retaining_wall">Retaining Wall</option>
+                            <option value="stamped">Stamped Concrete</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea id="projectNotes" rows="2" placeholder="Special requirements, access issues, etc."></textarea>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Dimensions & Materials</div>
+                </div>
+
+                <div class="calculator-section">
+                    <div class="section-title">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>
+                        Area Calculation
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Length (ft)</label>
+                            <input type="number" id="calcLength" value="20" min="0" step="0.5" onchange="calculateBid()">
+                        </div>
+                        <div class="form-group">
+                            <label>Width (ft)</label>
+                            <input type="number" id="calcWidth" value="10" min="0" step="0.5" onchange="calculateBid()">
+                        </div>
+                        <div class="form-group">
+                            <label>Thickness (in)</label>
+                            <input type="number" id="calcThickness" value="4" min="2" max="12" step="0.5" onchange="calculateBid()">
+                        </div>
+                    </div>
+                    <div class="cost-line">
+                        <span class="cost-label">Square Feet:</span>
+                        <span class="cost-value" id="calcSqft">200</span>
+                    </div>
+                    <div class="cost-line">
+                        <span class="cost-label">Cubic Yards:</span>
+                        <span class="cost-value" id="calcCubicYards">2.47</span>
+                    </div>
+                </div>
+
+                <div class="calculator-section">
+                    <div class="section-title">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                        Concrete Mix
+                    </div>
+                    <div class="preset-grid">
+                        <div class="preset-btn selected" onclick="selectMix(this, 'standard')" data-mix="standard">
+                            <div class="preset-name">Standard</div>
+                            <div class="preset-price">3000 PSI</div>
+                        </div>
+                        <div class="preset-btn" onclick="selectMix(this, 'highstrength')" data-mix="highstrength">
+                            <div class="preset-name">High Strength</div>
+                            <div class="preset-price">4000 PSI</div>
+                        </div>
+                        <div class="preset-btn" onclick="selectMix(this, 'fiber')" data-mix="fiber">
+                            <div class="preset-name">Fiber Mesh</div>
+                            <div class="preset-price">+$15/yd</div>
+                        </div>
+                        <div class="preset-btn" onclick="selectMix(this, 'colored')" data-mix="colored">
+                            <div class="preset-name">Colored</div>
+                            <div class="preset-price">+$25/yd</div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Concrete Cost ($/cubic yard)</label>
+                            <input type="number" id="concreteCost" value="150" min="0" step="5" onchange="calculateBid()">
+                        </div>
+                        <div class="form-group">
+                            <label>Waste Factor (%)</label>
+                            <input type="number" id="wasteFactor" value="10" min="0" max="25" onchange="calculateBid()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Labor & Equipment</div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Crew Size</label>
+                        <input type="number" id="crewSize" value="3" min="1" max="10" onchange="calculateBid()">
+                    </div>
+                    <div class="form-group">
+                        <label>Labor Rate ($/hr/person)</label>
+                        <input type="number" id="laborRate" value="45" min="0" step="5" onchange="calculateBid()">
+                    </div>
+                    <div class="form-group">
+                        <label>Estimated Hours</label>
+                        <input type="number" id="laborHours" value="8" min="0" step="0.5" onchange="calculateBid()">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Equipment Rental ($)</label>
+                        <input type="number" id="equipmentCost" value="200" min="0" step="25" onchange="calculateBid()">
+                    </div>
+                    <div class="form-group">
+                        <label>Delivery/Trucking ($)</label>
+                        <input type="number" id="deliveryCost" value="150" min="0" step="25" onchange="calculateBid()">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Additional Items</div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Demolition/Removal ($)</label>
+                        <input type="number" id="demoCost" value="0" min="0" step="50" onchange="calculateBid()">
+                    </div>
+                    <div class="form-group">
+                        <label>Site Prep/Grading ($)</label>
+                        <input type="number" id="prepCost" value="200" min="0" step="50" onchange="calculateBid()">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Rebar/Wire Mesh ($)</label>
+                        <input type="number" id="rebarCost" value="150" min="0" step="25" onchange="calculateBid()">
+                    </div>
+                    <div class="form-group">
+                        <label>Forms/Lumber ($)</label>
+                        <input type="number" id="formsCost" value="100" min="0" step="25" onchange="calculateBid()">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Finish Type</label>
+                        <select id="finishType" onchange="calculateBid()">
+                            <option value="broom">Broom Finish (+$0)</option>
+                            <option value="exposed">Exposed Aggregate (+$3/sqft)</option>
+                            <option value="stamped">Stamped (+$8/sqft)</option>
+                            <option value="polished">Polished (+$6/sqft)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Other Costs ($)</label>
+                        <input type="number" id="otherCost" value="0" min="0" step="50" onchange="calculateBid()">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Pricing</div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Overhead (%)</label>
+                        <input type="number" id="overhead" value="15" min="0" max="50" onchange="calculateBid()">
+                    </div>
+                    <div class="form-group">
+                        <label>Profit Margin (%)</label>
+                        <input type="number" id="profitMargin" value="20" min="0" max="100" onchange="calculateBid()">
+                    </div>
+                </div>
+
+                <div class="calculator-section" style="background: white; border: 2px solid var(--gray-200);">
+                    <div class="section-title">Cost Breakdown</div>
+                    <div class="cost-line">
+                        <span class="cost-label">Concrete Materials</span>
+                        <span class="cost-value" id="sumConcrete">$0.00</span>
+                    </div>
+                    <div class="cost-line">
+                        <span class="cost-label">Labor</span>
+                        <span class="cost-value" id="sumLabor">$0.00</span>
+                    </div>
+                    <div class="cost-line">
+                        <span class="cost-label">Equipment & Delivery</span>
+                        <span class="cost-value" id="sumEquipment">$0.00</span>
+                    </div>
+                    <div class="cost-line">
+                        <span class="cost-label">Site Work & Prep</span>
+                        <span class="cost-value" id="sumSiteWork">$0.00</span>
+                    </div>
+                    <div class="cost-line">
+                        <span class="cost-label">Materials (Rebar, Forms)</span>
+                        <span class="cost-value" id="sumMaterials">$0.00</span>
+                    </div>
+                    <div class="cost-line">
+                        <span class="cost-label">Finish Upgrade</span>
+                        <span class="cost-value" id="sumFinish">$0.00</span>
+                    </div>
+                    <div class="cost-line">
+                        <span class="cost-label">Other</span>
+                        <span class="cost-value" id="sumOther">$0.00</span>
+                    </div>
+                    <div class="cost-line" style="border-top: 2px solid var(--gray-300); padding-top: 0.75rem; margin-top: 0.5rem;">
+                        <span class="cost-label"><strong>Subtotal (Direct Costs)</strong></span>
+                        <span class="cost-value" id="sumSubtotal">$0.00</span>
+                    </div>
+                    <div class="cost-line">
+                        <span class="cost-label">Overhead</span>
+                        <span class="cost-value" id="sumOverhead">$0.00</span>
+                    </div>
+                    <div class="cost-line">
+                        <span class="cost-label">Profit</span>
+                        <span class="cost-value" id="sumProfit">$0.00</span>
+                    </div>
+                </div>
+
+                <div class="total-line">
+                    <span class="total-label">TOTAL BID</span>
+                    <span class="total-value" id="totalBid">$0.00</span>
+                </div>
+
+                <div class="cost-line mt-1">
+                    <span class="cost-label">Price per Square Foot</span>
+                    <span class="cost-value" id="pricePerSqft">$0.00</span>
+                </div>
+
+                <div class="flex gap-1 mt-1">
+                    <button class="btn btn-primary" onclick="saveBid()">Save Bid</button>
+                    <button class="btn btn-outline" onclick="clearCalculator()">Clear</button>
+                    <button class="btn btn-accent" onclick="printBid()">Print / PDF</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projects Page -->
+        <div id="projects" class="page">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">All Projects</div>
+                    <div class="flex gap-1">
+                        <select id="filterStatus" onchange="filterProjects()">
+                            <option value="all">All Status</option>
+                            <option value="draft">Draft</option>
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                        <button class="btn btn-primary btn-sm" onclick="showPage('calculator')">+ New Bid</button>
+                    </div>
+                </div>
+                <div id="allProjects" class="project-list"></div>
+            </div>
+        </div>
+
+        <!-- Customers Page -->
+        <div id="customers" class="page">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Customers</div>
+                    <button class="btn btn-primary btn-sm" onclick="openCustomerModal()">+ Add Customer</button>
+                </div>
+                <div id="customerList" class="project-list"></div>
+            </div>
+        </div>
+
+        <!-- Settings Page -->
+        <div id="settings" class="page">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Default Pricing</div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Default Concrete Cost ($/yd)</label>
+                        <input type="number" id="settingConcreteCost" value="150">
+                    </div>
+                    <div class="form-group">
+                        <label>Default Labor Rate ($/hr)</label>
+                        <input type="number" id="settingLaborRate" value="45">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Default Overhead (%)</label>
+                        <input type="number" id="settingOverhead" value="15">
+                    </div>
+                    <div class="form-group">
+                        <label>Default Profit Margin (%)</label>
+                        <input type="number" id="settingProfit" value="20">
+                    </div>
+                </div>
+                <button class="btn btn-primary mt-1" onclick="saveSettings()">Save Defaults</button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Company Information</div>
+                </div>
+                <div class="form-group">
+                    <label>Company Name</label>
+                    <input type="text" id="companyName" value="Kalex Concrete">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" id="companyPhone" placeholder="(555) 123-4567">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="companyEmail" placeholder="info@kalexconcrete.com">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Address</label>
+                    <input type="text" id="companyAddress" placeholder="123 Main St, City, State ZIP">
+                </div>
+                <div class="form-group">
+                    <label>License #</label>
+                    <input type="text" id="companyLicense" placeholder="Contractor License Number">
+                </div>
+                <button class="btn btn-primary mt-1" onclick="saveCompanyInfo()">Save Company Info</button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Data Management</div>
+                </div>
+                <div class="flex gap-1">
+                    <button class="btn btn-outline" onclick="exportData()">Export All Data</button>
+                    <button class="btn btn-outline" onclick="document.getElementById('importFile').click()">Import Data</button>
+                    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+                </div>
+                <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--gray-500);">
+                    All data is stored locally on this device. Export regularly to backup your bids.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Customer Modal -->
+    <div class="modal-overlay" id="customerModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Add Customer</div>
+                <button class="modal-close" onclick="closeCustomerModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Name *</label>
+                    <input type="text" id="custName" placeholder="Customer name">
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" id="custPhone" placeholder="(555) 123-4567">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="custEmail" placeholder="email@example.com">
+                </div>
+                <div class="form-group">
+                    <label>Address</label>
+                    <input type="text" id="custAddress" placeholder="Street address">
+                </div>
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea id="custNotes" rows="2" placeholder="Additional notes..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeCustomerModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveCustomer()">Save Customer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Detail Modal -->
+    <div class="modal-overlay" id="projectModal">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <div class="modal-title" id="modalProjectTitle">Project Details</div>
+                <button class="modal-close" onclick="closeProjectModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalProjectBody"></div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeProjectModal()">Close</button>
+                <button class="btn btn-primary" id="modalEditBtn">Edit Bid</button>
+                <select id="modalStatusSelect" onchange="updateProjectStatus()">
+                    <option value="draft">Draft</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="completed">Completed</option>
+                </select>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // Register Service Worker for PWA
+        // Data Store
+        let data = {
+            projects: [],
+            customers: [],
+            settings: {
+                concreteCost: 150,
+                laborRate: 45,
+                overhead: 15,
+                profitMargin: 20
+            },
+            company: {
+                name: 'Kalex Concrete',
+                phone: '',
+                email: '',
+                address: '',
+                license: ''
+            }
+        };
+
+        let currentProjectId = null;
+        let selectedMix = 'standard';
+
+        // Load data from localStorage
+        function loadData() {
+            const stored = localStorage.getItem('kalexConcreteData');
+            if (stored) {
+                data = JSON.parse(stored);
+                applySettings();
+            }
+            updateUI();
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('kalexConcreteData', JSON.stringify(data));
+            document.getElementById('lastSaved').textContent = 'Saved ' + new Date().toLocaleTimeString();
+        }
+
+        // Apply saved settings to calculator defaults
+        function applySettings() {
+            document.getElementById('settingConcreteCost').value = data.settings.concreteCost;
+            document.getElementById('settingLaborRate').value = data.settings.laborRate;
+            document.getElementById('settingOverhead').value = data.settings.overhead;
+            document.getElementById('settingProfit').value = data.settings.profitMargin;
+
+            document.getElementById('companyName').value = data.company.name || '';
+            document.getElementById('companyPhone').value = data.company.phone || '';
+            document.getElementById('companyEmail').value = data.company.email || '';
+            document.getElementById('companyAddress').value = data.company.address || '';
+            document.getElementById('companyLicense').value = data.company.license || '';
+        }
+
+        // Navigation
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                showPage(tab.dataset.page);
+            });
+        });
+
+        function showPage(pageId) {
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`[data-page="${pageId}"]`).classList.add('active');
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+
+            if (pageId === 'calculator' && !currentProjectId) {
+                applyDefaultsToCalculator();
+            }
+            updateUI();
+        }
+
+        function applyDefaultsToCalculator() {
+            document.getElementById('concreteCost').value = data.settings.concreteCost;
+            document.getElementById('laborRate').value = data.settings.laborRate;
+            document.getElementById('overhead').value = data.settings.overhead;
+            document.getElementById('profitMargin').value = data.settings.profitMargin;
+            calculateBid();
+        }
+
+        // Calculator Functions
+        function selectMix(btn, mix) {
+            document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedMix = mix;
+
+            let baseCost = data.settings.concreteCost;
+            if (mix === 'highstrength') baseCost += 10;
+            if (mix === 'fiber') baseCost += 15;
+            if (mix === 'colored') baseCost += 25;
+
+            document.getElementById('concreteCost').value = baseCost;
+            calculateBid();
+        }
+
+        function calculateBid() {
+            const length = parseFloat(document.getElementById('calcLength').value) || 0;
+            const width = parseFloat(document.getElementById('calcWidth').value) || 0;
+            const thickness = parseFloat(document.getElementById('calcThickness').value) || 4;
+
+            const sqft = length * width;
+            const cubicFeet = sqft * (thickness / 12);
+            const cubicYards = cubicFeet / 27;
+
+            document.getElementById('calcSqft').textContent = sqft.toFixed(0);
+            document.getElementById('calcCubicYards').textContent = cubicYards.toFixed(2);
+
+            // Costs
+            const concreteCost = parseFloat(document.getElementById('concreteCost').value) || 0;
+            const wasteFactor = parseFloat(document.getElementById('wasteFactor').value) || 10;
+            const adjustedYards = cubicYards * (1 + wasteFactor / 100);
+            const concreteMaterialCost = adjustedYards * concreteCost;
+
+            const crewSize = parseFloat(document.getElementById('crewSize').value) || 3;
+            const laborRate = parseFloat(document.getElementById('laborRate').value) || 45;
+            const laborHours = parseFloat(document.getElementById('laborHours').value) || 8;
+            const laborCost = crewSize * laborRate * laborHours;
+
+            const equipmentCost = parseFloat(document.getElementById('equipmentCost').value) || 0;
+            const deliveryCost = parseFloat(document.getElementById('deliveryCost').value) || 0;
+            const equipmentTotal = equipmentCost + deliveryCost;
+
+            const demoCost = parseFloat(document.getElementById('demoCost').value) || 0;
+            const prepCost = parseFloat(document.getElementById('prepCost').value) || 0;
+            const siteWorkCost = demoCost + prepCost;
+
+            const rebarCost = parseFloat(document.getElementById('rebarCost').value) || 0;
+            const formsCost = parseFloat(document.getElementById('formsCost').value) || 0;
+            const materialsCost = rebarCost + formsCost;
+
+            // Finish upgrade
+            const finishType = document.getElementById('finishType').value;
+            let finishCost = 0;
+            if (finishType === 'exposed') finishCost = sqft * 3;
+            if (finishType === 'stamped') finishCost = sqft * 8;
+            if (finishType === 'polished') finishCost = sqft * 6;
+
+            const otherCost = parseFloat(document.getElementById('otherCost').value) || 0;
+
+            const subtotal = concreteMaterialCost + laborCost + equipmentTotal + siteWorkCost + materialsCost + finishCost + otherCost;
+
+            const overheadPct = parseFloat(document.getElementById('overhead').value) || 0;
+            const profitPct = parseFloat(document.getElementById('profitMargin').value) || 0;
+
+            const overheadCost = subtotal * (overheadPct / 100);
+            const profitCost = (subtotal + overheadCost) * (profitPct / 100);
+
+            const total = subtotal + overheadCost + profitCost;
+            const pricePerSqft = sqft > 0 ? total / sqft : 0;
+
+            // Update display
+            document.getElementById('sumConcrete').textContent = formatCurrency(concreteMaterialCost);
+            document.getElementById('sumLabor').textContent = formatCurrency(laborCost);
+            document.getElementById('sumEquipment').textContent = formatCurrency(equipmentTotal);
+            document.getElementById('sumSiteWork').textContent = formatCurrency(siteWorkCost);
+            document.getElementById('sumMaterials').textContent = formatCurrency(materialsCost);
+            document.getElementById('sumFinish').textContent = formatCurrency(finishCost);
+            document.getElementById('sumOther').textContent = formatCurrency(otherCost);
+            document.getElementById('sumSubtotal').textContent = formatCurrency(subtotal);
+            document.getElementById('sumOverhead').textContent = formatCurrency(overheadCost);
+            document.getElementById('sumProfit').textContent = formatCurrency(profitCost);
+            document.getElementById('totalBid').textContent = formatCurrency(total);
+            document.getElementById('pricePerSqft').textContent = formatCurrency(pricePerSqft) + '/sqft';
+
+            return {
+                sqft, cubicYards: adjustedYards, concreteMaterialCost, laborCost, equipmentTotal,
+                siteWorkCost, materialsCost, finishCost, otherCost, subtotal, overheadCost, profitCost, total, pricePerSqft
+            };
+        }
+
+        function formatCurrency(amount) {
+            return '$' + amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        function saveBid() {
+            const projectName = document.getElementById('projectName').value.trim();
+            if (!projectName) {
+                alert('Please enter a project name');
+                return;
+            }
+
+            const costs = calculateBid();
+
+            const project = {
+                id: currentProjectId || Date.now().toString(),
+                name: projectName,
+                customer: document.getElementById('projectCustomer').value,
+                address: document.getElementById('projectAddress').value,
+                type: document.getElementById('projectType').value,
+                notes: document.getElementById('projectNotes').value,
+                dimensions: {
+                    length: parseFloat(document.getElementById('calcLength').value),
+                    width: parseFloat(document.getElementById('calcWidth').value),
+                    thickness: parseFloat(document.getElementById('calcThickness').value)
+                },
+                mix: selectedMix,
+                costs: {
+                    concreteCost: parseFloat(document.getElementById('concreteCost').value),
+                    wasteFactor: parseFloat(document.getElementById('wasteFactor').value),
+                    crewSize: parseFloat(document.getElementById('crewSize').value),
+                    laborRate: parseFloat(document.getElementById('laborRate').value),
+                    laborHours: parseFloat(document.getElementById('laborHours').value),
+                    equipment: parseFloat(document.getElementById('equipmentCost').value),
+                    delivery: parseFloat(document.getElementById('deliveryCost').value),
+                    demo: parseFloat(document.getElementById('demoCost').value),
+                    prep: parseFloat(document.getElementById('prepCost').value),
+                    rebar: parseFloat(document.getElementById('rebarCost').value),
+                    forms: parseFloat(document.getElementById('formsCost').value),
+                    finish: document.getElementById('finishType').value,
+                    other: parseFloat(document.getElementById('otherCost').value),
+                    overhead: parseFloat(document.getElementById('overhead').value),
+                    profit: parseFloat(document.getElementById('profitMargin').value)
+                },
+                calculated: costs,
+                status: 'draft',
+                created: currentProjectId ? (data.projects.find(p => p.id === currentProjectId)?.created || new Date().toISOString()) : new Date().toISOString(),
+                updated: new Date().toISOString()
+            };
+
+            if (currentProjectId) {
+                const index = data.projects.findIndex(p => p.id === currentProjectId);
+                if (index >= 0) {
+                    project.status = data.projects[index].status;
+                    data.projects[index] = project;
+                }
+            } else {
+                data.projects.unshift(project);
+            }
+
+            saveData();
+            clearCalculator();
+            showPage('projects');
+            alert('Bid saved successfully!');
+        }
+
+        function clearCalculator() {
+            currentProjectId = null;
+            document.getElementById('projectName').value = '';
+            document.getElementById('projectCustomer').value = '';
+            document.getElementById('projectAddress').value = '';
+            document.getElementById('projectType').value = 'driveway';
+            document.getElementById('projectNotes').value = '';
+            document.getElementById('calcLength').value = 20;
+            document.getElementById('calcWidth').value = 10;
+            document.getElementById('calcThickness').value = 4;
+            document.getElementById('demoCost').value = 0;
+            document.getElementById('otherCost').value = 0;
+            document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('selected'));
+            document.querySelector('[data-mix="standard"]').classList.add('selected');
+            selectedMix = 'standard';
+            applyDefaultsToCalculator();
+        }
+
+        function printBid() {
+            window.print();
+        }
+
+        // Project List Functions
+        function updateUI() {
+            updateStats();
+            updateRecentProjects();
+            updateAllProjects();
+            updateCustomerList();
+            updateCustomerDropdown();
+        }
+
+        function updateStats() {
+            const total = data.projects.length;
+            const pending = data.projects.filter(p => p.status === 'pending').length;
+            const approved = data.projects.filter(p => p.status === 'approved' || p.status === 'completed').length;
+            const revenue = data.projects
+                .filter(p => p.status === 'approved' || p.status === 'completed')
+                .reduce((sum, p) => sum + (p.calculated?.total || 0), 0);
+
+            document.getElementById('statTotalBids').textContent = total;
+            document.getElementById('statPending').textContent = pending;
+            document.getElementById('statApproved').textContent = approved;
+            document.getElementById('statRevenue').textContent = formatCurrency(revenue);
+        }
+
+        function updateRecentProjects() {
+            const container = document.getElementById('recentProjects');
+            const recent = data.projects.slice(0, 5);
+
+            if (recent.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <p>No projects yet. Create your first bid!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = recent.map(p => renderProjectItem(p)).join('');
+        }
+
+        function updateAllProjects() {
+            const container = document.getElementById('allProjects');
+            const filter = document.getElementById('filterStatus').value;
+            let projects = data.projects;
+
+            if (filter !== 'all') {
+                projects = projects.filter(p => p.status === filter);
+            }
+
+            if (projects.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <p>No projects found</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = projects.map(p => renderProjectItem(p)).join('');
+        }
+
+        function renderProjectItem(project) {
+            const date = new Date(project.created).toLocaleDateString();
+            const typeLabels = {
+                driveway: 'Driveway', patio: 'Patio', sidewalk: 'Sidewalk',
+                foundation: 'Foundation', slab: 'Slab', retaining_wall: 'Retaining Wall',
+                stamped: 'Stamped', other: 'Other'
+            };
+
+            return `
+                <div class="project-item status-${project.status}" onclick="openProjectModal('${project.id}')">
+                    <div class="project-header">
+                        <div class="project-name">${project.name}</div>
+                        <div class="project-amount">${formatCurrency(project.calculated?.total || 0)}</div>
+                    </div>
+                    <div class="project-details">
+                        <span class="project-detail">${typeLabels[project.type] || project.type}</span>
+                        <span class="project-detail">${project.calculated?.sqft || 0} sqft</span>
+                        <span class="project-detail">${date}</span>
+                        <span class="status-badge status-${project.status}">${project.status}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function filterProjects() {
+            updateAllProjects();
+        }
+
+        // Project Modal
+        function openProjectModal(projectId) {
+            const project = data.projects.find(p => p.id === projectId);
+            if (!project) return;
+
+            currentProjectId = projectId;
+            document.getElementById('modalProjectTitle').textContent = project.name;
+            document.getElementById('modalStatusSelect').value = project.status;
+
+            const body = document.getElementById('modalProjectBody');
+            body.innerHTML = `
+                <div style="margin-bottom: 1rem;">
+                    <strong>Customer:</strong> ${project.customer || 'N/A'}<br>
+                    <strong>Address:</strong> ${project.address || 'N/A'}<br>
+                    <strong>Type:</strong> ${project.type}
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <strong>Dimensions:</strong> ${project.dimensions.length}' x ${project.dimensions.width}' x ${project.dimensions.thickness}"<br>
+                    <strong>Area:</strong> ${project.calculated?.sqft || 0} sqft<br>
+                    <strong>Concrete:</strong> ${project.calculated?.cubicYards?.toFixed(2) || 0} cubic yards
+                </div>
+                <div class="calculator-section">
+                    <div class="cost-line"><span>Materials</span><span>${formatCurrency(project.calculated?.concreteMaterialCost + project.calculated?.materialsCost || 0)}</span></div>
+                    <div class="cost-line"><span>Labor</span><span>${formatCurrency(project.calculated?.laborCost || 0)}</span></div>
+                    <div class="cost-line"><span>Equipment/Delivery</span><span>${formatCurrency(project.calculated?.equipmentTotal || 0)}</span></div>
+                    <div class="cost-line"><span>Site Work</span><span>${formatCurrency(project.calculated?.siteWorkCost || 0)}</span></div>
+                    <div class="cost-line"><span>Finish/Other</span><span>${formatCurrency((project.calculated?.finishCost || 0) + (project.calculated?.otherCost || 0))}</span></div>
+                    <div class="cost-line" style="border-top: 2px solid var(--gray-300); padding-top: 0.5rem;"><span><strong>Subtotal</strong></span><span>${formatCurrency(project.calculated?.subtotal || 0)}</span></div>
+                    <div class="cost-line"><span>Overhead (${project.costs?.overhead || 0}%)</span><span>${formatCurrency(project.calculated?.overheadCost || 0)}</span></div>
+                    <div class="cost-line"><span>Profit (${project.costs?.profit || 0}%)</span><span>${formatCurrency(project.calculated?.profitCost || 0)}</span></div>
+                </div>
+                <div class="total-line">
+                    <span>TOTAL</span>
+                    <span>${formatCurrency(project.calculated?.total || 0)}</span>
+                </div>
+                <p style="margin-top: 0.5rem; text-align: right; color: var(--gray-500);">
+                    ${formatCurrency(project.calculated?.pricePerSqft || 0)}/sqft
+                </p>
+                ${project.notes ? `<p style="margin-top: 1rem;"><strong>Notes:</strong> ${project.notes}</p>` : ''}
+            `;
+
+            document.getElementById('modalEditBtn').onclick = () => editProject(projectId);
+            document.getElementById('projectModal').classList.add('active');
+        }
+
+        function closeProjectModal() {
+            document.getElementById('projectModal').classList.remove('active');
+            currentProjectId = null;
+        }
+
+        function editProject(projectId) {
+            const project = data.projects.find(p => p.id === projectId);
+            if (!project) return;
+
+            closeProjectModal();
+            currentProjectId = projectId;
+
+            // Fill form with project data
+            document.getElementById('projectName').value = project.name;
+            document.getElementById('projectCustomer').value = project.customer || '';
+            document.getElementById('projectAddress').value = project.address || '';
+            document.getElementById('projectType').value = project.type;
+            document.getElementById('projectNotes').value = project.notes || '';
+            document.getElementById('calcLength').value = project.dimensions.length;
+            document.getElementById('calcWidth').value = project.dimensions.width;
+            document.getElementById('calcThickness').value = project.dimensions.thickness;
+            document.getElementById('concreteCost').value = project.costs.concreteCost;
+            document.getElementById('wasteFactor').value = project.costs.wasteFactor;
+            document.getElementById('crewSize').value = project.costs.crewSize;
+            document.getElementById('laborRate').value = project.costs.laborRate;
+            document.getElementById('laborHours').value = project.costs.laborHours;
+            document.getElementById('equipmentCost').value = project.costs.equipment;
+            document.getElementById('deliveryCost').value = project.costs.delivery;
+            document.getElementById('demoCost').value = project.costs.demo;
+            document.getElementById('prepCost').value = project.costs.prep;
+            document.getElementById('rebarCost').value = project.costs.rebar;
+            document.getElementById('formsCost').value = project.costs.forms;
+            document.getElementById('finishType').value = project.costs.finish;
+            document.getElementById('otherCost').value = project.costs.other;
+            document.getElementById('overhead').value = project.costs.overhead;
+            document.getElementById('profitMargin').value = project.costs.profit;
+
+            // Set mix selection
+            selectedMix = project.mix || 'standard';
+            document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('selected'));
+            document.querySelector(`[data-mix="${selectedMix}"]`)?.classList.add('selected');
+
+            calculateBid();
+            showPage('calculator');
+        }
+
+        function updateProjectStatus() {
+            if (!currentProjectId) return;
+
+            const newStatus = document.getElementById('modalStatusSelect').value;
+            const index = data.projects.findIndex(p => p.id === currentProjectId);
+
+            if (index >= 0) {
+                data.projects[index].status = newStatus;
+                data.projects[index].updated = new Date().toISOString();
+                saveData();
+                updateUI();
+            }
+        }
+
+        // Customer Functions
+        function updateCustomerList() {
+            const container = document.getElementById('customerList');
+
+            if (data.customers.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <p>No customers yet. Add your first customer!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = data.customers.map(c => `
+                <div class="project-item">
+                    <div class="project-header">
+                        <div class="project-name">${c.name}</div>
+                        <button class="btn btn-sm btn-outline" onclick="deleteCustomer('${c.id}')">Delete</button>
+                    </div>
+                    <div class="project-details">
+                        ${c.phone ? `<span class="project-detail">${c.phone}</span>` : ''}
+                        ${c.email ? `<span class="project-detail">${c.email}</span>` : ''}
+                    </div>
+                    ${c.address ? `<p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--gray-500);">${c.address}</p>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function updateCustomerDropdown() {
+            const select = document.getElementById('projectCustomer');
+            select.innerHTML = '<option value="">Select customer...</option>' +
+                data.customers.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+        }
+
+        function openCustomerModal() {
+            document.getElementById('custName').value = '';
+            document.getElementById('custPhone').value = '';
+            document.getElementById('custEmail').value = '';
+            document.getElementById('custAddress').value = '';
+            document.getElementById('custNotes').value = '';
+            document.getElementById('customerModal').classList.add('active');
+        }
+
+        function closeCustomerModal() {
+            document.getElementById('customerModal').classList.remove('active');
+        }
+
+        function saveCustomer() {
+            const name = document.getElementById('custName').value.trim();
+            if (!name) {
+                alert('Please enter a customer name');
+                return;
+            }
+
+            data.customers.push({
+                id: Date.now().toString(),
+                name: name,
+                phone: document.getElementById('custPhone').value,
+                email: document.getElementById('custEmail').value,
+                address: document.getElementById('custAddress').value,
+                notes: document.getElementById('custNotes').value,
+                created: new Date().toISOString()
+            });
+
+            saveData();
+            closeCustomerModal();
+            updateUI();
+        }
+
+        function deleteCustomer(id) {
+            if (confirm('Delete this customer?')) {
+                data.customers = data.customers.filter(c => c.id !== id);
+                saveData();
+                updateUI();
+            }
+        }
+
+        // Settings Functions
+        function saveSettings() {
+            data.settings.concreteCost = parseFloat(document.getElementById('settingConcreteCost').value) || 150;
+            data.settings.laborRate = parseFloat(document.getElementById('settingLaborRate').value) || 45;
+            data.settings.overhead = parseFloat(document.getElementById('settingOverhead').value) || 15;
+            data.settings.profitMargin = parseFloat(document.getElementById('settingProfit').value) || 20;
+            saveData();
+            alert('Default settings saved!');
+        }
+
+        function saveCompanyInfo() {
+            data.company.name = document.getElementById('companyName').value;
+            data.company.phone = document.getElementById('companyPhone').value;
+            data.company.email = document.getElementById('companyEmail').value;
+            data.company.address = document.getElementById('companyAddress').value;
+            data.company.license = document.getElementById('companyLicense').value;
+            saveData();
+            alert('Company information saved!');
+        }
+
+        // Data Export/Import
+        function exportData() {
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `kalex-concrete-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (confirm('This will replace all current data. Continue?')) {
+                        data = imported;
+                        saveData();
+                        applySettings();
+                        updateUI();
+                        alert('Data imported successfully!');
+                    }
+                } catch (err) {
+                    alert('Error importing data: Invalid file format');
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        // Service Worker Registration
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js')
-                .then(reg => console.log('Dream World ready for offline'))
+                .then(reg => console.log('Service Worker registered'))
                 .catch(err => console.log('SW registration failed'));
         }
 
-        // Install prompt handling
-        let deferredPrompt;
-        const installBtn = document.getElementById('install-prompt');
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            installBtn.style.display = 'block';
-        });
-
-        installBtn.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                deferredPrompt = null;
-                installBtn.style.display = 'none';
-            }
-        });
-
-        // Dream World Engine
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        const gyroIndicator = document.getElementById('gyro-indicator');
-
-        let width, height;
-        let time = 0;
-        let mouseX = 0.5;
-        let mouseY = 0.5;
-        let targetMouseX = 0.5;
-        let targetMouseY = 0.5;
-        let dreamPhase = 0;
-        let useGyro = false;
-        let gyroX = 0, gyroY = 0;
-
-        // Resize handler
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        }
-        resize();
-        window.addEventListener('resize', resize);
-
-        // Mouse tracking (desktop)
-        document.addEventListener('mousemove', (e) => {
-            targetMouseX = e.clientX / width;
-            targetMouseY = e.clientY / height;
-        });
-
-        document.addEventListener('click', () => {
-            dreamPhase += Math.PI * 0.5;
-        });
-
-        // Touch tracking (mobile)
-        canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            const touch = e.touches[0];
-            targetMouseX = touch.clientX / width;
-            targetMouseY = touch.clientY / height;
-        }, { passive: false });
-
-        canvas.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            const touch = e.touches[0];
-            targetMouseX = touch.clientX / width;
-            targetMouseY = touch.clientY / height;
-        }, { passive: false });
-
-        canvas.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            dreamPhase += Math.PI * 0.5;
-        }, { passive: false });
-
-        // Multi-touch for dream shift
-        canvas.addEventListener('touchstart', (e) => {
-            if (e.touches.length >= 2) {
-                dreamPhase += Math.PI;
-            }
-        }, { passive: false });
-
-        // Gyroscope/Device orientation (mobile)
-        function enableGyro() {
-            if (typeof DeviceOrientationEvent !== 'undefined' &&
-                typeof DeviceOrientationEvent.requestPermission === 'function') {
-                // iOS 13+ requires permission
-                DeviceOrientationEvent.requestPermission()
-                    .then(response => {
-                        if (response === 'granted') {
-                            window.addEventListener('deviceorientation', handleOrientation);
-                            useGyro = true;
-                            gyroIndicator.style.display = 'block';
-                        }
-                    })
-                    .catch(console.error);
-            } else if ('DeviceOrientationEvent' in window) {
-                // Android and older iOS
-                window.addEventListener('deviceorientation', handleOrientation);
-                useGyro = true;
-                gyroIndicator.style.display = 'block';
-            }
-        }
-
-        function handleOrientation(e) {
-            if (e.gamma !== null && e.beta !== null) {
-                // gamma: left-right tilt (-90 to 90)
-                // beta: front-back tilt (-180 to 180)
-                gyroX = (e.gamma + 90) / 180; // normalize to 0-1
-                gyroY = (e.beta + 90) / 180; // normalize to 0-1
-                gyroX = Math.max(0, Math.min(1, gyroX));
-                gyroY = Math.max(0, Math.min(1, gyroY));
-            }
-        }
-
-        // Try to enable gyro on first touch
-        let gyroEnabled = false;
-        document.addEventListener('touchstart', () => {
-            if (!gyroEnabled) {
-                enableGyro();
-                gyroEnabled = true;
-            }
-        }, { once: true });
-
-        // Noise functions for organic movement
-        function noise(x, y, z) {
-            const X = Math.floor(x) & 255;
-            const Y = Math.floor(y) & 255;
-            const Z = Math.floor(z) & 255;
-            x -= Math.floor(x);
-            y -= Math.floor(y);
-            z -= Math.floor(z);
-            const u = fade(x);
-            const v = fade(y);
-            const w = fade(z);
-            const A = p[X] + Y, AA = p[A] + Z, AB = p[A + 1] + Z;
-            const B = p[X + 1] + Y, BA = p[B] + Z, BB = p[B + 1] + Z;
-            return lerp(w, lerp(v, lerp(u, grad(p[AA], x, y, z), grad(p[BA], x - 1, y, z)),
-                lerp(u, grad(p[AB], x, y - 1, z), grad(p[BB], x - 1, y - 1, z))),
-                lerp(v, lerp(u, grad(p[AA + 1], x, y, z - 1), grad(p[BA + 1], x - 1, y, z - 1)),
-                lerp(u, grad(p[AB + 1], x, y - 1, z - 1), grad(p[BB + 1], x - 1, y - 1, z - 1))));
-        }
-
-        function fade(t) { return t * t * t * (t * (t * 6 - 15) + 10); }
-        function lerp(t, a, b) { return a + t * (b - a); }
-        function grad(hash, x, y, z) {
-            const h = hash & 15;
-            const u = h < 8 ? x : y;
-            const v = h < 4 ? y : h == 12 || h == 14 ? x : z;
-            return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
-        }
-
-        // Permutation table
-        const p = new Array(512);
-        const permutation = [151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168,68,175,74,165,71,134,139,48,27,166,77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,102,143,54,65,25,63,161,1,216,80,73,209,76,132,187,208,89,18,169,200,196,135,130,116,188,159,86,164,100,109,198,173,186,3,64,52,217,226,250,124,123,5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,223,183,170,213,119,248,152,2,44,154,163,70,221,153,101,155,167,43,172,9,129,22,39,253,19,98,108,110,79,113,224,232,178,185,112,104,218,246,97,228,251,34,242,193,238,210,144,12,191,179,162,241,81,51,145,235,249,14,239,107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,127,4,150,254,138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180];
-        for (let i = 0; i < 256; i++) p[256 + i] = p[i] = permutation[i];
-
-        // Fractal noise
-        function fbm(x, y, z, octaves = 4) {
-            let value = 0;
-            let amplitude = 0.5;
-            let frequency = 1;
-            for (let i = 0; i < octaves; i++) {
-                value += amplitude * noise(x * frequency, y * frequency, z * frequency);
-                amplitude *= 0.5;
-                frequency *= 2;
-            }
-            return value;
-        }
-
-        // Dream entities
-        class FloatingForm {
-            constructor() {
-                this.reset();
-            }
-
-            reset() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.z = Math.random() * 1000;
-                this.size = 20 + Math.random() * 80;
-                this.type = Math.floor(Math.random() * 5);
-                this.rotation = Math.random() * Math.PI * 2;
-                this.rotationSpeed = (Math.random() - 0.5) * 0.02;
-                this.pulsePhase = Math.random() * Math.PI * 2;
-                this.hue = 220 + Math.random() * 80;
-                this.opacity = 0.1 + Math.random() * 0.3;
-            }
-
-            update(dt) {
-                const noiseVal = fbm(this.x * 0.001, this.y * 0.001, time * 0.1);
-                this.x += Math.sin(noiseVal * Math.PI * 2 + this.pulsePhase) * 0.5;
-                this.y += Math.cos(noiseVal * Math.PI * 2 + this.pulsePhase) * 0.3 - 0.2;
-                this.z -= 1 + mouseY * 2;
-                this.rotation += this.rotationSpeed;
-
-                // Mouse/touch influence
-                const dx = (mouseX * width - this.x) * 0.001;
-                const dy = (mouseY * height - this.y) * 0.001;
-                this.x += dx * 2;
-                this.y += dy * 2;
-
-                if (this.z < 0 || this.y < -100 || this.y > height + 100) {
-                    this.reset();
-                    this.z = 800 + Math.random() * 200;
-                    this.y = height + 50;
-                }
-            }
-
-            draw() {
-                const scale = 1000 / (1000 + this.z);
-                const screenX = width / 2 + (this.x - width / 2) * scale;
-                const screenY = height / 2 + (this.y - height / 2) * scale;
-                const screenSize = this.size * scale;
-
-                if (screenSize < 2) return;
-
-                const pulse = Math.sin(time * 2 + this.pulsePhase) * 0.3 + 0.7;
-                const alpha = this.opacity * scale * pulse;
-
-                ctx.save();
-                ctx.translate(screenX, screenY);
-                ctx.rotate(this.rotation + Math.sin(time + this.pulsePhase) * 0.2);
-
-                const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, screenSize);
-                gradient.addColorStop(0, `hsla(${this.hue + Math.sin(time) * 20}, 60%, 70%, ${alpha})`);
-                gradient.addColorStop(0.5, `hsla(${this.hue + 30}, 50%, 50%, ${alpha * 0.5})`);
-                gradient.addColorStop(1, `hsla(${this.hue + 60}, 40%, 30%, 0)`);
-
-                ctx.fillStyle = gradient;
-                ctx.beginPath();
-
-                // Different surreal shapes
-                switch (this.type) {
-                    case 0: // Morphing circle
-                        for (let i = 0; i <= 32; i++) {
-                            const angle = (i / 32) * Math.PI * 2;
-                            const r = screenSize * (0.8 + fbm(Math.cos(angle), Math.sin(angle), time * 0.5 + this.pulsePhase) * 0.4);
-                            const px = Math.cos(angle) * r;
-                            const py = Math.sin(angle) * r;
-                            if (i === 0) ctx.moveTo(px, py);
-                            else ctx.lineTo(px, py);
-                        }
-                        break;
-                    case 1: // Impossible triangle
-                        const s = screenSize;
-                        ctx.moveTo(0, -s);
-                        ctx.lineTo(s * 0.866, s * 0.5);
-                        ctx.lineTo(-s * 0.866, s * 0.5);
-                        ctx.closePath();
-                        ctx.moveTo(0, -s * 0.5);
-                        ctx.lineTo(s * 0.433, s * 0.25);
-                        ctx.lineTo(-s * 0.433, s * 0.25);
-                        break;
-                    case 2: // Eye
-                        ctx.ellipse(0, 0, screenSize, screenSize * 0.5, 0, 0, Math.PI * 2);
-                        ctx.moveTo(screenSize * 0.3, 0);
-                        ctx.arc(0, 0, screenSize * 0.3, 0, Math.PI * 2);
-                        break;
-                    case 3: // Spiral
-                        for (let i = 0; i <= 100; i++) {
-                            const t = i / 100;
-                            const angle = t * Math.PI * 6;
-                            const r = t * screenSize;
-                            const px = Math.cos(angle) * r;
-                            const py = Math.sin(angle) * r;
-                            if (i === 0) ctx.moveTo(px, py);
-                            else ctx.lineTo(px, py);
-                        }
-                        ctx.lineWidth = 2 * scale;
-                        ctx.strokeStyle = gradient;
-                        ctx.stroke();
-                        break;
-                    case 4: // Tesseract projection
-                        const ts = screenSize * 0.7;
-                        const inner = ts * 0.5;
-                        const phase = time * 0.5 + this.pulsePhase;
-                        ctx.rect(-ts, -ts, ts * 2, ts * 2);
-                        ctx.moveTo(-inner + Math.sin(phase) * 10, -inner + Math.cos(phase) * 10);
-                        ctx.lineTo(inner + Math.sin(phase) * 10, -inner + Math.cos(phase) * 10);
-                        ctx.lineTo(inner + Math.sin(phase) * 10, inner + Math.cos(phase) * 10);
-                        ctx.lineTo(-inner + Math.sin(phase) * 10, inner + Math.cos(phase) * 10);
-                        ctx.closePath();
-                        break;
-                }
-
-                ctx.fill();
-                ctx.restore();
-            }
-        }
-
-        // Terrain layer for surreal landscape
-        class DreamTerrain {
-            constructor(y, speed, color, amplitude) {
-                this.baseY = y;
-                this.speed = speed;
-                this.color = color;
-                this.amplitude = amplitude;
-                this.offset = Math.random() * 1000;
-            }
-
-            draw() {
-                const points = [];
-                const segments = Math.min(100, Math.floor(width / 10)); // Optimize for mobile
-
-                for (let i = 0; i <= segments; i++) {
-                    const x = (i / segments) * width;
-                    const noiseX = (x * 0.002 + this.offset + time * this.speed);
-                    const noiseY = time * 0.1;
-                    const y = this.baseY + fbm(noiseX, noiseY, dreamPhase * 0.1) * this.amplitude;
-
-                    // Mouse influence creates waves
-                    const distFromMouse = Math.abs(x - mouseX * width) / width;
-                    const mouseWave = Math.sin(distFromMouse * Math.PI * 4 - time * 3) * 20 * (1 - distFromMouse) * mouseY;
-
-                    points.push({ x, y: y + mouseWave });
-                }
-
-                ctx.beginPath();
-                ctx.moveTo(0, height);
-                points.forEach((p, i) => {
-                    if (i === 0) ctx.lineTo(p.x, p.y);
-                    else {
-                        const prev = points[i - 1];
-                        const cpx = (prev.x + p.x) / 2;
-                        ctx.quadraticCurveTo(prev.x, prev.y, cpx, (prev.y + p.y) / 2);
-                    }
-                });
-                ctx.lineTo(width, height);
-                ctx.closePath();
-
-                const gradient = ctx.createLinearGradient(0, this.baseY - this.amplitude, 0, height);
-                gradient.addColorStop(0, this.color);
-                gradient.addColorStop(1, 'rgba(10, 5, 20, 0.9)');
-                ctx.fillStyle = gradient;
-                ctx.fill();
-            }
-        }
-
-        // Particle system for mystical atmosphere
-        class Particle {
-            constructor() {
-                this.reset();
-            }
-
-            reset() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.size = 1 + Math.random() * 3;
-                this.speedX = (Math.random() - 0.5) * 0.5;
-                this.speedY = (Math.random() - 0.5) * 0.5 - 0.3;
-                this.life = 1;
-                this.decay = 0.001 + Math.random() * 0.003;
-                this.hue = 260 + Math.random() * 60;
-            }
-
-            update() {
-                const noiseVal = fbm(this.x * 0.005, this.y * 0.005, time * 0.2);
-                this.x += this.speedX + Math.sin(noiseVal * Math.PI * 2) * 0.5;
-                this.y += this.speedY + Math.cos(noiseVal * Math.PI * 2) * 0.3;
-                this.life -= this.decay;
-
-                // Attracted to touch/mouse
-                const dx = mouseX * width - this.x;
-                const dy = mouseY * height - this.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < 200) {
-                    this.x += dx * 0.002;
-                    this.y += dy * 0.002;
-                }
-
-                if (this.life <= 0 || this.x < 0 || this.x > width || this.y < 0 || this.y > height) {
-                    this.reset();
-                }
-            }
-
-            draw() {
-                const alpha = this.life * 0.6;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = `hsla(${this.hue}, 70%, 70%, ${alpha})`;
-                ctx.fill();
-            }
-        }
-
-        // Initialize entities (reduced counts for mobile performance)
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        const formCount = isMobile ? 12 : 20;
-        const particleCount = isMobile ? 80 : 150;
-        const starCount = isMobile ? 100 : 200;
-
-        const forms = [];
-        for (let i = 0; i < formCount; i++) {
-            forms.push(new FloatingForm());
-        }
-
-        const terrains = [
-            new DreamTerrain(height * 0.85, 0.02, 'rgba(20, 10, 40, 0.8)', 100),
-            new DreamTerrain(height * 0.75, 0.03, 'rgba(40, 20, 60, 0.6)', 80),
-            new DreamTerrain(height * 0.65, 0.04, 'rgba(60, 30, 80, 0.4)', 60),
-        ];
-
-        const particles = [];
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(new Particle());
-        }
-
-        // Stars
-        const stars = [];
-        for (let i = 0; i < starCount; i++) {
-            stars.push({
-                x: Math.random() * width,
-                y: Math.random() * height * 0.6,
-                size: Math.random() * 2,
-                twinkle: Math.random() * Math.PI * 2
-            });
-        }
-
-        // Main render loop
-        let lastTime = 0;
-        function animate(currentTime) {
-            const dt = (currentTime - lastTime) / 1000;
-            lastTime = currentTime;
-            time += dt;
-
-            // Use gyroscope if available, otherwise touch/mouse
-            if (useGyro) {
-                targetMouseX = gyroX;
-                targetMouseY = gyroY;
-            }
-
-            // Smooth following
-            mouseX += (targetMouseX - mouseX) * 0.05;
-            mouseY += (targetMouseY - mouseY) * 0.05;
-
-            // Clear with fade effect for trails
-            ctx.fillStyle = `rgba(8, 5, 15, 0.1)`;
-            ctx.fillRect(0, 0, width, height);
-
-            // Redraw background occasionally for full clear
-            if (Math.random() < 0.02) {
-                const bgGradient = ctx.createRadialGradient(
-                    width * mouseX, height * mouseY, 0,
-                    width / 2, height / 2, Math.max(width, height)
-                );
-                bgGradient.addColorStop(0, `hsla(${260 + Math.sin(time * 0.1) * 20}, 50%, 15%, 1)`);
-                bgGradient.addColorStop(0.5, 'rgba(15, 10, 25, 1)');
-                bgGradient.addColorStop(1, 'rgba(5, 3, 10, 1)');
-                ctx.fillStyle = bgGradient;
-                ctx.fillRect(0, 0, width, height);
-            }
-
-            // Draw stars
-            stars.forEach(star => {
-                const twinkle = Math.sin(time * 2 + star.twinkle) * 0.5 + 0.5;
-                ctx.beginPath();
-                ctx.arc(star.x, star.y, star.size * twinkle, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(200, 180, 255, ${0.3 + twinkle * 0.4})`;
-                ctx.fill();
-            });
-
-            // Draw moon/portal
-            const moonX = width * 0.7 + Math.sin(time * 0.1) * 50;
-            const moonY = height * 0.25 + Math.cos(time * 0.15) * 30;
-            const moonGradient = ctx.createRadialGradient(moonX, moonY, 0, moonX, moonY, 80);
-            moonGradient.addColorStop(0, 'rgba(200, 180, 255, 0.3)');
-            moonGradient.addColorStop(0.5, 'rgba(140, 100, 200, 0.15)');
-            moonGradient.addColorStop(1, 'rgba(80, 60, 120, 0)');
-            ctx.beginPath();
-            ctx.arc(moonX, moonY, 80, 0, Math.PI * 2);
-            ctx.fillStyle = moonGradient;
-            ctx.fill();
-
-            // Inner portal effect
-            const portalPhase = time * 0.5;
-            for (let ring = 0; ring < 5; ring++) {
-                ctx.beginPath();
-                ctx.arc(moonX, moonY, 30 + ring * 10 + Math.sin(portalPhase + ring) * 5, 0, Math.PI * 2);
-                ctx.strokeStyle = `rgba(180, 150, 255, ${0.2 - ring * 0.03})`;
-                ctx.lineWidth = 2;
-                ctx.stroke();
-            }
-
-            // Update and draw particles (behind terrain)
-            particles.forEach(p => {
-                p.update();
-                p.draw();
-            });
-
-            // Draw floating forms (sorted by z for depth)
-            forms.sort((a, b) => b.z - a.z);
-            forms.forEach(form => {
-                form.update(dt);
-                form.draw();
-            });
-
-            // Draw terrain layers (front to back)
-            terrains.forEach(terrain => terrain.draw());
-
-            // Vignette fog effect
-            const fogGradient = ctx.createRadialGradient(
-                width / 2, height / 2, height * 0.3,
-                width / 2, height / 2, height
-            );
-            fogGradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
-            fogGradient.addColorStop(1, 'rgba(10, 5, 20, 0.6)');
-            ctx.fillStyle = fogGradient;
-            ctx.fillRect(0, 0, width, height);
-
-            // Subtle scan lines for dreamy effect (skip on mobile for performance)
-            if (!isMobile) {
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.03)';
-                for (let y = 0; y < height; y += 4) {
-                    ctx.fillRect(0, y, width, 2);
-                }
-            }
-
-            requestAnimationFrame(animate);
-        }
-
-        // Start the dream
-        animate(0);
+        // Initialize
+        loadData();
+        calculateBid();
     </script>
 </body>
 </html>
