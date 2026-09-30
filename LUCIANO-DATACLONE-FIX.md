@@ -12,9 +12,10 @@ that breaks every chat turn before the model is even called:
 - Structured cloning cannot serialize a Proxy, so the worker pool fails with
   `WorkerTaskError: DataCloneError: #<Object> could not be cloned` and the turn ends with no reply.
 
-Upstream tracking: openclaw/openclaw issues #159758, #161654, #161828, #161872.
+Upstream tracking: openclaw/openclaw issues #157067, #159339, #159758, #161654, #161828, #161872.
 Affected: OpenClaw 2026.9.6 and 2026.9.7 (the current npm `latest`, published 2026-09-30).
-The reader-level fix landed on OpenClaw `main` after the 2026.9.7 tag and is not on npm yet.
+The reader-level fix is PR #160075 (commit a181c3f1d, merged to `main` on 2026-09-29). It is not in
+the 2026.9.7 release and not on npm yet; the next release cut from `main` should include it.
 
 ## The fix (run on the PC that hosts the gateway)
 
