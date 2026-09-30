@@ -33,11 +33,14 @@ openclaw gateway restart
 ```
 
 If `openclaw gateway restart` complains about the startup-folder launcher (it did on this PC before),
-restart the scheduled task instead:
+the old, unpatched gateway process is probably still running. Stop it and start it again by hand:
 
 ```powershell
-schtasks /End /TN "OpenClaw Gateway"
-schtasks /Run /TN "OpenClaw Gateway"
+openclaw gateway status                 # shows whether a Scheduled Task or a Startup-folder item runs it
+openclaw gateway stop                   # if it refuses: netstat -ano | findstr :18789  then  taskkill /F /T /PID <pid>
+schtasks /Run /TN "OpenClaw Gateway"    # Scheduled Task install
+# Startup-folder install instead: run "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\OpenClaw Gateway.cmd"
+openclaw gateway status                 # confirm it started after the patch ran
 ```
 
 Then message Luciano on Telegram. Expected: a normal reply, and no new `DataCloneError` lines in
@@ -47,7 +50,7 @@ Then message Luciano on Telegram. Expected: a normal reply, and no new `DataClon
 
 ```powershell
 node fix-openclaw-dataclone.mjs --check     # dry run, changes nothing
-node fix-openclaw-dataclone.mjs --revert    # restore the backups
+node fix-openclaw-dataclone.mjs --revert    # restore the backups (and remove them)
 node fix-openclaw-dataclone.mjs --dir "C:\Users\maste\AppData\Roaming\npm\node_modules\openclaw"
 ```
 
