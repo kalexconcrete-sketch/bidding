@@ -75,7 +75,9 @@ function ${HELPER_NAME}(value, depth) {
 		const current = value[key];
 		let next = current;
 		if (current !== null && typeof current === "object") {
-			if (key === "env" && !Array.isArray(current)) {
+			const currentProto = Object.getPrototypeOf(current);
+			if (key === "env" && !Array.isArray(current) && (currentProto === Object.prototype || currentProto === null)) {
+				// A Windows env Proxy reports Object.prototype here, so it is copied; Maps etc. fall through untouched.
 				next = {};
 				for (const envKey of Object.keys(current)) next[envKey] = current[envKey];
 			} else {
