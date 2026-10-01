@@ -54,6 +54,21 @@ node fix-openclaw-dataclone.mjs --revert    # restore the backups (and remove th
 node fix-openclaw-dataclone.mjs --dir "C:\Users\maste\AppData\Roaming\npm\node_modules\openclaw"
 ```
 
+## How this was verified
+
+- The mechanism was reproduced in isolation on Node 24: posting the Windows env Proxy to a worker
+  thread fails with exactly `DataCloneError: #<Object> could not be cloned`; a plain copy works.
+- Through OpenClaw 2026.9.7's real worker pool and session-transcript worker (Windows code path
+  forced on Linux): both affected reads failed with the exact `WorkerTaskError` before the patch
+  and returned normal domain replies after it. Reverting restored byte-identical files.
+- Through a locally running OpenClaw 2026.9.7 gateway: a webchat `chat.send` turn (the same path
+  Telegram uses) logged `outcome=error ... WorkerTaskError: DataCloneError` and wrote
+  "This turn ended before a reply: WorkerTaskError: DataCloneError: #<Object> could not be cloned."
+  into the session transcript. With the patch applied and the gateway restarted, the same turn
+  reached the model call with no clone errors in the gateway log.
+- A source audit found no other host-to-worker boundary that can carry the Proxy; every pool
+  dispatches through the one site the script patches.
+
 ## After OpenClaw updates itself
 
 OpenClaw auto-updates. A release newer than 2026.9.7 should contain the upstream fix, in which case
